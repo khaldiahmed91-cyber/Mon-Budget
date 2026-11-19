@@ -252,6 +252,57 @@
     }
     .tx-item:hover { background: var(--bg-muted); }
     .tx-item:last-child { border-bottom: 0; }
+    .tx-item.excluded { opacity: 0.62; }
+    .tx-item.excluded .amt { color: var(--text-muted); }
+    .tx-item.selected { background: var(--accent-soft); }
+    .tx-check {
+      flex-shrink: 0; width: 22px; height: 22px; margin: 0;
+      accent-color: var(--accent); cursor: pointer;
+    }
+    .badge.exclu { background: var(--bg-muted); color: var(--text-muted); }
+    .tx-tools { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      border: 1px solid var(--border); background: var(--bg-elev); color: var(--text);
+      border-radius: 999px; padding: 7px 12px; font-size: 13px; font-weight: 650;
+    }
+    .chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-hover); }
+    .tx-select-row {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+      font-size: 13px; color: var(--text);
+    }
+    .tx-select-row label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 650; }
+    .tx-bulk-bar {
+      position: fixed;
+      left: calc(12px + var(--safe-l));
+      right: calc(12px + var(--safe-r));
+      bottom: calc(8px + var(--nav-h) + var(--safe-b));
+      z-index: 45;
+      display: none;
+      flex-wrap: wrap; align-items: center; gap: 8px 10px;
+      background: var(--bg-elev); color: var(--text);
+      border: 1px solid var(--border); border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      padding: 10px 12px;
+      max-height: min(40vh, 240px);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tx-bulk-bar.show { display: flex; }
+    .tx-bulk-bar .bulk-meta { flex: 1 1 140px; min-width: 0; font-size: 13px; font-weight: 650; }
+    .tx-bulk-bar .bulk-meta .hint { font-weight: 500; }
+    .tx-bulk-bar .btn { flex: 0 0 auto; }
+    body.has-bulk { padding-bottom: calc(var(--nav-h) + var(--safe-b) + 96px); }
+    @media (max-width: 720px) {
+      body.has-bulk .fab { display: none !important; }
+      .tx-bulk-bar { gap: 8px; }
+    }
+    .toast.has-action { pointer-events: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .toast .toast-undo {
+      border: 0; background: var(--accent); color: #07312A; font-weight: 700;
+      border-radius: 999px; padding: 5px 11px; font-size: 12px;
+    }
+    html[data-theme="dark"] .toast .toast-undo { color: #06241E; }
     .tx-item .meta { flex: 1; min-width: 0; }
     .tx-item .title { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .tx-item .sub { font-size: 12px; color: var(--text-muted); }
@@ -503,7 +554,7 @@
     }
 
     @media print {
-      .topbar, .bottom-nav, .fab, .filters, .btn, .icon-btn, .year-totals-bar { display: none !important; }
+      .topbar, .bottom-nav, .fab, .filters, .btn, .icon-btn, .year-totals-bar, .tx-bulk-bar, .tx-tools { display: none !important; }
       body { background: white; padding: 0; }
       .card { box-shadow: none; }
     }
@@ -539,6 +590,29 @@
     }
     noscript.app-banner { display: block; background: var(--warning-soft); }
 
+
+    .modal.wide { width: min(980px, 100%); max-height: min(92vh, 900px); }
+    .import-wizard { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+    .import-map {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px 10px; margin: 8px 0 4px;
+    }
+    .import-map .form-row { margin-bottom: 0; }
+    .import-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .import-toolbar input[type="search"] { flex: 1; min-width: 140px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; color: var(--text); }
+    .import-toolbar select { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px; padding: 8px 10px; color: var(--text); max-width: 220px; }
+    .import-preview { max-height: min(50vh, 420px); overflow: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--border); border-radius: 12px; }
+    .import-table { font-size: 12.5px; }
+    .import-table td, .import-table th { padding: 6px 8px; vertical-align: middle; }
+    .import-table select { max-width: 150px; background: var(--bg-muted); border: 1px solid var(--border); border-radius: 8px; padding: 4px 6px; color: var(--text); font-size: 12px; }
+    .import-table tr.imp-skipped td { opacity: .62; }
+    .badge.import { background: var(--accent-soft); color: var(--accent-hover); }
+    .badge.dup { background: var(--bg-muted); color: var(--text-muted); }
+    .badge.warn { background: var(--warning-soft); color: var(--warning); }
+    @media (max-width: 720px) {
+      .import-table select { max-width: 110px; }
+      .page-head .tx-actions { width: 100%; justify-content: flex-start; }
+    }
 </style>
 </head>
 <body>
@@ -561,7 +635,7 @@
       </div>
       <div class="brand-text">
         <h1>Mon Budget</h1>
-        <p id="greeting">Bonjour</p>
+        <p id="greeting">Bonjour Ahmed</p>
       </div>
     </div>
     <nav class="desktop-nav" aria-label="Navigation">
@@ -700,7 +774,11 @@
           <h2>Transactions</h2>
           <p class="sub" id="tx-count">0 opération</p>
         </div>
-        <button type="button" class="btn btn-primary" id="btn-add-tx">+ Ajouter</button>
+        <div class="tx-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn" id="btn-import-bank">Importer un relevé bancaire</button>
+          <button type="button" class="btn" id="btn-undo-import" hidden>Annuler le dernier import</button>
+          <button type="button" class="btn btn-primary" id="btn-add-tx">+ Ajouter</button>
+        </div>
       </div>
       <div class="filters">
         <select id="filter-month" aria-label="Mois"></select>
@@ -711,6 +789,9 @@
           <option value="revenu">Revenus</option>
           <option value="depense">Dépenses</option>
           <option value="retrait">Retraits d'épargne</option>
+          <option value="transfer">Virements internes</option>
+          <option value="card">Relevés carte</option>
+          <option value="imported">Import bancaire</option>
         </select>
         <select id="filter-sort" aria-label="Tri">
           <option value="date-desc">Plus récentes</option>
@@ -720,6 +801,17 @@
           <option value="cat">Catégorie</option>
         </select>
         <input type="search" id="filter-search" placeholder="Rechercher une description…" />
+      </div>
+      <div class="tx-tools" id="tx-tools">
+        <div class="filter-chips" id="tx-chips" role="group" aria-label="Filtres rapides">
+          <button type="button" class="chip" data-quick="transfer" id="chip-transfer">Virements internes</button>
+          <button type="button" class="chip" data-quick="card" id="chip-card">Relevés carte</button>
+          <button type="button" class="chip" data-quick="imported" id="chip-imported">Import bancaire</button>
+        </div>
+        <div class="tx-select-row">
+          <label><input type="checkbox" class="tx-check" id="tx-check-all"/> Tout sélectionner</label>
+          <button type="button" class="btn btn-sm" id="btn-select-transfers" hidden>Sélectionner tous les virements internes</button>
+        </div>
       </div>
       <div class="card" id="tx-list"></div>
     </section>
@@ -875,6 +967,17 @@
               <button type="button" class="btn btn-sm" id="btn-export-json">Exporter JSON</button>
               <button type="button" class="btn btn-sm" id="btn-import-json">Importer JSON</button>
               <input type="file" id="import-file" class="sr-file" accept=".json,application/json,text/plain" tabindex="-1" aria-hidden="true" />
+              <input type="file" id="bank-import-file" class="sr-file" accept=".csv,.txt,.tsv,.xlsx,.xls,.ofx,.qfx,.qif,text/csv,text/plain,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" tabindex="-1" aria-hidden="true" />
+            </div>
+          </div>
+          <div class="setting-row">
+            <div>
+              <strong>Relevé bancaire</strong>
+              <div class="hint">Importez un export de votre banque (CSV, Excel, OFX, QIF). Les données restent dans ce navigateur. Depuis l’espace client : Relevés ou Téléchargements → exporter en CSV, Excel ou OFX/QIF (Money/Quicken).</div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+              <button type="button" class="btn btn-sm" id="btn-import-bank-settings">Importer un relevé bancaire</button>
+              <button type="button" class="btn btn-sm" id="btn-undo-import-settings" hidden>Annuler le dernier import</button>
             </div>
           </div>
           <div class="setting-row">
@@ -1042,6 +1145,7 @@
     <div class="modal" id="modal"></div>
   </div>
   <div class="toast" id="toast" role="status"></div>
+  <div id="tx-bulk-bar" class="tx-bulk-bar" hidden></div>
   <script>
 (function () {
   "use strict";
@@ -1091,7 +1195,10 @@
     budgetMonth: null,
     expandedCats: {},
     expandedCalcCats: {},
-    calc: { years: 30, mode: "year", incomeRate: 0, expenseRate: 0 }
+    calc: { years: 30, mode: "year", incomeRate: 0, expenseRate: 0 },
+    importMaps: {},
+    importRules: {},
+    importHistory: []
   };
 
   let toastTimer = null;
@@ -1241,6 +1348,22 @@
     return state.categories.find(function (c) { return c.id === id; }) || {
       id: id, name: "Catégorie inconnue", icon: "❓", color: "#95A5A6", kind: "depense"
     };
+  }
+  function isExcluded(t) {
+    return !!(t && t.excluded);
+  }
+  function isInternalTx(t) {
+    if (!t) return false;
+    if (isExcluded(t)) return true;
+    var label = t.description || t.label || "";
+    if (typeof BankImport !== "undefined" && BankImport.isInternalTransferHint) return BankImport.isInternalTransferHint(label);
+    return /vir(?:ement)?\s+interne|transfert\s+interne|vir\s+compte|compte a compte|de compte a compte/i.test(label);
+  }
+  function isCardTx(t) {
+    if (!t) return false;
+    var label = t.description || t.label || "";
+    if (typeof BankImport !== "undefined" && BankImport.isCardStatementHint) return BankImport.isCardStatementHint(label);
+    return /releve\s+carte|releve\s+cb|carte\s+differe|differe\s+carte|prelevement\s+(?:carte|cb)\s+differe/i.test(label);
   }
   function isEpargne(catId) {
     const c = catById(catId);
@@ -1393,6 +1516,7 @@
       : "auto";
     if (!raw) state.year = 2026;
     state.calc = sanitizeCalc(raw && raw.calc);
+    loadImportExtras(raw);
   }
   function defaultCalc() {
     return { years: 30, mode: "year", incomeRate: 0, expenseRate: 0 };
@@ -1423,7 +1547,10 @@
         goal: Number((state.savings || {}).goal) || 0,
         demo: !!((state.savings || {}).demo)
       },
-      calc: sanitizeCalc(state.calc)
+      calc: sanitizeCalc(state.calc),
+      importMaps: state.importMaps || {},
+      importRules: state.importRules || {},
+      importHistory: state.importHistory || []
     };
     storageSet(JSON.stringify(payload));
     updateStorageBanner();
@@ -1459,7 +1586,8 @@
           startDate: r.startDate,
           months: freq === "monthly" ? recMonths(r) : undefined,
           demo: !!r.demo,
-          virtual: !(ov && ov.replaced)
+          virtual: !(ov && ov.replaced),
+          excluded: (ov && Object.prototype.hasOwnProperty.call(ov, "excluded")) ? !!ov.excluded : !!r.excluded
         });
       }
       if (freq === "yearly") {
@@ -1501,6 +1629,7 @@
       months.push({ month: m, revenus: 0, depenses: 0, epargne: 0, solde: 0, cumul: 0, byCat: {} });
     }
     transactionsForYear(year).forEach(function (t) {
+      if (isExcluded(t)) return;
       const m = parseYMD(t.date).m;
       if (m < 1 || m > 12) return;
       const row = months[m - 1];
@@ -1553,14 +1682,14 @@
   }
 
   function savingsDelta(t) {
-    if (!t) return 0;
+    if (!t || isExcluded(t)) return 0;
     var amt = Math.abs(Number(t.amount) || 0);
     if (t.type === "retrait") return -amt;
     if (isEpargne(t.categoryId) && t.type !== "revenu") return amt;
     return 0;
   }
   function isSavingsContribution(t) {
-    return !!(t && t.type !== "revenu" && t.type !== "retrait" && isEpargne(t.categoryId));
+    return !!(t && !isExcluded(t) && t.type !== "revenu" && t.type !== "retrait" && isEpargne(t.categoryId));
   }
   function moneyCents(n) {
     return Math.round((Number(n) || 0) * 100);
@@ -1580,6 +1709,7 @@
   function monthCashflow(year, month, exclude) {
     var revenus = 0, depenses = 0, contributions = 0, withdrawals = 0;
     transactionsForYear(year).forEach(function (t) {
+      if (isExcluded(t)) return;
       if (parseYMD(t.date).m !== month) return;
       if (txExcludedFromMonth(t, exclude)) return;
       var amt = Number(t.amount) || 0;
@@ -1888,15 +2018,37 @@
       el.classList.toggle("active", el.getAttribute("data-view") === name);
     });
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { try { window.scrollTo(0, 0); } catch (e2) {} }
+    if (typeof updateBulkBar === "function") updateBulkBar();
   }
-  function toast(msg) {
+  var toastUndoFn = null;
+  function toast(msg, action) {
     const el = document.getElementById("toast");
-    el.textContent = msg;
-    if (msg && String(msg).length > 70) el.classList.add("multiline");
-    else el.classList.remove("multiline");
+    el.innerHTML = "";
+    var text = document.createElement("span");
+    text.textContent = msg;
+    el.appendChild(text);
+    var hasAction = !!(action && action.onClick);
+    el.classList.toggle("multiline", !!(msg && String(msg).length > 70) || hasAction);
+    el.classList.toggle("has-action", hasAction);
+    toastUndoFn = hasAction ? action.onClick : null;
+    if (hasAction) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "toast-undo";
+      b.textContent = action.label || "Annuler";
+      b.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        el.classList.remove("show");
+        var fn = toastUndoFn;
+        toastUndoFn = null;
+        if (fn) fn();
+      });
+      el.appendChild(b);
+    }
     el.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2600);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); toastUndoFn = null; }, hasAction ? 7000 : 2600);
   }
 
   /* ---------- charts ---------- */
@@ -2010,6 +2162,7 @@
   function yearSavingsSplit(year) {
     var versements = 0, retraits = 0;
     transactionsForYear(year).forEach(function (t) {
+      if (isExcluded(t)) return;
       var amt = Math.abs(Number(t.amount) || 0);
       if (t.type === "retrait") retraits += amt;
       else if (isEpargne(t.categoryId) && t.type !== "revenu") versements += amt;
@@ -2077,6 +2230,7 @@
   function categoryBreakdown(year) {
     var byCat = {};
     transactionsForYear(year).forEach(function (t) {
+      if (isExcluded(t)) return;
       var amt = Number(t.amount) || 0;
       var contrib = 0;
       if (t.type === "revenu" || t.type === "retrait") return;
@@ -2123,6 +2277,22 @@
       if (annualNote) annualNote.hidden = true;
       var emptyWarn = document.getElementById("dash-savings-warning");
       if (emptyWarn) { emptyWarn.hidden = true; emptyWarn.innerHTML = ""; }
+      document.getElementById("kpi-revenus").textContent = fmtMoney(0);
+      document.getElementById("kpi-depenses").textContent = fmtMoney(0);
+      var soldeEmpty = document.getElementById("kpi-solde");
+      if (soldeEmpty) {
+        soldeEmpty.textContent = fmtMoney(0);
+        soldeEmpty.className = "value num pos";
+      }
+      var soldeHintEmpty = document.getElementById("kpi-solde-hint");
+      if (soldeHintEmpty) soldeHintEmpty.textContent = "Dont épargne " + fmtMoney(0) + " · reste " + fmtMoney(0);
+      var cashEmpty = document.getElementById("kpi-cash");
+      if (cashEmpty) {
+        cashEmpty.textContent = fmtMoney(0);
+        cashEmpty.className = "value num pos";
+      }
+      var cashHintEmpty = document.getElementById("kpi-cash-hint");
+      if (cashHintEmpty) cashHintEmpty.textContent = "Pour vos achats plaisir";
       return;
     }
 
@@ -2310,7 +2480,10 @@
         return sid === f.subcategoryId;
       });
     }
-    if (f.type) list = list.filter(function (t) { return t.type === f.type; });
+    if (f.type === "imported") list = list.filter(function (t) { return t.source === "bank"; });
+    else if (f.type === "transfer") list = list.filter(function (t) { return isInternalTx(t); });
+    else if (f.type === "card") list = list.filter(function (t) { return isCardTx(t); });
+    else if (f.type) list = list.filter(function (t) { return t.type === f.type; });
     if (f.search) {
       const q = f.search.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       list = list.filter(function (t) {
@@ -2330,13 +2503,300 @@
     return list;
   }
 
+  var selectedTx = {};
+  var bulkSnapshot = null;
+
+  function pruneSelection() {
+    Object.keys(selectedTx).forEach(function (id) {
+      if (!findTxById(id)) delete selectedTx[id];
+    });
+  }
+  function selectedIdList() {
+    pruneSelection();
+    return Object.keys(selectedTx).filter(function (id) { return selectedTx[id]; });
+  }
+  function selectedItems() {
+    return selectedIdList().map(findTxById).filter(Boolean);
+  }
+  function clearSelection() {
+    selectedTx = {};
+    updateBulkBar();
+    renderTransactions();
+  }
+  function setTxSelected(id, on) {
+    if (on) selectedTx[id] = true;
+    else delete selectedTx[id];
+  }
+  function snapshotFinance() {
+    return {
+      transactions: JSON.parse(JSON.stringify(state.transactions || [])),
+      recurring: JSON.parse(JSON.stringify(state.recurring || [])),
+      overrides: JSON.parse(JSON.stringify(state.overrides || []))
+    };
+  }
+  function restoreFinance(snap) {
+    if (!snap) return;
+    state.transactions = JSON.parse(JSON.stringify(snap.transactions || []));
+    state.recurring = JSON.parse(JSON.stringify(snap.recurring || []));
+    state.overrides = JSON.parse(JSON.stringify(snap.overrides || []));
+    persist();
+    renderAll();
+  }
+  function toastUndo(msg) {
+    var snap = bulkSnapshot;
+    toast(msg, {
+      label: "Annuler",
+      onClick: function () {
+        restoreFinance(snap);
+        toast("Action annulée.");
+      }
+    });
+  }
+  function internalsInYear() {
+    return allVisible(state.year).filter(isInternalTx);
+  }
+  function updateQuickFilters() {
+    var typ = (state.filters && state.filters.type) || "";
+    document.querySelectorAll("#tx-chips .chip").forEach(function (btn) {
+      btn.classList.toggle("active", btn.getAttribute("data-quick") === typ);
+    });
+    var btn = document.getElementById("btn-select-transfers");
+    if (btn) btn.hidden = internalsInYear().length === 0;
+  }
+  function updateBulkBar() {
+    var bar = document.getElementById("tx-bulk-bar");
+    if (!bar) return;
+    var onTx = state.view === "transactions";
+    var items = onTx ? selectedItems() : [];
+    var show = onTx && items.length > 0;
+    bar.classList.toggle("show", show);
+    bar.hidden = !show;
+    document.body.classList.toggle("has-bulk", show);
+    var allBox = document.getElementById("tx-check-all");
+    if (allBox) {
+      var vis = (typeof filteredTransactions === "function") ? filteredTransactions() : [];
+      var nSelVis = vis.filter(function (t) { return selectedTx[t.id]; }).length;
+      allBox.checked = vis.length > 0 && nSelVis === vis.length;
+      allBox.indeterminate = nSelVis > 0 && nSelVis < vis.length;
+    }
+    if (!show) { bar.innerHTML = ""; return; }
+    var total = 0;
+    items.forEach(function (t) {
+      var amt = Math.abs(Number(t.amount) || 0);
+      if (t.type === "revenu") total += amt;
+      else total -= amt;
+    });
+    var meta = items.length + " sélectionnée" + (items.length > 1 ? "s" : "") +
+      " · " + fmtMoney(total);
+    bar.innerHTML =
+      '<div class="bulk-meta">' + esc(meta) +
+        '<div class="hint">Les séries récurrentes sont traitées en entier.</div>' +
+      "</div>" +
+      '<button type="button" class="btn btn-sm" id="btn-bulk-type">Changer le type</button>' +
+      '<button type="button" class="btn btn-sm" id="btn-bulk-cat">Changer la catégorie</button>' +
+      '<button type="button" class="btn btn-sm btn-danger" id="btn-bulk-delete">Supprimer</button>' +
+      '<button type="button" class="btn btn-sm btn-ghost" id="btn-bulk-clear">Désélectionner</button>';
+  }
+  function selectAllFiltered(on) {
+    filteredTransactions().forEach(function (t) { setTxSelected(t.id, on); });
+    renderTransactions();
+  }
+  function selectAllInternalTransfers() {
+    state.filters.type = "transfer";
+    var typeSel = document.getElementById("filter-type");
+    if (typeSel) typeSel.value = "transfer";
+    internalsInYear().forEach(function (t) { setTxSelected(t.id, true); });
+    renderTransactions();
+    var n = selectedIdList().length;
+    toast(n + " virement" + (n > 1 ? "s" : "") + " interne" + (n > 1 ? "s" : "") + " sélectionné" + (n > 1 ? "s" : "") + ".");
+  }
+  function uniqueRecurringInSelection() {
+    var seen = {};
+    var recs = [];
+    selectedItems().forEach(function (t) {
+      if (t.recurring && t.recurringId && !seen[t.recurringId]) {
+        seen[t.recurringId] = true;
+        recs.push(t);
+      }
+    });
+    return recs;
+  }
+  function forEachSelectedTarget(oneOffFn, recFn) {
+    var seenRec = {};
+    selectedItems().forEach(function (t) {
+      if (t.recurring && t.recurringId) {
+        if (seenRec[t.recurringId]) return;
+        seenRec[t.recurringId] = true;
+        var rec = state.recurring.find(function (r) { return r.id === t.recurringId; });
+        if (rec) recFn(rec);
+      } else {
+        var raw = state.transactions.find(function (x) { return x.id === t.id; });
+        if (raw) oneOffFn(raw);
+      }
+    });
+  }
+  function openBulkDeleteModal() {
+    var items = selectedItems();
+    if (!items.length) return;
+    var recs = uniqueRecurringInSelection();
+    var nOne = items.filter(function (t) { return !t.recurring; }).length;
+    var html = '<h3 id="modal-title">Supprimer la sélection ?</h3>';
+    html += "<p>" + items.length + " opération" + (items.length > 1 ? "s" : "") + " seront supprimée" + (items.length > 1 ? "s" : "") + ".</p>";
+    if (recs.length) {
+      html += "<p><strong>" + recs.length + " série" + (recs.length > 1 ? "s" : "") + " récurrente" + (recs.length > 1 ? "s" : "") +
+        " entière" + (recs.length > 1 ? "s" : "") + "</strong> " + (recs.length > 1 ? "seront effacées" : "sera effacée") +
+        " (toutes les échéances, pas seulement le mois affiché).";
+      if (nOne) html += " Les " + nOne + " opération" + (nOne > 1 ? "s" : "") + " ponctuelle" + (nOne > 1 ? "s" : "") + " seront aussi retirée" + (nOne > 1 ? "s" : "") + ".";
+      html += "</p>";
+    }
+    html += '<div class="modal-actions" style="margin-top:16px">';
+    html += '<button type="button" class="btn btn-ghost" id="btn-cancel-modal">Annuler</button>';
+    html += '<button type="button" class="btn btn-danger" id="btn-bulk-delete-confirm">Supprimer ' + items.length + " opération" + (items.length > 1 ? "s" : "") + "</button>";
+    html += "</div>";
+    openModal(html);
+  }
+  function applyBulkDelete() {
+    var items = selectedItems();
+    if (!items.length) { closeModal(); return; }
+    bulkSnapshot = snapshotFinance();
+    var recIds = {};
+    uniqueRecurringInSelection().forEach(function (t) { recIds[t.recurringId] = true; });
+    var oneIds = {};
+    items.forEach(function (t) { if (!t.recurring) oneIds[t.id] = true; });
+    var nRec = Object.keys(recIds).length;
+    var nOne = Object.keys(oneIds).length;
+    state.transactions = state.transactions.filter(function (x) { return !oneIds[x.id]; });
+    state.recurring = state.recurring.filter(function (r) { return !recIds[r.id]; });
+    state.overrides = state.overrides.filter(function (o) { return !recIds[o.recurringId]; });
+    selectedTx = {};
+    persist();
+    closeModal();
+    renderAll();
+    var msg = (nOne + nRec) + " opération" + ((nOne + nRec) > 1 ? "s" : "") + " supprimée" + ((nOne + nRec) > 1 ? "s" : "") + ".";
+    if (nRec) msg += " " + nRec + " série" + (nRec > 1 ? "s" : "") + " récurrente" + (nRec > 1 ? "s" : "") + " retirée" + (nRec > 1 ? "s" : "") + ".";
+    toastUndo(msg);
+  }
+  function openBulkCategoryModal() {
+    if (!selectedItems().length) return;
+    var html = '<h3 id="modal-title">Changer la catégorie</h3>';
+    html += '<p class="hint">S’applique aux ' + selectedItems().length + " opération" + (selectedItems().length > 1 ? "s" : "") + " sélectionnée" + (selectedItems().length > 1 ? "s" : "") + ". Les séries récurrentes sont modifiées en entier.</p>";
+    html += '<div class="form-row"><label for="bulk-cat">Catégorie</label><select id="bulk-cat">' + categoryOptions("", null) + "</select></div>";
+    html += '<div class="form-row"><label for="bulk-sub">Sous-catégorie</label><select id="bulk-sub"><option value="">—</option></select></div>';
+    html += '<div class="modal-actions"><button type="button" class="btn btn-ghost" id="btn-cancel-modal">Annuler</button>';
+    html += '<button type="button" class="btn btn-primary" id="btn-bulk-cat-apply">Appliquer</button></div>';
+    openModal(html);
+    var catSel = document.getElementById("bulk-cat");
+    var subSel = document.getElementById("bulk-sub");
+    function fillSubs() {
+      var id = catSel.value;
+      var htmls = '<option value="">—</option>';
+      subsOf(id).forEach(function (s) {
+        htmls += '<option value="' + esc(s.id) + '">' + esc(s.name) + "</option>";
+      });
+      subSel.innerHTML = htmls;
+    }
+    fillSubs();
+    catSel.addEventListener("change", fillSubs);
+  }
+  function applyBulkCategory() {
+    var cat = (document.getElementById("bulk-cat") || {}).value;
+    var sub = (document.getElementById("bulk-sub") || {}).value || "";
+    if (!cat) { toast("Choisissez une catégorie."); return; }
+    var n = selectedItems().length;
+    bulkSnapshot = snapshotFinance();
+    var kind = catById(cat).kind;
+    forEachSelectedTarget(function (raw) {
+      raw.categoryId = cat;
+      raw.subcategoryId = sanitizeSubId(cat, sub);
+      if (kind === "revenu" && raw.type === "depense") raw.type = "revenu";
+      if (kind !== "revenu" && raw.type === "revenu") raw.type = "depense";
+      if (cat === "epargne" && raw.type === "revenu") raw.type = "depense";
+    }, function (rec) {
+      rec.categoryId = cat;
+      rec.subcategoryId = sanitizeSubId(cat, sub);
+      if (kind === "revenu" && rec.type === "depense") rec.type = "revenu";
+      if (kind !== "revenu" && rec.type === "revenu") rec.type = "depense";
+      if (cat === "epargne" && rec.type === "revenu") rec.type = "depense";
+      state.overrides.forEach(function (o) {
+        if (o.recurringId === rec.id && !o.deleted) {
+          o.categoryId = cat;
+          o.subcategoryId = sanitizeSubId(cat, sub);
+        }
+      });
+    });
+    persist();
+    closeModal();
+    renderAll();
+    toastUndo("Catégorie mise à jour sur " + n + " opération" + (n > 1 ? "s" : "") + ".");
+  }
+  function openBulkTypeModal() {
+    if (!selectedItems().length) return;
+    var html = '<h3 id="modal-title">Changer le type</h3>';
+    html += '<p class="hint">S’applique aux ' + selectedItems().length + " opération" + (selectedItems().length > 1 ? "s" : "") + " sélectionnée" + (selectedItems().length > 1 ? "s" : "") + ". Les séries récurrentes sont modifiées en entier.</p>";
+    html += '<div class="form-row"><label for="bulk-type">Nouveau type</label><select id="bulk-type">';
+    html += '<option value="depense">Dépense</option>';
+    html += '<option value="revenu">Revenu</option>';
+    html += '<option value="epargne">Épargne (versement)</option>';
+    html += '<option value="retrait">Retrait d\'épargne</option>';
+    html += '<option value="exclu">Virement interne (exclu des totaux)</option>';
+    html += "</select></div>";
+    html += '<p class="hint">« Virement interne » laisse la ligne visible, grisée et badge « Exclu », mais la retire de tous les totaux (revenus, dépenses, épargne, solde, cash, budgets, calculatrice, récap CSV).</p>';
+    html += '<div class="modal-actions"><button type="button" class="btn btn-ghost" id="btn-cancel-modal">Annuler</button>';
+    html += '<button type="button" class="btn btn-primary" id="btn-bulk-type-apply">Appliquer</button></div>';
+    openModal(html);
+  }
+  function applyTypeToRecord(raw, typ) {
+    var ep = state.categories.find(function (c) { return c.id === "epargne"; }) || state.categories.find(function (c) { return isEpargne(c.id); });
+    if (typ === "exclu") {
+      raw.excluded = true;
+      return;
+    }
+    raw.excluded = false;
+    if (typ === "epargne") {
+      raw.type = "depense";
+      if (ep) raw.categoryId = ep.id;
+      raw.subcategoryId = sanitizeSubId(raw.categoryId, raw.subcategoryId);
+    } else if (typ === "retrait") {
+      raw.type = "retrait";
+      if (ep) raw.categoryId = ep.id;
+      raw.subcategoryId = sanitizeSubId(raw.categoryId, raw.subcategoryId);
+    } else {
+      raw.type = typ;
+      var cobj = catById(raw.categoryId);
+      if (typ === "revenu" && cobj.kind !== "revenu") raw.categoryId = "autres-revenus";
+      if (typ === "depense" && cobj.kind === "revenu") raw.categoryId = "divers";
+      raw.subcategoryId = sanitizeSubId(raw.categoryId, raw.subcategoryId);
+    }
+  }
+  function applyBulkType() {
+    var typ = (document.getElementById("bulk-type") || {}).value;
+    if (!typ) return;
+    var n = selectedItems().length;
+    bulkSnapshot = snapshotFinance();
+    forEachSelectedTarget(function (raw) {
+      applyTypeToRecord(raw, typ);
+    }, function (rec) {
+      applyTypeToRecord(rec, typ);
+      state.overrides.forEach(function (o) {
+        if (o.recurringId === rec.id && !o.deleted) applyTypeToRecord(o, typ);
+      });
+    });
+    persist();
+    closeModal();
+    renderAll();
+    var labels = { depense: "dépense", revenu: "revenu", epargne: "versement d’épargne", retrait: "retrait d’épargne", exclu: "virement interne (exclu des totaux)" };
+    toastUndo("Type « " + (labels[typ] || typ) + " » appliqué à " + n + " opération" + (n > 1 ? "s" : "") + ".");
+  }
+
   function renderTransactions() {
     populateFilterSelects();
+    updateQuickFilters();
     const list = filteredTransactions();
     const n = list.length;
     document.getElementById("tx-count").textContent = n + " opération" + (n > 1 ? "s" : "") + " en " + state.year;
     if (!n) {
       document.getElementById("tx-list").innerHTML = '<div class="empty"><h3>Aucune transaction</h3><p>Aucun résultat pour ces filtres, ou aucune opération enregistrée cette année.</p></div>';
+      updateBulkBar();
       return;
     }
     let html = "";
@@ -2350,23 +2810,29 @@
       const c = catById(t.categoryId);
       const d = parseYMD(t.date);
       const dateLabel = pad2(d.d) + " " + MONTHS_SHORT[d.m - 1];
-      html += '<div class="tx-item" data-tx="' + esc(t.id) + '" role="button" tabindex="0">';
+      var cls = "tx-item" + (isExcluded(t) ? " excluded" : "") + (selectedTx[t.id] ? " selected" : "");
+      html += '<div class="' + cls + '" data-tx="' + esc(t.id) + '" role="button" tabindex="0">';
+      html += '<input type="checkbox" class="tx-check" data-tx-check="' + esc(t.id) + '" aria-label="Sélectionner" ' + (selectedTx[t.id] ? "checked " : "") + "/>";
       html += '<span class="cat-ico" style="background:' + esc(c.color) + '22">' + esc(c.icon) + "</span>";
       html += '<div class="meta"><div class="title">' + esc(t.description || c.name) + "</div>";
       var subLabel = subName(t.categoryId, t.subcategoryId);
       html += '<div class="sub">' + esc(dateLabel) + " · " + esc(c.name) + (subLabel ? " · " + esc(subLabel) : "");
       if (t.type === "retrait") html += ' <span class="badge">Retrait</span>';
+      if (isExcluded(t)) html += ' <span class="badge exclu">Exclu</span>';
       if (t.recurring) {
         html += ' <span class="badge">' + esc(fmtRecurringBadge(t)) + "</span>";
       }
       if (t.demo) html += ' <span class="badge demo">Exemple</span>';
+      if (t.source === "bank") html += ' <span class="badge import">Importé</span>';
       html += "</div></div>";
       if (t.recurring) {
         html += '<button type="button" class="btn btn-sm btn-stop-rec" data-rec="' + esc(t.recurringId) + '" data-month="' + esc(t.date.slice(0, 7)) + '" title="Arrêter cette série à partir d\'un mois donné">Arrêter…</button>';
       }
-      html += '<div class="amt num ' + t.type + '">' + esc(fmtMoneySigned(t.amount, t.type === "retrait" ? "depense" : t.type)) + "</div></div>";
+      var amtKind = isExcluded(t) ? "depense" : (t.type === "retrait" ? "depense" : t.type);
+      html += '<div class="amt num ' + (isExcluded(t) ? "" : t.type) + '">' + esc(fmtMoneySigned(t.amount, amtKind)) + "</div></div>";
     });
     document.getElementById("tx-list").innerHTML = html;
+    updateBulkBar();
   }
 
   function currentBudgetMonth() {
@@ -2622,6 +3088,7 @@
     map[catId][sid] = (map[catId][sid] || 0) + amt;
   }
   function absorbTransaction(out, t) {
+    if (isExcluded(t)) return;
     var amt = Number(t.amount) || 0;
     var catId = t.categoryId || "divers";
     if (t.type === "revenu") {
@@ -2657,6 +3124,7 @@
   function salaireForYear(year) {
     var s = 0;
     transactionsForYear(year).forEach(function (t) {
+      if (isExcluded(t)) return;
       if (t.type === "revenu" && isSalaireCat(t.categoryId)) s += Number(t.amount) || 0;
     });
     return s;
@@ -3098,6 +3566,1581 @@
     renderCategories();
     renderYearTotalsWidget();
     renderCalculator();
+    updateImportUndoButtons();
+  }
+
+
+  /* ===== bank import library (built-in, offline) ===== */
+/* Universal client-side bank statement helpers (synthetic-test friendly). */
+(function (root, factory) {
+  if (typeof module === "object" && module.exports) module.exports = factory();
+  else root.BankImport = factory();
+})(typeof globalThis !== "undefined" ? globalThis : this, function () {
+  "use strict";
+
+  function foldText(s) {
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[’'`]/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function headerSig(headers, kind) {
+    return String(kind || "table") + "::" + (headers || []).map(function (h) { return foldText(h); }).join("|");
+  }
+
+  function bytesOf(buf) {
+    if (!buf) return new Uint8Array(0);
+    if (buf instanceof Uint8Array) return buf;
+    if (buf instanceof ArrayBuffer) return new Uint8Array(buf);
+    if (typeof Buffer !== "undefined" && Buffer.isBuffer && Buffer.isBuffer(buf)) return new Uint8Array(buf);
+    return new Uint8Array(buf);
+  }
+
+  function decodeText(buf) {
+    var u8 = bytesOf(buf);
+    var offset = 0;
+    if (u8.length >= 3 && u8[0] === 0xEF && u8[1] === 0xBB && u8[2] === 0xBF) offset = 3;
+    var slice = offset ? u8.subarray(offset) : u8;
+    var utf8 = "";
+    try { utf8 = new TextDecoder("utf-8").decode(slice); } catch (e) {
+      utf8 = "";
+      for (var i = 0; i < slice.length; i++) utf8 += String.fromCharCode(slice[i]);
+    }
+    var repl = 0;
+    for (var j = 0; j < utf8.length; j++) if (utf8.charCodeAt(j) === 0xFFFD) repl++;
+    var ratio = utf8.length ? repl / utf8.length : 0;
+    if (repl === 0) return utf8;
+    if (ratio < 0.002 && repl < 2) return utf8;
+    var latin = "";
+    try { latin = new TextDecoder("windows-1252").decode(slice); }
+    catch (e2) {
+      try { latin = new TextDecoder("iso-8859-1").decode(slice); }
+      catch (e3) {
+        latin = "";
+        for (var k = 0; k < slice.length; k++) latin += String.fromCharCode(slice[k]);
+      }
+    }
+    return latin || utf8;
+  }
+
+  /* ---------- inflate-raw (RFC 1951) ---------- */
+  function inflateRaw(input) {
+    var data = bytesOf(input);
+    var pos = 0, bitbuf = 0, bitcnt = 0;
+    function bit() {
+      if (bitcnt === 0) {
+        if (pos >= data.length) throw new Error("deflate: fin inattendue");
+        bitbuf = data[pos++];
+        bitcnt = 8;
+      }
+      var v = bitbuf & 1;
+      bitbuf >>= 1;
+      bitcnt--;
+      return v;
+    }
+    function bits(n) {
+      var r = 0, i, sh = 0;
+      for (i = 0; i < n; i++) { r |= bit() << sh; sh++; }
+      return r;
+    }
+    function bitsRev(n) {
+      var r = 0, i;
+      for (i = 0; i < n; i++) r = (r << 1) | bit();
+      return r;
+    }
+    function buildTree(lengths) {
+      var max = 0, i, n = lengths.length;
+      for (i = 0; i < n; i++) if (lengths[i] > max) max = lengths[i];
+      var blCount = new Array(max + 1);
+      for (i = 0; i <= max; i++) blCount[i] = 0;
+      for (i = 0; i < n; i++) blCount[lengths[i]]++;
+      blCount[0] = 0;
+      var nextCode = new Array(max + 1);
+      nextCode[0] = 0;
+      var code = 0;
+      for (i = 1; i <= max; i++) {
+        code = (code + blCount[i - 1]) << 1;
+        nextCode[i] = code;
+      }
+      var table = new Array(n);
+      for (i = 0; i < n; i++) table[i] = -1;
+      for (i = 0; i < n; i++) {
+        var len = lengths[i];
+        if (len) {
+          table[i] = nextCode[len];
+          nextCode[len]++;
+        }
+      }
+      return { lengths: lengths, codes: table, max: max };
+    }
+    function decode(tree) {
+      var code = 0, len = 0, i;
+      for (;;) {
+        code = (code << 1) | bit();
+        len++;
+        for (i = 0; i < tree.lengths.length; i++) {
+          if (tree.lengths[i] === len && tree.codes[i] === code) return i;
+        }
+        if (len > tree.max) throw new Error("deflate: code invalide");
+      }
+    }
+    function fixedLitTree() {
+      var lengths = new Array(288), i;
+      for (i = 0; i <= 143; i++) lengths[i] = 8;
+      for (i = 144; i <= 255; i++) lengths[i] = 9;
+      for (i = 256; i <= 279; i++) lengths[i] = 7;
+      for (i = 280; i <= 287; i++) lengths[i] = 8;
+      return buildTree(lengths);
+    }
+    function fixedDistTree() {
+      var lengths = new Array(32), i;
+      for (i = 0; i < 32; i++) lengths[i] = 5;
+      return buildTree(lengths);
+    }
+    var LEN_BASE = [3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258];
+    var LEN_EXTRA = [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+    var DIST_BASE = [1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];
+    var DIST_EXTRA = [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+    var out = [];
+    function put(b) { out.push(b & 255); }
+    function stored() {
+      bitbuf = 0; bitcnt = 0;
+      if (pos + 4 > data.length) throw new Error("deflate: stored");
+      var len = data[pos] | (data[pos + 1] << 8);
+      var nlen = data[pos + 2] | (data[pos + 3] << 8);
+      pos += 4;
+      if ((len ^ 0xffff) !== nlen) throw new Error("deflate: stored checksum");
+      for (var i = 0; i < len; i++) put(data[pos++]);
+    }
+    function codes(lit, dist) {
+      for (;;) {
+        var sym = decode(lit);
+        if (sym < 256) put(sym);
+        else if (sym === 256) break;
+        else {
+          var li = sym - 257;
+          var length = LEN_BASE[li] + bits(LEN_EXTRA[li]);
+          var ds = decode(dist);
+          var distance = DIST_BASE[ds] + bits(DIST_EXTRA[ds]);
+          if (distance <= 0 || distance > out.length) throw new Error("deflate: distance");
+          for (var k = 0; k < length; k++) put(out[out.length - distance]);
+        }
+      }
+    }
+    function dynamic() {
+      var hlit = bits(5) + 257;
+      var hdist = bits(5) + 1;
+      var hclen = bits(4) + 4;
+      var order = [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+      var clen = new Array(19);
+      var i;
+      for (i = 0; i < 19; i++) clen[i] = 0;
+      for (i = 0; i < hclen; i++) clen[order[i]] = bits(3);
+      var ctree = buildTree(clen);
+      var all = hlit + hdist;
+      var lengths = new Array(all);
+      i = 0;
+      while (i < all) {
+        var s = decode(ctree);
+        if (s < 16) { lengths[i++] = s; }
+        else if (s === 16) {
+          var rep = 3 + bits(2);
+          if (!i) throw new Error("deflate: repeat");
+          var prev = lengths[i - 1];
+          while (rep--) lengths[i++] = prev;
+        } else if (s === 17) {
+          var z = 3 + bits(3);
+          while (z--) lengths[i++] = 0;
+        } else {
+          var z2 = 11 + bits(7);
+          while (z2--) lengths[i++] = 0;
+        }
+      }
+      codes(buildTree(lengths.slice(0, hlit)), buildTree(lengths.slice(hlit)));
+    }
+    var last;
+    do {
+      last = bit();
+      var type = bits(2);
+      if (type === 0) stored();
+      else if (type === 1) codes(fixedLitTree(), fixedDistTree());
+      else if (type === 2) dynamic();
+      else throw new Error("deflate: type réservé");
+    } while (!last);
+    return new Uint8Array(out);
+  }
+
+  async function inflateRawAsync(u8) {
+    if (typeof DecompressionStream !== "undefined") {
+      try {
+        var ds = new DecompressionStream("deflate-raw");
+        var ab = await new Response(new Blob([u8]).stream().pipeThrough(ds)).arrayBuffer();
+        return new Uint8Array(ab);
+      } catch (e) {}
+    }
+    return inflateRaw(u8);
+  }
+
+  /* ---------- ZIP ---------- */
+  function u16(u8, o) { return u8[o] | (u8[o + 1] << 8); }
+  function u32(u8, o) { return (u8[o] | (u8[o + 1] << 8) | (u8[o + 2] << 16) | (u8[o + 3] << 24)) >>> 0; }
+
+  function findEocd(u8) {
+    var max = Math.min(u8.length, 65535 + 22);
+    for (var i = u8.length - 22; i >= u8.length - max; i--) {
+      if (i < 0) break;
+      if (u8[i] === 0x50 && u8[i + 1] === 0x4b && u8[i + 2] === 0x05 && u8[i + 3] === 0x06) return i;
+    }
+    return -1;
+  }
+
+  async function unzip(buf) {
+    var u8 = bytesOf(buf);
+    if (u8[0] !== 0x50 || u8[1] !== 0x4b) throw new Error("Ce fichier n’est pas une archive ZIP / XLSX valide.");
+    var files = {};
+    var eocd = findEocd(u8);
+    var entries = [];
+    if (eocd >= 0) {
+      var count = u16(u8, eocd + 10);
+      var cdOff = u32(u8, eocd + 16);
+      var p = cdOff;
+      for (var n = 0; n < count; n++) {
+        if (u32(u8, p) !== 0x02014b50) break;
+        var method = u16(u8, p + 10);
+        var comp = u32(u8, p + 20);
+        var uncomp = u32(u8, p + 24);
+        var nameLen = u16(u8, p + 28);
+        var extraLen = u16(u8, p + 30);
+        var commentLen = u16(u8, p + 32);
+        var localOff = u32(u8, p + 42);
+        var name = "";
+        for (var c = 0; c < nameLen; c++) name += String.fromCharCode(u8[p + 46 + c]);
+        entries.push({ name: name, method: method, comp: comp, uncomp: uncomp, localOff: localOff });
+        p += 46 + nameLen + extraLen + commentLen;
+      }
+    } else {
+      var q = 0;
+      while (q + 30 < u8.length) {
+        if (u32(u8, q) !== 0x04034b50) break;
+        var method2 = u16(u8, q + 8);
+        var flags = u16(u8, q + 6);
+        var comp2 = u32(u8, q + 18);
+        var uncomp2 = u32(u8, q + 22);
+        var nameLen2 = u16(u8, q + 26);
+        var extraLen2 = u16(u8, q + 28);
+        var name2 = "";
+        for (var c2 = 0; c2 < nameLen2; c2++) name2 += String.fromCharCode(u8[q + 30 + c2]);
+        var dataOff = q + 30 + nameLen2 + extraLen2;
+        entries.push({ name: name2, method: method2, comp: comp2, uncomp: uncomp2, dataOff: dataOff, flags: flags });
+        if (flags & 8) break;
+        q = dataOff + comp2;
+      }
+    }
+    for (var e = 0; e < entries.length; e++) {
+      var ent = entries[e];
+      var dataOff2 = ent.dataOff;
+      if (dataOff2 == null) {
+        var lo = ent.localOff;
+        if (u32(u8, lo) !== 0x04034b50) continue;
+        var nl = u16(u8, lo + 26);
+        var el = u16(u8, lo + 28);
+        dataOff2 = lo + 30 + nl + el;
+      }
+      var chunk = u8.subarray(dataOff2, dataOff2 + ent.comp);
+      var raw;
+      if (ent.method === 0) raw = chunk;
+      else if (ent.method === 8) raw = await inflateRawAsync(chunk);
+      else continue;
+      files[ent.name] = raw;
+    }
+    return files;
+  }
+
+  function xmlUnescape(s) {
+    return String(s || "")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&apos;/g, "'")
+      .replace(/&amp;/g, "&")
+      .replace(/_x([0-9A-Fa-f]{4})_/g, function (_, h) { return String.fromCharCode(parseInt(h, 16)); });
+  }
+
+  function colLettersToIndex(ref) {
+    var m = String(ref || "").match(/^[A-Z]+/i);
+    if (!m) return 0;
+    var s = m[0].toUpperCase(), n = 0, i;
+    for (i = 0; i < s.length; i++) n = n * 26 + (s.charCodeAt(i) - 64);
+    return n - 1;
+  }
+
+  function parseSharedStrings(xml) {
+    var out = [];
+    if (!xml) return out;
+    var siRe = /<si\b[^>]*>([\s\S]*?)<\/si>/gi;
+    var m;
+    while ((m = siRe.exec(xml))) {
+      var chunk = m[1], text = "";
+      var tRe = /<t\b[^>]*>([\s\S]*?)<\/t>/gi;
+      var tm;
+      while ((tm = tRe.exec(chunk))) text += xmlUnescape(tm[1]);
+      out.push(text);
+    }
+    return out;
+  }
+
+  function parseSheetXml(xml, sst) {
+    sst = sst || [];
+    var rows = [];
+    var rowRe = /<row\b[^>]*>([\s\S]*?)<\/row>/gi;
+    var rm;
+    while ((rm = rowRe.exec(xml))) {
+      var rowXml = rm[1];
+      var cells = [];
+      var cRe = /<c\b([^>]*)>([\s\S]*?)<\/c>|<c\b([^>]*)\/>/gi;
+      var cm;
+      while ((cm = cRe.exec(rowXml))) {
+        var attrs = cm[1] || cm[3] || "";
+        var inner = cm[2] || "";
+        var rMatch = attrs.match(/\br="([^"]+)"/);
+        var tMatch = attrs.match(/\bt="([^"]+)"/);
+        var typ = tMatch ? tMatch[1] : "";
+        var idx = rMatch ? colLettersToIndex(rMatch[1]) : cells.length;
+        var val = "";
+        if (typ === "inlineStr") {
+          var it = inner.match(/<t\b[^>]*>([\s\S]*?)<\/t>/);
+          val = it ? xmlUnescape(it[1]) : "";
+        } else if (typ === "s") {
+          var v = inner.match(/<v\b[^>]*>([\s\S]*?)<\/v>/);
+          var si = v ? parseInt(v[1], 10) : -1;
+          val = (si >= 0 && si < sst.length) ? sst[si] : "";
+        } else if (typ === "b") {
+          var vb = inner.match(/<v\b[^>]*>([\s\S]*?)<\/v>/);
+          val = vb && vb[1] === "1" ? "TRUE" : "FALSE";
+        } else {
+          var vn = inner.match(/<v\b[^>]*>([\s\S]*?)<\/v>/);
+          val = vn ? vn[1] : "";
+        }
+        cells[idx] = val;
+      }
+      for (var i = 0; i < cells.length; i++) if (cells[i] == null) cells[i] = "";
+      rows.push(cells);
+    }
+    var width = 0;
+    rows.forEach(function (r) { if (r.length > width) width = r.length; });
+    rows.forEach(function (r) { while (r.length < width) r.push(""); });
+    return rows;
+  }
+
+  function utf8Decode(u8) {
+    try { return new TextDecoder("utf-8").decode(u8); }
+    catch (e) {
+      var s = "";
+      for (var i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]);
+      return s;
+    }
+  }
+
+  async function parseXlsx(buf) {
+    var files = await unzip(buf);
+    var names = Object.keys(files);
+    function get(path) {
+      if (files[path]) return files[path];
+      var low = path.toLowerCase();
+      for (var i = 0; i < names.length; i++) if (names[i].toLowerCase() === low) return files[names[i]];
+      return null;
+    }
+    var sstXml = get("xl/sharedStrings.xml");
+    var sst = sstXml ? parseSharedStrings(utf8Decode(sstXml)) : [];
+    var sheet = get("xl/worksheets/sheet1.xml");
+    if (!sheet) {
+      for (var i = 0; i < names.length; i++) {
+        if (/xl\/worksheets\/sheet\d+\.xml$/i.test(names[i])) { sheet = files[names[i]]; break; }
+      }
+    }
+    if (!sheet) throw new Error("Impossible de lire la feuille Excel (aucune feuille trouvée).");
+    return parseSheetXml(utf8Decode(sheet), sst);
+  }
+
+  function excelSerialToISO(n) {
+    var x = Number(n);
+    if (!isFinite(x)) return "";
+    if (x < 1 || x > 80000) return "";
+    var epoch = Date.UTC(1899, 11, 30);
+    var d = new Date(epoch + Math.round(x * 86400000));
+    var y = d.getUTCFullYear();
+    var m = d.getUTCMonth() + 1;
+    var day = d.getUTCDate();
+    return y + "-" + String(m).padStart(2, "0") + "-" + String(day).padStart(2, "0");
+  }
+
+  /* ---------- CSV ---------- */
+  function parseCsv(text, delimiter) {
+    var rows = [], row = [], field = "", i, c, inQ = false;
+    var s = String(text || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    for (i = 0; i < s.length; i++) {
+      c = s.charAt(i);
+      if (inQ) {
+        if (c === '"') {
+          if (s.charAt(i + 1) === '"') { field += '"'; i++; }
+          else inQ = false;
+        } else field += c;
+      } else if (c === '"') inQ = true;
+      else if (c === delimiter) { row.push(field); field = ""; }
+      else if (c === "\n") { row.push(field); field = ""; rows.push(row); row = []; }
+      else field += c;
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function detectDelimiter(text) {
+    var lines = String(text || "").split(/\r?\n/).slice(0, 30);
+    var cands = [";", ",", "\t", "|"];
+    var best = ";", bestScore = -1;
+    cands.forEach(function (d) {
+      var counts = [];
+      lines.forEach(function (line) {
+        if (!line.trim()) return;
+        var n = parseCsv(line, d)[0] ? parseCsv(line, d)[0].length : 0;
+        if (n > 1) counts.push(n);
+      });
+      if (!counts.length) return;
+      var freq = {};
+      counts.forEach(function (n) { freq[n] = (freq[n] || 0) + 1; });
+      var mode = 0, modeN = 0;
+      Object.keys(freq).forEach(function (k) { if (freq[k] > mode) { mode = freq[k]; modeN = +k; } });
+      var score = mode * 10 + modeN;
+      if (d === ";" ) score += 2;
+      if (score > bestScore) { bestScore = score; best = d; }
+    });
+    return best;
+  }
+
+  var DATE_HEADERS = ["date","date operation","date operation","date op","dateope","dateop","date operation comptable","date comptable","date valeur","dateval","date de valeur","date d operation","transaction date","posted date","posting date","dtposted","valuedate","value date","trade date","execution date","jour"];
+  var LABEL_HEADERS = ["libelle","libelle simplifie","libelle operation","libelle operations","intitule","intitule operation","description","label","wording","name","memo","details","detail","objet","transaction","communication","beneficiaire","beneficiary","merchant","commentaire","infos complementaires"];
+  var AMOUNT_HEADERS = ["montant","montant eur","montant euro","amount","somme","value","trnamt","operation amount","montant operation","solde operation"];
+  var DEBIT_HEADERS = ["debit","debits","withdrawal","withdrawals","sorties","sortie","expenses","depense","depenses","montant debit"];
+  var CREDIT_HEADERS = ["credit","credits","deposit","deposits","entrees","entree","income","montant credit"];
+  var CATEGORY_HEADERS = ["categorie","category","rubrique","class","classification","famille","type operation","sous categorie"];
+
+  function headerRole(name) {
+    var f = foldText(name);
+    if (!f) return "";
+    function hit(list) {
+      for (var i = 0; i < list.length; i++) {
+        var a = list[i];
+        if (f === a) return true;
+        if (a.length >= 4 && f.indexOf(a) !== -1) return true;
+      }
+      return false;
+    }
+    if (hit(DATE_HEADERS) && f.indexOf("solde") === -1) return "date";
+    if (hit(DEBIT_HEADERS)) return "debit";
+    if (hit(CREDIT_HEADERS)) return "credit";
+    if (hit(AMOUNT_HEADERS) && f.indexOf("solde") === -1) return "amount";
+    if (hit(CATEGORY_HEADERS)) return "category";
+    if (hit(LABEL_HEADERS)) return "label";
+    return "";
+  }
+
+  function looksLikeHeaderRow(cells) {
+    var roles = 0, i;
+    for (i = 0; i < cells.length; i++) if (headerRole(cells[i])) roles++;
+    return roles >= 2;
+  }
+
+  function parseAmountBank(str) {
+    if (typeof str === "number") return isFinite(str) ? Math.round(str * 100) / 100 : NaN;
+    var t = String(str || "").trim();
+    if (!t) return NaN;
+    t = t.replace(/[€$£]|EUR|USD|GBP/gi, "");
+    t = t.replace(/[\s\u00a0\u202f\u2009\u2007\u2028]/g, "");
+    var neg = false;
+    if (/^\(.*\)$/.test(t)) { neg = true; t = t.slice(1, -1); }
+    if (/^-/.test(t)) { neg = true; t = t.replace(/^-/, ""); }
+    if (/-$/.test(t)) { neg = true; t = t.replace(/-$/, ""); }
+    t = t.replace(/[^\d,.\-]/g, "");
+    if (!t) return NaN;
+    var lastC = t.lastIndexOf(","), lastD = t.lastIndexOf(".");
+    if (lastC !== -1 && lastD !== -1) {
+      if (lastC > lastD) t = t.replace(/\./g, "").replace(",", ".");
+      else t = t.replace(/,/g, "");
+    } else if (lastC !== -1) {
+      var parts = t.split(",");
+      if (parts.length === 2 && parts[1].length <= 2) t = parts[0].replace(/\./g, "") + "." + parts[1];
+      else t = t.replace(/,/g, "");
+    } else if (lastD !== -1) {
+      var p2 = t.split(".");
+      if (p2.length > 2) {
+        var dec = p2[p2.length - 1];
+        if (dec.length <= 2) t = p2.slice(0, -1).join("") + "." + dec;
+        else t = t.replace(/\./g, "");
+      }
+    }
+    var n = parseFloat(t);
+    if (!isFinite(n)) return NaN;
+    if (neg) n = -n;
+    return Math.round(n * 100) / 100;
+  }
+
+  function parseDateBank(str, prefer) {
+    if (str == null || str === "") return "";
+    if (typeof str === "number" || (/^\d+(\.\d+)?$/.test(String(str).trim()) && Number(str) > 2000 && Number(str) < 80000)) {
+      return excelSerialToISO(str);
+    }
+    var t = String(str).trim();
+    var m, y, mo, d, yy;
+    m = t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (m) return normYmd(+m[1], +m[2], +m[3]);
+    m = t.match(/^(\d{4})(\d{2})(\d{2})(?:\d{6,})?$/);
+    if (m) return normYmd(+m[1], +m[2], +m[3]);
+    m = t.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})(?:\s|T|$)/);
+    if (m) {
+      d = +m[1]; mo = +m[2]; yy = m[3];
+      y = yy.length === 2 ? (parseInt(yy, 10) >= 70 ? 1900 + parseInt(yy, 10) : 2000 + parseInt(yy, 10)) : parseInt(yy, 10);
+      if (prefer === "mdy" && d <= 12) return normYmd(y, d, mo);
+      return normYmd(y, mo, d);
+    }
+    m = t.match(/^(\d{1,2})[\/.\-](\d{1,2})'(\d{2})$/);
+    if (m) {
+      y = 2000 + parseInt(m[3], 10);
+      return normYmd(y, +m[2], +m[1]);
+    }
+    return "";
+  }
+
+  function normYmd(y, m, d) {
+    if (!y || m < 1 || m > 12 || d < 1 || d > 31) return "";
+    if (y < 50) y += 2000;
+    if (y < 100) y += 1900;
+    if (y < 1990 || y > 2100) return "";
+    var last = new Date(y, m, 0).getDate();
+    if (d > last) return "";
+    return y + "-" + String(m).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+  }
+
+  function detectDateFormat(values) {
+    var dmyHits = 0, mdyHits = 0, ymdHits = 0, serials = 0, i, v, p;
+    for (i = 0; i < values.length; i++) {
+      v = values[i];
+      if (v == null || v === "") continue;
+      if (typeof v === "number" || (/^\d+(\.\d+)?$/.test(String(v).trim()) && Number(v) > 2000 && Number(v) < 80000)) {
+        if (excelSerialToISO(v)) serials++;
+        continue;
+      }
+      var t = String(v).trim();
+      if (/^\d{4}-\d{1,2}-\d{1,2}/.test(t) || /^\d{8}/.test(t)) { ymdHits++; continue; }
+      p = t.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/);
+      if (!p) continue;
+      var a = +p[1], b = +p[2];
+      if (a > 12 && b <= 12) dmyHits++;
+      else if (b > 12 && a <= 12) mdyHits++;
+      else dmyHits++;
+    }
+    if (serials > dmyHits && serials > ymdHits) return "excel";
+    if (ymdHits > dmyHits && ymdHits > mdyHits) return "ymd";
+    if (mdyHits > dmyHits) return "mdy";
+    return "dmy";
+  }
+
+  function scoreColumn(values, kind) {
+    var ok = 0, n = 0, i, v;
+    for (i = 0; i < values.length; i++) {
+      v = values[i];
+      if (v == null || String(v).trim() === "") continue;
+      n++;
+      if (kind === "date") { if (parseDateBank(v) || parseDateBank(v, "mdy") || excelSerialToISO(v)) ok++; }
+      else if (kind === "amount") { if (isFinite(parseAmountBank(v))) ok++; }
+      else if (kind === "label") { if (String(v).trim().length >= 2 && !/^\d+([.,]\d+)?$/.test(String(v).trim())) ok++; }
+    }
+    return n ? ok / n : 0;
+  }
+
+  function colValues(rows, col, from) {
+    var out = [], i;
+    for (i = from; i < rows.length; i++) out.push(rows[i][col] != null ? rows[i][col] : "");
+    return out;
+  }
+
+  function detectHeaderRow(rows) {
+    var i, max = Math.min(rows.length, 40);
+    for (i = 0; i < max; i++) if (looksLikeHeaderRow(rows[i] || [])) return i;
+    return -1;
+  }
+
+  function detectMapping(rows, kind) {
+    var headerRow = detectHeaderRow(rows);
+    var headers = [];
+    var dataStart = 0;
+    var width = 0;
+    rows.forEach(function (r) { if (r && r.length > width) width = r.length; });
+    var i, role, map = {
+      dateCol: -1, labelCol: -1, amountCol: -1, debitCol: -1, creditCol: -1, categoryCol: -1,
+      amountMode: "signed", dateFormat: "dmy", invertSign: false, headerRow: headerRow, kind: kind || "table"
+    };
+    if (headerRow >= 0) {
+      headers = (rows[headerRow] || []).map(function (h) { return String(h || "").trim(); });
+      while (headers.length < width) headers.push("");
+      dataStart = headerRow + 1;
+      for (i = 0; i < headers.length; i++) {
+        role = headerRole(headers[i]);
+        if (role === "date" && map.dateCol < 0) map.dateCol = i;
+        else if (role === "label" && map.labelCol < 0) map.labelCol = i;
+        else if (role === "amount" && map.amountCol < 0) map.amountCol = i;
+        else if (role === "debit" && map.debitCol < 0) map.debitCol = i;
+        else if (role === "credit" && map.creditCol < 0) map.creditCol = i;
+        else if (role === "category" && map.categoryCol < 0) map.categoryCol = i;
+      }
+    } else {
+      dataStart = 0;
+      for (i = 0; i < width; i++) headers.push("Colonne " + (i + 1));
+    }
+    function fillMissing(field, kindScore, threshold) {
+      if (map[field] >= 0) return;
+      var best = -1, bestS = threshold || 0.5, c, s;
+      for (c = 0; c < width; c++) {
+        if (c === map.dateCol || c === map.labelCol || c === map.amountCol || c === map.debitCol || c === map.creditCol || c === map.categoryCol) continue;
+        s = scoreColumn(colValues(rows, c, dataStart), kindScore);
+        if (s > bestS) { bestS = s; best = c; }
+      }
+      if (best >= 0) map[field] = best;
+    }
+    fillMissing("dateCol", "date", 0.5);
+    if (map.amountCol < 0 && (map.debitCol < 0 || map.creditCol < 0)) fillMissing("amountCol", "amount", 0.5);
+    fillMissing("labelCol", "label", 0.4);
+    if (map.debitCol >= 0 && map.creditCol >= 0) {
+      map.amountMode = "debit-credit";
+      map.amountCol = -1;
+    } else {
+      map.amountMode = "signed";
+    }
+    if (map.dateCol >= 0) map.dateFormat = detectDateFormat(colValues(rows, map.dateCol, dataStart));
+    map.headers = headers;
+    map.dataStart = dataStart;
+    map.width = width;
+    map.signature = headerSig(headers, map.kind);
+    return map;
+  }
+
+  function applyMapping(rows, map) {
+    var out = [], i, r, dateRaw, label, amount, debit, credit, cat;
+    var start = map.dataStart || 0;
+    for (i = start; i < rows.length; i++) {
+      r = rows[i] || [];
+      dateRaw = map.dateCol >= 0 ? r[map.dateCol] : "";
+      label = map.labelCol >= 0 ? String(r[map.labelCol] == null ? "" : r[map.labelCol]).trim() : "";
+      cat = map.categoryCol >= 0 ? String(r[map.categoryCol] == null ? "" : r[map.categoryCol]).trim() : "";
+      if (map.amountMode === "debit-credit") {
+        debit = map.debitCol >= 0 ? parseAmountBank(r[map.debitCol]) : NaN;
+        credit = map.creditCol >= 0 ? parseAmountBank(r[map.creditCol]) : NaN;
+        if (!isFinite(debit)) debit = 0;
+        if (!isFinite(credit)) credit = 0;
+        amount = credit - Math.abs(debit);
+      } else {
+        amount = map.amountCol >= 0 ? parseAmountBank(r[map.amountCol]) : NaN;
+      }
+      if (map.invertSign && isFinite(amount)) amount = -amount;
+      var prefer = map.dateFormat === "mdy" ? "mdy" : undefined;
+      var date = parseDateBank(dateRaw, prefer);
+      if (!date && map.dateFormat === "excel") date = excelSerialToISO(dateRaw);
+      var empty = !label && !isFinite(amount) && !date;
+      if (empty) continue;
+      out.push({
+        rowIndex: i,
+        date: date,
+        dateRaw: dateRaw,
+        label: label,
+        amount: isFinite(amount) ? Math.round(amount * 100) / 100 : NaN,
+        bankCategory: cat,
+        cells: r
+      });
+    }
+    return out;
+  }
+
+  /* ---------- OFX / QIF ---------- */
+  function parseOfx(text) {
+    var raw = String(text || "");
+    var idx = raw.search(/<OFX/i);
+    var body = idx >= 0 ? raw.slice(idx) : raw;
+    body = body.replace(/<([A-Za-z0-9.]+)>\s*([^<\r\n]*)/g, function (all, tag, val) {
+      if (/^\s*$/.test(val)) return all;
+      if (new RegExp("</" + tag + ">", "i").test(all)) return all;
+      return "<" + tag + ">" + val + "</" + tag + ">";
+    });
+    var rows = [];
+    var re = /<STMTTRN>([\s\S]*?)<\/STMTTRN>/gi;
+    var m;
+    function tag(block, name) {
+      var mm = block.match(new RegExp("<" + name + ">([\\s\\S]*?)(?:</" + name + ">|$)", "i"));
+      return mm ? mm[1].replace(/<[^>]+>/g, "").trim() : "";
+    }
+    while ((m = re.exec(body))) {
+      var b = m[1];
+      var amt = parseAmountBank(tag(b, "TRNAMT"));
+      var dt = tag(b, "DTPOSTED") || tag(b, "DTUSER") || tag(b, "DTAVAIL");
+      var date = parseDateBank(dt);
+      var label = tag(b, "NAME") || tag(b, "PAYEE") || tag(b, "MEMO");
+      var memo = tag(b, "MEMO");
+      if (memo && label && memo !== label) label = label + " " + memo;
+      var cat = tag(b, "SIC") || "";
+      rows.push({ date: date, dateRaw: dt, label: label, amount: amt, bankCategory: cat, cells: [date, label, amt] });
+    }
+    return rows;
+  }
+
+  function parseQif(text) {
+    var lines = String(text || "").replace(/\r\n/g, "\n").split("\n");
+    var rows = [], cur = { date: "", dateRaw: "", label: "", amount: NaN, bankCategory: "", cells: [] };
+    function flush() {
+      if (cur.date || cur.label || isFinite(cur.amount)) {
+        rows.push(cur);
+      }
+      cur = { date: "", dateRaw: "", label: "", amount: NaN, bankCategory: "", cells: [] };
+    }
+    lines.forEach(function (line) {
+      if (!line) return;
+      var code = line.charAt(0), rest = line.slice(1);
+      if (code === "!") return;
+      if (code === "^") { flush(); return; }
+      if (code === "D") { cur.dateRaw = rest; cur.date = parseDateBank(rest) || parseDateBank(rest.replace(/'/g, "/")); }
+      else if (code === "T" || code === "U") cur.amount = parseAmountBank(rest);
+      else if (code === "P") cur.label = (cur.label ? cur.label + " " : "") + rest;
+      else if (code === "M") {
+        if (!cur.label) cur.label = rest;
+        else if (cur.label.indexOf(rest) === -1) cur.label += " " + rest;
+      }
+      else if (code === "L") cur.bankCategory = rest.replace(/^\[|\]$/g, "");
+    });
+    flush();
+    return rows;
+  }
+
+  /* ---------- categorization ---------- */
+  var KEYWORD_RULES = [
+    { k: "vir salaire", cat: "salaire", sub: null },
+    { k: "virement salaire", cat: "salaire", sub: null },
+    { k: "salaire", cat: "salaire", sub: null },
+    { k: "payroll", cat: "salaire", sub: null },
+    { k: " paie ", cat: "salaire", sub: null },
+    { k: "amazon prime", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "prime video", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "netflix", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "spotify", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "disney plus", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "disney+", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "youtube", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "canal plus", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "canal+", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "deezer", cat: "abonnements", sub: "abonnements-streaming" },
+    { k: "apple com bill", cat: "abonnements", sub: "abonnements-logiciels" },
+    { k: "apple.com/bill", cat: "abonnements", sub: "abonnements-logiciels" },
+    { k: "free mobile", cat: "abonnements", sub: "abonnements-telephone" },
+    { k: "free telecom", cat: "abonnements", sub: "abonnements-telephone" },
+    { k: "sosh", cat: "abonnements", sub: "abonnements-telephone" },
+    { k: "orange", cat: "abonnements", sub: "abonnements-telephone" },
+    { k: "bouygues", cat: "abonnements", sub: "abonnements-telephone" },
+    { k: " sfr", cat: "abonnements", sub: "abonnements-telephone" },
+    { k: "carrefour", cat: "courses", sub: "courses-alimentation" },
+    { k: "leclerc", cat: "courses", sub: "courses-alimentation" },
+    { k: "auchan", cat: "courses", sub: "courses-alimentation" },
+    { k: "lidl", cat: "courses", sub: "courses-alimentation" },
+    { k: "intermarche", cat: "courses", sub: "courses-alimentation" },
+    { k: "monoprix", cat: "courses", sub: "courses-alimentation" },
+    { k: "franprix", cat: "courses", sub: "courses-alimentation" },
+    { k: "picard", cat: "courses", sub: "courses-alimentation" },
+    { k: "biocoop", cat: "courses", sub: "courses-alimentation" },
+    { k: "aldi", cat: "courses", sub: "courses-alimentation" },
+    { k: "super u", cat: "courses", sub: "courses-alimentation" },
+    { k: "systeme u", cat: "courses", sub: "courses-alimentation" },
+    { k: "casino", cat: "courses", sub: "courses-alimentation" },
+    { k: "netto", cat: "courses", sub: "courses-alimentation" },
+    { k: "grand frais", cat: "courses", sub: "courses-alimentation" },
+    { k: "cora", cat: "courses", sub: "courses-alimentation" },
+    { k: "naturalia", cat: "courses", sub: "courses-alimentation" },
+    { k: "boulangerie", cat: "courses", sub: "courses-alimentation" },
+    { k: "sncf", cat: "transport", sub: "transport-commun" },
+    { k: "ratp", cat: "transport", sub: "transport-commun" },
+    { k: "navigo", cat: "transport", sub: "transport-commun" },
+    { k: "uber", cat: "transport", sub: "transport-commun" },
+    { k: "bolt", cat: "transport", sub: "transport-commun" },
+    { k: "flixbus", cat: "transport", sub: "transport-commun" },
+    { k: "blablacar", cat: "transport", sub: "transport-commun" },
+    { k: "air france", cat: "transport", sub: "transport-commun" },
+    { k: "easyjet", cat: "transport", sub: "transport-commun" },
+    { k: "ryanair", cat: "transport", sub: "transport-commun" },
+    { k: "totalenergies", cat: "transport", sub: "transport-carburant" },
+    { k: "total ", cat: "transport", sub: "transport-carburant" },
+    { k: " esso", cat: "transport", sub: "transport-carburant" },
+    { k: "shell", cat: "transport", sub: "transport-carburant" },
+    { k: "autorout", cat: "transport", sub: "transport-carburant" },
+    { k: "vinci", cat: "transport", sub: "transport-carburant" },
+    { k: "sanef", cat: "transport", sub: "transport-carburant" },
+    { k: "indigo", cat: "transport", sub: "transport-carburant" },
+    { k: "parking", cat: "transport", sub: "transport-carburant" },
+    { k: "carburant", cat: "transport", sub: "transport-carburant" },
+    { k: "station service", cat: "transport", sub: "transport-carburant" },
+    { k: "loyer", cat: "logement", sub: "logement-loyer" },
+    { k: "edf", cat: "energie", sub: null },
+    { k: "engie", cat: "energie", sub: null },
+    { k: "totalenergies facture", cat: "energie", sub: null },
+    { k: "ilek", cat: "energie", sub: null },
+    { k: "ohm energie", cat: "energie", sub: null },
+    { k: "enercoop", cat: "energie", sub: null },
+    { k: "veolia", cat: "logement", sub: "logement-charges" },
+    { k: "suez", cat: "logement", sub: "logement-charges" },
+    { k: "pharmacie", cat: "sante", sub: null },
+    { k: "pharma", cat: "sante", sub: null },
+    { k: "doctolib", cat: "sante", sub: null },
+    { k: "mutuelle", cat: "sante", sub: null },
+    { k: "hopital", cat: "sante", sub: null },
+    { k: "laboratoire", cat: "sante", sub: null },
+    { k: "dentiste", cat: "sante", sub: null },
+    { k: "optic", cat: "sante", sub: null },
+    { k: "mcdonald", cat: "restaurants", sub: null },
+    { k: "mcdo", cat: "restaurants", sub: null },
+    { k: "burger king", cat: "restaurants", sub: null },
+    { k: "kfc", cat: "restaurants", sub: null },
+    { k: "starbucks", cat: "restaurants", sub: null },
+    { k: "subway", cat: "restaurants", sub: null },
+    { k: "deliveroo", cat: "restaurants", sub: null },
+    { k: "uber eats", cat: "restaurants", sub: null },
+    { k: "just eat", cat: "restaurants", sub: null },
+    { k: "restaurant", cat: "restaurants", sub: null },
+    { k: "brasserie", cat: "restaurants", sub: null },
+    { k: "amazon", cat: "shopping", sub: null },
+    { k: "fnac", cat: "shopping", sub: null },
+    { k: "darty", cat: "shopping", sub: null },
+    { k: "ikea", cat: "shopping", sub: null },
+    { k: "zara", cat: "shopping", sub: null },
+    { k: "uniqlo", cat: "shopping", sub: null },
+    { k: "shein", cat: "shopping", sub: null },
+    { k: "cdiscount", cat: "shopping", sub: null },
+    { k: "aliexpress", cat: "shopping", sub: null },
+    { k: "h m ", cat: "shopping", sub: null },
+    { k: "decathlon", cat: "loisirs", sub: null },
+    { k: "cinema", cat: "loisirs", sub: null },
+    { k: "pathe", cat: "loisirs", sub: null },
+    { k: "steam", cat: "loisirs", sub: null },
+    { k: "playstation", cat: "loisirs", sub: null },
+    { k: "xbox", cat: "loisirs", sub: null },
+    { k: "maif", cat: "assurances", sub: null },
+    { k: "macif", cat: "assurances", sub: null },
+    { k: "axa", cat: "assurances", sub: null },
+    { k: "allianz", cat: "assurances", sub: null },
+    { k: "maaf", cat: "assurances", sub: null },
+    { k: "gmf", cat: "assurances", sub: null },
+    { k: "groupama", cat: "assurances", sub: null },
+    { k: "assurance", cat: "assurances", sub: null },
+    { k: "caf ", cat: "autres-revenus", sub: null },
+    { k: "pole emploi", cat: "autres-revenus", sub: null },
+    { k: "cpam", cat: "autres-revenus", sub: null },
+    { k: "impot remb", cat: "autres-revenus", sub: null },
+    { k: "impots remb", cat: "autres-revenus", sub: null }
+  ];
+
+  var INTERNAL_TRANSFER_HINTS = [
+    "vir interne", "virement interne", "transfert interne",
+    "vir compte", "de compte a compte", "virement compte a compte"
+  ];
+  var CARD_STATEMENT_HINTS = [
+    "releve carte", "releve cb", "prelevement carte differe",
+    "prelevement cb differe", "differe carte", "carte differe"
+  ];
+  var TRANSFER_HINTS = INTERNAL_TRANSFER_HINTS.concat(CARD_STATEMENT_HINTS);
+
+  function labelHasHint(label, hints) {
+    var f = " " + foldText(label) + " ";
+    for (var i = 0; i < hints.length; i++) {
+      if (f.indexOf(hints[i]) !== -1) return true;
+    }
+    return false;
+  }
+  function isInternalTransferHint(label) {
+    return labelHasHint(label, INTERNAL_TRANSFER_HINTS);
+  }
+  function isCardStatementHint(label) {
+    return labelHasHint(label, CARD_STATEMENT_HINTS);
+  }
+  function isTransferHint(label) {
+    return isInternalTransferHint(label) || isCardStatementHint(label);
+  }
+
+  function ruleKeyword(label) {
+    var f = foldText(label);
+    var parts = f.split(" ").filter(function (p) { return p.length >= 3; }).slice(0, 4);
+    return parts.join(" ");
+  }
+
+  function matchLearned(label, learned) {
+    var f = foldText(label);
+    if (!f || !learned) return null;
+    var best = null, bestLen = 0, k, rec;
+    for (k in learned) {
+      if (!Object.prototype.hasOwnProperty.call(learned, k)) continue;
+      if (!k) continue;
+      if (f.indexOf(k) !== -1 && k.length > bestLen) {
+        bestLen = k.length;
+        rec = learned[k];
+        best = rec;
+      }
+    }
+    return best;
+  }
+
+  function matchBuiltin(label) {
+    var f = " " + foldText(label) + " ";
+    var best = null, bestLen = 0, i, k;
+    for (i = 0; i < KEYWORD_RULES.length; i++) {
+      k = KEYWORD_RULES[i].k;
+      if (f.indexOf(k) !== -1 && k.length > bestLen) {
+        bestLen = k.length;
+        best = KEYWORD_RULES[i];
+      }
+    }
+    return best;
+  }
+
+  function categorize(label, bankCategory, learned, amount) {
+    var learnedHit = matchLearned(label, learned);
+    if (learnedHit && learnedHit.categoryId) {
+      return { categoryId: learnedHit.categoryId, subcategoryId: learnedHit.subcategoryId || null, via: "learned" };
+    }
+    var bi = matchBuiltin(label);
+    if (bi) return { categoryId: bi.cat, subcategoryId: bi.sub || null, via: "builtin" };
+    if (bankCategory) {
+      var bc = matchBuiltin(bankCategory);
+      if (bc) return { categoryId: bc.cat, subcategoryId: bc.sub || null, via: "bank-category" };
+    }
+    if (isFinite(amount) && amount > 0) return { categoryId: "autres-revenus", subcategoryId: null, via: "fallback-income" };
+    return { categoryId: "divers", subcategoryId: null, via: "fallback" };
+  }
+
+  function labelsSimilar(a, b) {
+    var fa = foldText(a), fb = foldText(b);
+    if (!fa && !fb) return true;
+    if (!fa || !fb) return false;
+    if (fa === fb) return true;
+    var pa = fa.slice(0, 22), pb = fb.slice(0, 22);
+    if (pa.length >= 8 && pb.length >= 8 && (fa.indexOf(pb) !== -1 || fb.indexOf(pa) !== -1)) return true;
+    var ta = fa.split(" ").filter(function (t) { return t.length > 2; });
+    var tb = fb.split(" ").filter(function (t) { return t.length > 2; });
+    if (!ta.length || !tb.length) return false;
+    var inter = 0, i;
+    for (i = 0; i < ta.length; i++) if (tb.indexOf(ta[i]) !== -1) inter++;
+    return inter >= Math.min(2, Math.min(ta.length, tb.length));
+  }
+
+  function moneyCents(n) { return Math.round((Number(n) || 0) * 100); }
+
+  function isDuplicateOf(row, existing) {
+    if (!row || !existing) return false;
+    if (row.date !== existing.date) return false;
+    if (moneyCents(Math.abs(row.amount)) !== moneyCents(existing.amount)) return false;
+    return labelsSimilar(row.label, existing.description || "");
+  }
+
+  function sniffFormat(name, buf) {
+    var n = String(name || "").toLowerCase();
+    var u8 = bytesOf(buf);
+    if (u8.length >= 8 && u8[0] === 0xD0 && u8[1] === 0xCF && u8[2] === 0x11 && u8[3] === 0xE0) return "xls";
+    if (u8.length >= 2 && u8[0] === 0x50 && u8[1] === 0x4b && (/\.xlsx?$/.test(n) || n.indexOf("xls") !== -1 || !n)) {
+      if (/\.xls$/.test(n) && !/\.xlsx$/.test(n)) {
+        /* zip could still be xlsx misnamed; PK means xlsx */
+        return "xlsx";
+      }
+      return "xlsx";
+    }
+    if (/\.xlsx$/.test(n)) return "xlsx";
+    if (/\.xls$/.test(n)) return "xls";
+    var head = "";
+    try { head = decodeText(u8.subarray(0, Math.min(u8.length, 800))); } catch (e) { head = ""; }
+    if (/\.ofx$|\.qfx$/.test(n) || /OFXHEADER|<OFX/i.test(head)) return "ofx";
+    if (/\.qif$/.test(n) || /^!Type:/im.test(head)) return "qif";
+    if (/\.(csv|txt|tsv)$/.test(n) || !n) return "csv";
+    return "csv";
+  }
+
+  async function parseStatement(name, buf) {
+    var kind = sniffFormat(name, buf);
+    if (kind === "xls") {
+      return { kind: "xls", error: "Le format Excel .xls (ancien) n’est pas lu directement. Enregistrez le fichier au format .xlsx ou exportez un CSV depuis votre banque, puis réessayez." };
+    }
+    if (kind === "xlsx") {
+      var table = await parseXlsx(buf);
+      var map = detectMapping(table, "xlsx");
+      return { kind: "xlsx", rows: table, map: map, records: applyMapping(table, map) };
+    }
+    var text = decodeText(buf);
+    if (kind === "ofx") {
+      var recs = parseOfx(text);
+      var headers = ["Date", "Libellé", "Montant"];
+      var table2 = [headers].concat(recs.map(function (r) { return [r.date || r.dateRaw, r.label, r.amount]; }));
+      var map2 = { dateCol: 0, labelCol: 1, amountCol: 2, debitCol: -1, creditCol: -1, categoryCol: -1, amountMode: "signed", dateFormat: "ymd", invertSign: false, headerRow: 0, dataStart: 1, headers: headers, width: 3, kind: "ofx", signature: headerSig(headers, "ofx") };
+      return { kind: "ofx", rows: table2, map: map2, records: recs, text: text };
+    }
+    if (kind === "qif") {
+      var recsQ = parseQif(text);
+      var headersQ = ["Date", "Libellé", "Montant"];
+      var tableQ = [headersQ].concat(recsQ.map(function (r) { return [r.date || r.dateRaw, r.label, r.amount]; }));
+      var mapQ = { dateCol: 0, labelCol: 1, amountCol: 2, debitCol: -1, creditCol: -1, categoryCol: -1, amountMode: "signed", dateFormat: "dmy", invertSign: false, headerRow: 0, dataStart: 1, headers: headersQ, width: 3, kind: "qif", signature: headerSig(headersQ, "qif") };
+      return { kind: "qif", rows: tableQ, map: mapQ, records: recsQ, text: text };
+    }
+    var delim = detectDelimiter(text);
+    var tableC = parseCsv(text, delim);
+    var mapC = detectMapping(tableC, "csv");
+    mapC.delimiter = delim;
+    return { kind: "csv", rows: tableC, map: mapC, records: applyMapping(tableC, mapC), text: text, delimiter: delim };
+  }
+
+  return {
+    foldText: foldText,
+    headerSig: headerSig,
+    decodeText: decodeText,
+    inflateRaw: inflateRaw,
+    unzip: unzip,
+    parseXlsx: parseXlsx,
+    excelSerialToISO: excelSerialToISO,
+    parseCsv: parseCsv,
+    detectDelimiter: detectDelimiter,
+    parseAmountBank: parseAmountBank,
+    parseDateBank: parseDateBank,
+    detectDateFormat: detectDateFormat,
+    detectMapping: detectMapping,
+    applyMapping: applyMapping,
+    parseOfx: parseOfx,
+    parseQif: parseQif,
+    categorize: categorize,
+    matchBuiltin: matchBuiltin,
+    isTransferHint: isTransferHint,
+    isInternalTransferHint: isInternalTransferHint,
+    isCardStatementHint: isCardStatementHint,
+    ruleKeyword: ruleKeyword,
+    labelsSimilar: labelsSimilar,
+    isDuplicateOf: isDuplicateOf,
+    sniffFormat: sniffFormat,
+    parseStatement: parseStatement,
+    KEYWORD_RULES: KEYWORD_RULES
+  };
+});
+
+  /* ---------- bank statement import (client-side only) ---------- */
+  var importState = null;
+
+  function loadImportExtras(raw) {
+    state.importMaps = (raw && raw.importMaps && typeof raw.importMaps === "object") ? raw.importMaps : {};
+    state.importRules = (raw && raw.importRules && typeof raw.importRules === "object") ? raw.importRules : {};
+    state.importHistory = (raw && Array.isArray(raw.importHistory)) ? raw.importHistory : [];
+  }
+  function resetImportExtras() {
+    state.importMaps = {};
+    state.importRules = {};
+    state.importHistory = [];
+  }
+  function updateImportUndoButtons() {
+    var has = !!(state.importHistory && state.importHistory.length);
+    ["btn-undo-import", "btn-undo-import-settings"].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.hidden = !has;
+    });
+  }
+
+  function allKnownTransactions() {
+    var list = (state.transactions || []).slice();
+    var years = {};
+    list.forEach(function (t) { if (t && t.date) years[parseInt(String(t.date).slice(0, 4), 10)] = true; });
+    if (importState && importState.items) {
+      importState.items.forEach(function (it) {
+        if (it.date) years[parseInt(String(it.date).slice(0, 4), 10)] = true;
+      });
+    }
+    Object.keys(years).forEach(function (y) {
+      var n = parseInt(y, 10);
+      if (!isFinite(n)) return;
+      (typeof expandRecurringForYear === "function" ? expandRecurringForYear(n) : []).forEach(function (t) { list.push(t); });
+    });
+    return list;
+  }
+
+  function rememberImportMap() {
+    if (!importState || !importState.map || !importState.map.signature) return;
+    var m = importState.map;
+    state.importMaps[m.signature] = {
+      dateCol: m.dateCol, labelCol: m.labelCol, amountCol: m.amountCol,
+      debitCol: m.debitCol, creditCol: m.creditCol, categoryCol: m.categoryCol,
+      amountMode: m.amountMode, dateFormat: m.dateFormat, invertSign: !!m.invertSign
+    };
+  }
+
+  function applySavedMap(map) {
+    var saved = state.importMaps && state.importMaps[map.signature];
+    if (!saved) return false;
+    ["dateCol", "labelCol", "amountCol", "debitCol", "creditCol", "categoryCol", "amountMode", "dateFormat", "invertSign"].forEach(function (k) {
+      if (saved[k] != null) map[k] = saved[k];
+    });
+    return true;
+  }
+
+  function openBankFilePicker() {
+    var inp = document.getElementById("bank-import-file");
+    if (!inp) return;
+    inp.value = "";
+    inp.click();
+  }
+
+  function readFileAsBuffer(file) {
+    return new Promise(function (resolve, reject) {
+      var r = new FileReader();
+      r.onload = function () { resolve(r.result); };
+      r.onerror = function () { reject(r.error || new Error("Lecture impossible")); };
+      r.readAsArrayBuffer(file);
+    });
+  }
+
+  function startBankImport(file) {
+    if (!file) return;
+    toast("Lecture du relevé…");
+    readFileAsBuffer(file).then(function (buf) {
+      return BankImport.parseStatement(file.name, buf);
+    }).then(function (parsed) {
+      if (parsed.error) {
+        openModal(
+          '<h3 id="modal-title">Import du relevé</h3>' +
+          '<p class="hint" style="margin-bottom:14px">' + esc(parsed.error) + "</p>" +
+          '<div class="modal-actions"><button type="button" class="btn btn-primary" id="btn-cancel-modal">Compris</button></div>'
+        );
+        return;
+      }
+      var recalled = applySavedMap(parsed.map);
+      if (recalled) parsed.records = BankImport.applyMapping(parsed.rows, parsed.map);
+      importState = {
+        parsed: parsed,
+        map: parsed.map,
+        filename: file.name,
+        recalled: recalled,
+        excludeTransfers: true,
+        items: []
+      };
+      rebuildImportItems(true);
+      renderImportWizard();
+    }).catch(function (err) {
+      openModal(
+        '<h3 id="modal-title">Import du relevé</h3>' +
+        '<p>Impossible de lire ce fichier. ' + esc((err && err.message) || String(err)) + "</p>" +
+        '<div class="modal-actions"><button type="button" class="btn btn-primary" id="btn-cancel-modal">Fermer</button></div>'
+      );
+    });
+  }
+
+  function rebuildImportItems(resetUser) {
+    if (!importState) return;
+    var prev = {};
+    if (!resetUser && importState.items) {
+      importState.items.forEach(function (it) {
+        prev[it.rowIndex] = it;
+      });
+    }
+    var recs = BankImport.applyMapping(importState.parsed.rows, importState.map);
+    importState.parsed.records = recs;
+    var seen = {};
+    var existing = allKnownTransactions();
+    importState.items = recs.map(function (rec) {
+      var old = prev[rec.rowIndex];
+      var cat = BankImport.categorize(rec.label, rec.bankCategory, state.importRules, rec.amount);
+      var type = (isFinite(rec.amount) && rec.amount > 0) ? "revenu" : "depense";
+      if (cat.categoryId === "epargne" && type === "depense") type = "epargne";
+      var internal = BankImport.isInternalTransferHint(rec.label);
+      var card = BankImport.isCardStatementHint(rec.label);
+      if (old && !resetUser && old.userSet) {
+        type = old.type;
+        cat = { categoryId: old.categoryId, subcategoryId: old.subcategoryId, via: old.via };
+      } else if (importState.excludeTransfers !== false && internal) {
+        type = "exclu";
+      }
+      var item = {
+        rowIndex: rec.rowIndex,
+        date: rec.date,
+        dateRaw: rec.dateRaw,
+        label: rec.label,
+        amount: rec.amount,
+        bankCategory: rec.bankCategory,
+        type: type,
+        categoryId: cat.categoryId,
+        subcategoryId: cat.subcategoryId,
+        via: cat.via,
+        included: true,
+        userSet: !!(old && old.userSet),
+        dupExisting: false,
+        dupInFile: false,
+        transfer: internal || card,
+        internal: internal,
+        card: card,
+        savingsOver: false
+      };
+      if (old && old.userSet) item.included = old.included;
+      var key = (item.date || "") + "|" + BankImport.foldText(item.label) + "|" + (isFinite(item.amount) ? Math.round(Math.abs(item.amount) * 100) : "");
+      if (seen[key]) item.dupInFile = true;
+      else seen[key] = true;
+      var ex;
+      for (var i = 0; i < existing.length; i++) {
+        if (BankImport.isDuplicateOf(item, existing[i])) { item.dupExisting = true; break; }
+      }
+      if (item.dupExisting && !item.userSet) item.included = false;
+      return item;
+    });
+    flagImportSavings();
+  }
+
+  function flagImportSavings() {
+    if (!importState) return;
+    var added = {};
+    importState.items.forEach(function (it) {
+      it.savingsOver = false;
+      if (it.type !== "epargne") return;
+      if (!it.date || !isFinite(it.amount)) return;
+      var p = parseYMD(it.date);
+      if (!p.y) return;
+      var key = monthKey(p.y, p.m);
+      var cf = monthCashflow(p.y, p.m, null);
+      var used = added[key] || 0;
+      var avail = moneyCents(cf.available) - used;
+      if (moneyCents(Math.abs(it.amount)) > avail) {
+        it.savingsOver = true;
+        if (!it.userSet) it.included = false;
+      }
+      if (it.included) added[key] = used + moneyCents(Math.abs(it.amount));
+    });
+  }
+
+  function importColOptions(map, selected, noneLabel) {
+    var html = '<option value="-1">' + esc(noneLabel || "—") + "</option>";
+    (map.headers || []).forEach(function (h, i) {
+      html += '<option value="' + i + '"' + (i === selected ? " selected" : "") + ">" + esc((i + 1) + " · " + (h || ("Colonne " + (i + 1)))) + "</option>";
+    });
+    return html;
+  }
+
+  function importCatOptions(selected, type) {
+    var kind = (type === "revenu") ? "revenu" : (type === "retrait" || type === "epargne" ? "epargne" : "depense");
+    return categoryOptions(selected, kind === "epargne" ? "retrait" : (kind === "revenu" ? "revenu" : "depense"));
+  }
+
+  function importSubOptions(catId, selected) {
+    var html = '<option value="">—</option>';
+    subsOf(catId).forEach(function (s) {
+      html += '<option value="' + esc(s.id) + '"' + (s.id === selected ? " selected" : "") + ">" + esc(s.name) + "</option>";
+    });
+    return html;
+  }
+
+  function renderImportWizard() {
+    if (!importState) return;
+    var map = importState.map;
+    var items = importState.items || [];
+    var kindLabel = { csv: "CSV / texte", xlsx: "Excel (.xlsx)", ofx: "OFX / QFX", qif: "QIF" }[importState.parsed.kind] || importState.parsed.kind;
+    var html = '<div class="import-wizard">';
+    html += '<h3 id="modal-title">Importer un relevé bancaire</h3>';
+    html += '<p class="hint">Fichier : <strong>' + esc(importState.filename) + "</strong> · format détecté : " + esc(kindLabel) +
+      (importState.recalled ? " · colonnes mémorisées pour cette banque" : "") +
+      ". Aucune donnée n’est envoyée vers un serveur.</p>";
+    html += '<div class="import-map">';
+    html += '<div class="form-row"><label>Date</label><select id="imp-col-date">' + importColOptions(map, map.dateCol, "Non détectée") + "</select></div>";
+    html += '<div class="form-row"><label>Libellé</label><select id="imp-col-label">' + importColOptions(map, map.labelCol, "Non détecté") + "</select></div>";
+    html += '<div class="form-row"><label>Montant (signé)</label><select id="imp-col-amount">' + importColOptions(map, map.amountCol, "Utiliser Débit / Crédit") + "</select></div>";
+    html += '<div class="form-row"><label>Débit</label><select id="imp-col-debit">' + importColOptions(map, map.debitCol) + "</select></div>";
+    html += '<div class="form-row"><label>Crédit</label><select id="imp-col-credit">' + importColOptions(map, map.creditCol) + "</select></div>";
+    html += '<div class="form-row"><label>Catégorie banque</label><select id="imp-col-category">' + importColOptions(map, map.categoryCol) + "</select></div>";
+    html += '<div class="form-row"><label>Format de date</label><select id="imp-date-format">';
+    [["auto","Auto (détecté)"],["dmy","jj/mm/aaaa"],["ymd","aaaa-mm-jj"],["mdy","mm/jj/aaaa"],["excel","Série Excel"]].forEach(function (p) {
+      var sel = (map.dateFormat === p[0] || (p[0] === "auto" && !map.dateFormat)) ? " selected" : "";
+      if (p[0] !== "auto" && map.dateFormat === p[0]) sel = " selected";
+      html += '<option value="' + p[0] + '"' + (map.dateFormat === p[0] ? " selected" : "") + ">" + p[1] + "</option>";
+    });
+    html += "</select></div>";
+    html += '<div class="form-row check-row" style="justify-content:flex-start;align-items:center"><label><input type="checkbox" id="imp-invert"' + (map.invertSign ? " checked" : "") + "/> Inverser les signes</label></div>";
+    html += '<div class="form-row check-row" style="justify-content:flex-start;align-items:flex-start;flex-direction:column;gap:4px">';
+    html += '<label><input type="checkbox" id="imp-exclude-transfers"' + (importState.excludeTransfers !== false ? " checked" : "") + "/> Exclure les virements internes détectés</label>";
+    html += '<p class="hint">Coché par défaut : les virements entre vos comptes (VIR INTERNE, etc.) sont importés avec le type « Virement interne (exclu) » et n’entrent pas dans les totaux. Les lignes « relevé carte » restent incluses, car elles correspondent souvent à de vraies dépenses.</p>';
+    html += "</div></div>";
+
+    var q = (importState.filter || "").toLowerCase();
+    var visible = items.filter(function (it) {
+      if (!q) return true;
+      return (it.label + " " + (it.date || "")).toLowerCase().indexOf(q) !== -1;
+    });
+    var nInc = items.filter(function (it) { return it.included && it.date && isFinite(it.amount); }).length;
+    var nSkip = items.filter(function (it) { return it.dupExisting; }).length;
+    var nOver = items.filter(function (it) { return it.savingsOver; }).length;
+
+    html += '<div class="import-toolbar">';
+    html += '<input type="search" id="imp-filter" placeholder="Filtrer les lignes…" value="' + esc(importState.filter || "") + '"/>';
+    html += '<button type="button" class="btn btn-sm" id="imp-check-all">Tout cocher</button>';
+    html += '<button type="button" class="btn btn-sm" id="imp-uncheck-all">Tout décocher</button>';
+    html += '<select id="imp-bulk-cat" aria-label="Catégorie à appliquer"><option value="">Catégorie…</option>' + categoryOptions("", null) + "</select>";
+    html += '<button type="button" class="btn btn-sm" id="imp-apply-cat">Appliquer aux lignes cochées</button>';
+    html += "</div>";
+    html += '<p class="hint" id="imp-summary">' + items.length + " ligne" + (items.length > 1 ? "s" : "") + " · " + nInc + " à importer" +
+      (nSkip ? " · " + nSkip + " déjà importée" + (nSkip > 1 ? "s" : "") : "") +
+      (nOver ? " · " + nOver + " versement" + (nOver > 1 ? "s" : "") + " d’épargne au-dessus du disponible (décoché" + (nOver > 1 ? "s" : "") + " par défaut)" : "") +
+      ".</p>";
+    html += '<div class="import-preview table-wrap"><table class="data import-table"><thead><tr>';
+    html += '<th></th><th>Date</th><th>Libellé</th><th class="right">Montant</th><th>Type</th><th>Catégorie</th><th>Sous-cat.</th><th></th>';
+    html += "</tr></thead><tbody>";
+    if (!visible.length) {
+      html += '<tr><td colspan="8" class="hint">Aucune ligne ne correspond au filtre.</td></tr>';
+    }
+    visible.forEach(function (it) {
+      var invalid = !it.date || !isFinite(it.amount);
+      var amt = isFinite(it.amount) ? fmtMoneySigned(Math.abs(it.amount), it.amount >= 0 ? "revenu" : "depense") : "—";
+      html += '<tr data-imp-row="' + it.rowIndex + '"' + (it.included ? "" : ' class="imp-skipped"') + ">";
+      html += '<td><input type="checkbox" data-imp-inc="' + it.rowIndex + '"' + (it.included ? " checked" : "") + (invalid ? " disabled" : "") + "/></td>";
+      html += "<td>" + (it.date ? esc(it.date.split("-").reverse().join("/")) : '<span class="badge warn">Date ?</span>') + "</td>";
+      html += "<td>" + esc(it.label || "—") + "</td>";
+      html += '<td class="right num">' + (invalid && !isFinite(it.amount) ? '<span class="badge warn">Montant ?</span>' : amt) + "</td>";
+      html += "<td><select data-imp-type=\"" + it.rowIndex + "\">";
+      [["depense","Dépense"],["revenu","Revenu"],["epargne","Épargne (versement)"],["retrait","Retrait d'épargne"],["exclu","Virement interne (exclu)"]].forEach(function (p) {
+        html += '<option value="' + p[0] + '"' + (it.type === p[0] ? " selected" : "") + ">" + p[1] + "</option>";
+      });
+      html += "</select></td>";
+      html += "<td><select data-imp-cat=\"" + it.rowIndex + "\">" + importCatOptions(it.categoryId, it.type) + "</select></td>";
+      html += "<td><select data-imp-sub=\"" + it.rowIndex + "\">" + importSubOptions(it.type === "epargne" || it.type === "retrait" ? "epargne" : it.categoryId, it.subcategoryId) + "</select></td>";
+      html += "<td>";
+      if (it.dupExisting) html += '<span class="badge dup">Déjà importé</span> ';
+      if (it.dupInFile) html += '<span class="badge">Doublon (fichier)</span> ';
+      if (it.internal) html += '<span class="badge">Virement interne</span> ';
+      else if (it.card) html += '<span class="badge">Relevé carte</span> ';
+      else if (it.transfer) html += '<span class="badge">Virement / carte</span> ';
+      if (it.savingsOver) html += '<span class="badge warn">Dépasse l’épargne dispo.</span> ';
+      html += "</td></tr>";
+    });
+    html += "</tbody></table></div>";
+    html += '<div class="modal-actions">';
+    html += '<button type="button" class="btn btn-ghost" id="btn-cancel-modal">Annuler</button>';
+    html += '<button type="button" class="btn btn-primary" id="imp-confirm">Importer ' + nInc + " opération" + (nInc > 1 ? "s" : "") + "</button>";
+    html += "</div></div>";
+    openModal(html);
+    var modal = document.getElementById("modal");
+    if (modal) modal.classList.add("wide");
+  }
+
+  function importItemByRow(rowIndex) {
+    if (!importState) return null;
+    for (var i = 0; i < importState.items.length; i++) {
+      if (importState.items[i].rowIndex === rowIndex) return importState.items[i];
+    }
+    return null;
+  }
+
+  function readImportMappingFromForm() {
+    if (!importState || !document.getElementById("imp-col-date")) return;
+    var map = importState.map;
+    function num(id) { var el = document.getElementById(id); return el ? parseInt(el.value, 10) : -1; }
+    map.dateCol = num("imp-col-date");
+    map.labelCol = num("imp-col-label");
+    map.amountCol = num("imp-col-amount");
+    map.debitCol = num("imp-col-debit");
+    map.creditCol = num("imp-col-credit");
+    map.categoryCol = num("imp-col-category");
+    var fmt = (document.getElementById("imp-date-format") || {}).value || "dmy";
+    map.dateFormat = fmt === "auto" ? "dmy" : fmt;
+    map.invertSign = !!(document.getElementById("imp-invert") || {}).checked;
+    if (map.debitCol >= 0 && map.creditCol >= 0) { map.amountMode = "debit-credit"; }
+    else { map.amountMode = "signed"; }
+  }
+
+  function onImportMappingChange() {
+    readImportMappingFromForm();
+    rebuildImportItems(false);
+    importState.filter = (document.getElementById("imp-filter") || {}).value || "";
+    renderImportWizard();
+  }
+
+  function confirmBankImport() {
+    if (!importState) return;
+    var items = importState.items.filter(function (it) { return it.included && it.date && isFinite(it.amount); });
+    if (!items.length) { toast("Aucune ligne à importer. Cochez au moins une opération."); return; }
+    rememberImportMap();
+    var batchId = uid();
+    var ids = [];
+    var totIn = 0, totOut = 0, nInc = 0, nExp = 0, nSav = 0, nExcl = 0;
+    items.forEach(function (it) {
+      var type = it.type;
+      var cat = it.categoryId;
+      var sub = it.subcategoryId;
+      var excluded = (type === "exclu");
+      if (excluded) {
+        type = (isFinite(it.amount) && it.amount >= 0) ? "revenu" : "depense";
+        nExcl++;
+      }
+      if (type === "epargne") {
+        var ep = state.categories.find(function (c) { return c.id === "epargne"; }) || state.categories.find(function (c) { return isEpargne(c.id); });
+        if (ep) cat = ep.id;
+        type = "depense";
+        sub = sanitizeSubId(cat, sub);
+        nSav++;
+      } else if (type === "retrait") {
+        var ep2 = state.categories.find(function (c) { return c.id === "epargne"; }) || state.categories.find(function (c) { return isEpargne(c.id); });
+        if (ep2) cat = ep2.id;
+        sub = sanitizeSubId(cat, sub);
+      } else {
+        var cobj = catById(cat);
+        if (type === "revenu" && cobj.kind !== "revenu") cat = "autres-revenus";
+        if (type === "depense" && cobj.kind === "revenu") cat = "divers";
+        sub = sanitizeSubId(cat, sub);
+      }
+      var id = uid();
+      state.transactions.push({
+        id: id,
+        date: it.date,
+        type: type,
+        amount: Math.abs(it.amount),
+        categoryId: cat,
+        subcategoryId: sub,
+        description: it.label || "Opération importée",
+        demo: false,
+        source: "bank",
+        importId: batchId,
+        excluded: excluded
+      });
+      ids.push(id);
+      if (!excluded) {
+        if (type === "revenu") { totIn += Math.abs(it.amount); nInc++; }
+        else { totOut += Math.abs(it.amount); nExp++; }
+      }
+      var kw = BankImport.ruleKeyword(it.label);
+      if (kw && !excluded) {
+        state.importRules[kw] = { categoryId: cat, subcategoryId: sub || null };
+      }
+    });
+    state.importHistory.push({
+      id: batchId,
+      at: new Date().toISOString(),
+      filename: importState.filename,
+      ids: ids,
+      count: ids.length
+    });
+    persist();
+    closeModal();
+    renderAll();
+    var parts = [ids.length + " opération" + (ids.length > 1 ? "s" : "") + " importée" + (ids.length > 1 ? "s" : "")];
+    if (nInc) parts.push("revenus " + fmtMoney(totIn));
+    if (nExp) parts.push("dépenses " + fmtMoney(totOut));
+    if (nSav) parts.push(nSav + " versement" + (nSav > 1 ? "s" : "") + " d’épargne");
+    if (nExcl) parts.push(nExcl + " virement" + (nExcl > 1 ? "s" : "") + " interne" + (nExcl > 1 ? "s" : "") + " exclu" + (nExcl > 1 ? "s" : "") + " des totaux");
+    toast(parts.join(" · ") + ".");
+  }
+
+  function undoLastImport() {
+    if (!state.importHistory || !state.importHistory.length) {
+      toast("Aucun import à annuler.");
+      return;
+    }
+    var last = state.importHistory[state.importHistory.length - 1];
+    var n = (last.ids || []).length;
+    if (!confirm("Annuler le dernier import" + (last.filename ? " (« " + last.filename + " »)" : "") + " ? " + n + " opération" + (n > 1 ? "s" : "") + " seront supprimée" + (n > 1 ? "s" : "") + ".")) return;
+    var ids = {};
+    (last.ids || []).forEach(function (id) { ids[id] = true; });
+    state.transactions = state.transactions.filter(function (t) { return !ids[t.id]; });
+    state.importHistory.pop();
+    persist();
+    renderAll();
+    toast("Dernier import annulé (" + n + " ligne" + (n > 1 ? "s" : "") + ").");
+  }
+
+  function handleImportWizardEvent(e) {
+    if (!importState || !e.target) return false;
+    var t = e.target;
+    var id = t.id || "";
+    if (id === "imp-col-date" || id === "imp-col-label" || id === "imp-col-amount" || id === "imp-col-debit" || id === "imp-col-credit" || id === "imp-col-category" || id === "imp-date-format" || id === "imp-invert") {
+      onImportMappingChange();
+      return true;
+    }
+    if (id === "imp-exclude-transfers") {
+      importState.excludeTransfers = !!t.checked;
+      rebuildImportItems(false);
+      renderImportWizard();
+      return true;
+    }
+    if (id === "imp-filter" && e.type === "input") {
+      importState.filter = t.value || "";
+      renderImportWizard();
+      var el = document.getElementById("imp-filter");
+      if (el) { el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch (err) {} }
+      return true;
+    }
+    if (id === "imp-check-all" || id === "imp-uncheck-all") {
+      var on = id === "imp-check-all";
+      importState.items.forEach(function (it) {
+        if (it.date && isFinite(it.amount)) { it.included = on; it.userSet = true; }
+      });
+      flagImportSavings();
+      renderImportWizard();
+      return true;
+    }
+    if (id === "imp-apply-cat") {
+      var cat = (document.getElementById("imp-bulk-cat") || {}).value || "";
+      if (!cat) { toast("Choisissez une catégorie à appliquer."); return true; }
+      importState.items.forEach(function (it) {
+        if (!it.included) return;
+        it.categoryId = cat;
+        it.subcategoryId = null;
+        it.userSet = true;
+        if (cat === "epargne" && it.type === "depense") it.type = "epargne";
+      });
+      flagImportSavings();
+      renderImportWizard();
+      return true;
+    }
+    if (id === "imp-confirm") { confirmBankImport(); return true; }
+    var inc = t.getAttribute && t.getAttribute("data-imp-inc");
+    if (inc != null && e.type === "change") {
+      var it = importItemByRow(parseInt(inc, 10));
+      if (it) { it.included = !!t.checked; it.userSet = true; flagImportSavings(); renderImportWizard(); }
+      return true;
+    }
+    var typ = t.getAttribute && t.getAttribute("data-imp-type");
+    if (typ != null && e.type === "change") {
+      var it2 = importItemByRow(parseInt(typ, 10));
+      if (it2) {
+        it2.type = t.value;
+        it2.userSet = true;
+        if (it2.type === "epargne" || it2.type === "retrait") {
+          var ep = state.categories.find(function (c) { return c.id === "epargne"; });
+          if (ep) it2.categoryId = ep.id;
+        } else if (it2.type === "revenu" && catById(it2.categoryId).kind !== "revenu") it2.categoryId = "salaire";
+        else if (it2.type === "depense" && catById(it2.categoryId).kind === "revenu") it2.categoryId = "divers";
+        it2.subcategoryId = sanitizeSubId(it2.categoryId, it2.subcategoryId);
+        flagImportSavings();
+        renderImportWizard();
+      }
+      return true;
+    }
+    var cattr = t.getAttribute && t.getAttribute("data-imp-cat");
+    if (cattr != null && e.type === "change") {
+      var it3 = importItemByRow(parseInt(cattr, 10));
+      if (it3) {
+        it3.categoryId = t.value;
+        it3.subcategoryId = null;
+        it3.userSet = true;
+        if (it3.categoryId === "epargne" && it3.type === "depense") it3.type = "epargne";
+        flagImportSavings();
+        renderImportWizard();
+      }
+      return true;
+    }
+    var sattr = t.getAttribute && t.getAttribute("data-imp-sub");
+    if (sattr != null && e.type === "change") {
+      var it4 = importItemByRow(parseInt(sattr, 10));
+      if (it4) { it4.subcategoryId = t.value || null; it4.userSet = true; }
+      return true;
+    }
+    return false;
   }
 
   /* ---------- modal ---------- */
@@ -3109,7 +5152,10 @@
   }
   function closeModal() {
     document.getElementById("modal-overlay").classList.remove("open");
-    document.getElementById("modal").innerHTML = "";
+    var modal = document.getElementById("modal");
+    modal.innerHTML = "";
+    modal.className = "modal";
+    importState = null;
   }
 
   function categoryOptions(selected, kind) {
@@ -3156,6 +5202,8 @@
       '<label class="' + (t.type === "depense" ? "on-depense" : "") + '"><input type="radio" name="type" value="depense"' + (t.type === "depense" ? " checked" : "") + '/> Dépense</label>' +
       '<label class="' + (t.type === "retrait" ? "on-retrait" : "") + '"><input type="radio" name="type" value="retrait"' + (t.type === "retrait" ? " checked" : "") + '/> Retrait épargne</label>' +
       "</div></div>" +
+      '<div class="form-row check-row"><label><input type="checkbox" id="f-excluded"' + (t.excluded ? " checked" : "") + '/> Virement interne (exclu des totaux)</label>' +
+      '<div class="hint">La ligne reste visible dans la liste (grisée, badge Exclu) mais est retirée des revenus, dépenses, épargne, solde, cash, budgets et calculatrice.</div></div>' +
       '<div class="form-grid">' +
       '<div class="form-row"><label for="f-date">Date</label><input id="f-date" name="date" type="date" required value="' + esc(t.date) + '"/></div>' +
       '<div class="form-row"><label for="f-amount">Montant (€)</label><input id="f-amount" name="amount" type="text" inputmode="decimal" required placeholder="0,00" value="' + (t.amount !== "" && t.amount != null ? String(t.amount).replace(".", ",") : "") + '"/></div>' +
@@ -3272,6 +5320,7 @@
 
   function saveTxFromForm(form) {
     const type = (form.querySelector('input[name="type"]:checked') || {}).value;
+    var excluded = !!(form.querySelector("#f-excluded") || {}).checked;
     const date = form.date.value;
     const amount = parseAmount(form.amount.value);
     const categoryId = form.categoryId.value;
@@ -3320,7 +5369,7 @@
       if (scope === "one") {
         const mk = date.slice(0, 7);
         state.overrides = state.overrides.filter(function (o) { return !(o.recurringId === recId && o.month === mk); });
-        state.overrides.push({ recurringId: recId, month: mk, date: date, type: type, amount: amount, categoryId: finalCat, subcategoryId: finalSub, description: description, deleted: false });
+        state.overrides.push({ recurringId: recId, month: mk, date: date, type: type, amount: amount, categoryId: finalCat, subcategoryId: finalSub, description: description, deleted: false, excluded: excluded });
       } else {
         const rec = state.recurring.find(function (r) { return r.id === recId; });
         if (rec) {
@@ -3334,6 +5383,7 @@
           rec.endDate = endDate;
           rec.frequency = freq;
           rec.subcategoryId = finalSub;
+          rec.excluded = excluded;
           if (freq === "monthly") rec.months = monthsSel;
           else delete rec.months;
         }
@@ -3343,14 +5393,14 @@
       if (!existingTx) return;
       if (recurring && !existingTx.recurring) {
         state.transactions = state.transactions.filter(function (x) { return x.id !== editId; });
-        state.recurring.push({ id: uid(), startDate: date, type: type, amount: amount, categoryId: finalCat, subcategoryId: finalSub, description: description, endDate: endDate, frequency: freq, months: freq === "monthly" ? monthsSel : undefined, demo: !!existingTx.demo });
+        state.recurring.push({ id: uid(), startDate: date, type: type, amount: amount, categoryId: finalCat, subcategoryId: finalSub, description: description, endDate: endDate, frequency: freq, months: freq === "monthly" ? monthsSel : undefined, demo: !!existingTx.demo, excluded: excluded });
       } else {
-        existingTx.date = date; existingTx.type = type; existingTx.amount = amount; existingTx.categoryId = finalCat; existingTx.subcategoryId = finalSub; existingTx.description = description;
+        existingTx.date = date; existingTx.type = type; existingTx.amount = amount; existingTx.categoryId = finalCat; existingTx.subcategoryId = finalSub; existingTx.description = description; existingTx.excluded = excluded;
       }
     } else if (recurring) {
-      state.recurring.push({ id: uid(), startDate: date, type: type, amount: amount, categoryId: finalCat, subcategoryId: finalSub, description: description, endDate: endDate, frequency: freq, months: freq === "monthly" ? monthsSel : undefined, demo: false });
+      state.recurring.push({ id: uid(), startDate: date, type: type, amount: amount, categoryId: finalCat, subcategoryId: finalSub, description: description, endDate: endDate, frequency: freq, months: freq === "monthly" ? monthsSel : undefined, demo: false, excluded: excluded });
     } else {
-      state.transactions.push({ id: uid(), date: date, type: type, amount: amount, categoryId: finalCat, subcategoryId: finalSub, description: description, demo: false });
+      state.transactions.push({ id: uid(), date: date, type: type, amount: amount, categoryId: finalCat, subcategoryId: finalSub, description: description, demo: false, excluded: excluded });
     }
     persist();
     closeModal();
@@ -3703,7 +5753,10 @@
         initialBalance: Number((state.savings || {}).initialBalance) || 0,
         goal: Number((state.savings || {}).goal) || 0,
         demo: !!((state.savings || {}).demo)
-      }
+      },
+      importMaps: state.importMaps || {},
+      importRules: state.importRules || {},
+      importHistory: state.importHistory || []
     };
     downloadBlob("mon-budget-sauvegarde.json", "application/json", JSON.stringify(payload, null, 2));
     toast("Sauvegarde JSON téléchargée.");
@@ -3741,18 +5794,20 @@
       csvMoney(tot.disponible)
     ].join(";"));
     lines.push("");
-    const header = ["Date", "Type", "Montant", "Catégorie", "Sous-catégorie", "Description", "Récurrent", "Exemple"];
+    const header = ["Date", "Type", "Montant", "Catégorie", "Sous-catégorie", "Description", "Récurrent", "Exemple", "Exclu"];
     lines.push(header.join(";"));
     list.forEach(function (t) {
+      var typLabel = t.excluded ? "Virement interne (exclu)" : (t.type === "revenu" ? "Revenu" : (t.type === "retrait" ? "Retrait d'épargne" : "Dépense"));
       lines.push([
         t.date,
-        t.type === "revenu" ? "Revenu" : (t.type === "retrait" ? "Retrait d'épargne" : "Dépense"),
+        typLabel,
         String(t.amount).replace(".", ","),
         csvEscape(catById(t.categoryId).name),
         csvEscape(subName(t.categoryId, t.subcategoryId)),
         csvEscape(t.description || ""),
         t.recurring ? (recFrequency(t) === "yearly" ? "annuel" : "mensuel") : "non",
-        t.demo ? "oui" : "non"
+        t.demo ? "oui" : "non",
+        t.excluded ? "oui" : "non"
       ].join(";"));
     });
     downloadBlob("mon-budget-" + state.year + ".csv", "text/csv;charset=utf-8", "\uFEFF" + lines.join("\n"));
@@ -3778,6 +5833,7 @@
     }
     if (data.year) state.year = data.year;
     if (data.theme === "dark" || data.theme === "light" || data.theme === "auto") state.theme = data.theme;
+    loadImportExtras(data);
     persist(); applyTheme(); renderAll(); toast("Sauvegarde importée.");
   }
   function resetAll() {
@@ -3801,6 +5857,7 @@
     state.year = 2026;
     state.theme = "auto";
     state.calc = defaultCalc();
+    resetImportExtras();
     persist();
     applyTheme();
     closeModal();
@@ -3887,6 +5944,29 @@
     });
     on(document.getElementById("filter-subcategory"), "change", function (e) { state.filters.subcategoryId = e.target.value; renderTransactions(); });
     on(document.getElementById("filter-type"), "change", function (e) { state.filters.type = e.target.value; renderTransactions(); });
+    on(document.getElementById("tx-chips"), "click", function (e) {
+      var chip = e.target.closest(".chip");
+      if (!chip) return;
+      var q = chip.getAttribute("data-quick") || "";
+      state.filters.type = (state.filters.type === q) ? "" : q;
+      var sel = document.getElementById("filter-type");
+      if (sel) sel.value = state.filters.type;
+      renderTransactions();
+    });
+    on(document.getElementById("tx-check-all"), "change", function (e) {
+      selectAllFiltered(!!e.target.checked);
+    });
+    on(document.getElementById("btn-select-transfers"), "click", function () {
+      selectAllInternalTransfers();
+    });
+    on(document.getElementById("tx-bulk-bar"), "click", function (e) {
+      var btn = e.target.closest("button");
+      if (!btn) return;
+      if (btn.id === "btn-bulk-delete") openBulkDeleteModal();
+      if (btn.id === "btn-bulk-cat") openBulkCategoryModal();
+      if (btn.id === "btn-bulk-type") openBulkTypeModal();
+      if (btn.id === "btn-bulk-clear") clearSelection();
+    });
     on(document.getElementById("filter-sort"), "change", function (e) { state.filters.sort = e.target.value; renderTransactions(); });
     on(document.getElementById("filter-search"), "input", function (e) { state.filters.search = e.target.value; renderTransactions(); });
 
@@ -3918,13 +5998,35 @@
         openStopModal(stop.getAttribute("data-rec"), stop.getAttribute("data-month"));
         return;
       }
+      const check = e.target.closest(".tx-check") || e.target.closest("[data-tx-check]");
+      if (check) {
+        e.stopPropagation();
+        var cid = check.getAttribute("data-tx-check") || check.getAttribute("data-tx");
+        if (cid) {
+          setTxSelected(cid, !!check.checked);
+          var row = check.closest(".tx-item");
+          if (row) row.classList.toggle("selected", !!check.checked);
+          updateBulkBar();
+        }
+        return;
+      }
       const item = e.target.closest(".tx-item");
       if (!item) return;
       const t = findTxById(item.getAttribute("data-tx"));
       if (t) openTxModal(t);
     });
+    on(document.getElementById("tx-list"), "change", function (e) {
+      var check = e.target.closest(".tx-check");
+      if (!check) return;
+      var cid = check.getAttribute("data-tx-check");
+      if (!cid) return;
+      setTxSelected(cid, !!check.checked);
+      var row = check.closest(".tx-item");
+      if (row) row.classList.toggle("selected", !!check.checked);
+      updateBulkBar();
+    });
     on(document.getElementById("tx-list"), "keydown", function (e) {
-      if (e.target.closest(".btn-stop-rec")) return;
+      if (e.target.closest(".btn-stop-rec") || e.target.closest(".tx-check")) return;
       if (e.key !== "Enter" && e.key !== " ") return;
       const item = e.target.closest(".tx-item");
       if (!item) return;
@@ -3993,6 +6095,15 @@
     on(document.getElementById("btn-export-json"), "click", exportJSON);
     on(document.getElementById("btn-export-csv"), "click", exportCSV);
     on(document.getElementById("btn-import-json"), "click", function () { document.getElementById("import-file").click(); });
+    on(document.getElementById("btn-import-bank"), "click", openBankFilePicker);
+    on(document.getElementById("btn-import-bank-settings"), "click", openBankFilePicker);
+    on(document.getElementById("btn-undo-import"), "click", undoLastImport);
+    on(document.getElementById("btn-undo-import-settings"), "click", undoLastImport);
+    on(document.getElementById("bank-import-file"), "change", function (e) {
+      var f = e.target.files && e.target.files[0];
+      if (f) startBankImport(f);
+      e.target.value = "";
+    });
     on(document.getElementById("import-file"), "change", function (e) {
       const file = e.target.files && e.target.files[0];
       e.target.value = "";
@@ -4005,6 +6116,7 @@
 
     const overlay = document.getElementById("modal-overlay");
     on(overlay, "click", function (e) { if (e.target === overlay) closeModal(); });
+    on(overlay, "click", function (e) { if (handleImportWizardEvent(e)) e.preventDefault(); });
     on(overlay, "click", function (e) {
       if (e.target.id === "btn-cancel-modal") closeModal();
       if (e.target.id === "btn-delete-tx") {
@@ -4016,6 +6128,9 @@
       if (e.target.id === "btn-del-one") deleteOccurrence(e.target.getAttribute("data-rec"), e.target.getAttribute("data-date"));
       if (e.target.id === "btn-del-one-off") deleteOneOff(e.target.getAttribute("data-id"));
       if (e.target.id === "btn-reset-confirm") doReset();
+      if (e.target.id === "btn-bulk-delete-confirm") applyBulkDelete();
+      if (e.target.id === "btn-bulk-cat-apply") applyBulkCategory();
+      if (e.target.id === "btn-bulk-type-apply") applyBulkType();
       if (e.target.id === "btn-stop-confirm") {
         var recId = e.target.getAttribute("data-rec");
         var rec = state.recurring.find(function (r) { return r.id === recId; });
@@ -4044,6 +6159,7 @@
     });
     on(overlay, "change", function (e) {
       if (!e.target) return;
+      if (handleImportWizardEvent(e)) return;
       if (e.target.name === "type" || e.target.name === "frequency" || e.target.id === "f-scope" || e.target.id === "f-cat" || e.target.name === "months") syncTxFormUI();
       if (e.target.id === "f-subcat") {
         var form = e.target.closest("#tx-form");
@@ -4056,6 +6172,7 @@
     });
     on(overlay, "input", function (e) {
       if (!e.target) return;
+      if (handleImportWizardEvent(e)) return;
       if (e.target.id === "f-date" || e.target.id === "f-amount") {
         var form = e.target.closest("#tx-form");
         if (form) updateSavingsAvailHint(form);
