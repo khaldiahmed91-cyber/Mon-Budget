@@ -260,6 +260,47 @@
       accent-color: var(--accent); cursor: pointer;
     }
     .badge.exclu { background: var(--bg-muted); color: var(--text-muted); }
+    .btn-interne {
+      font-size: 11px; padding: 4px 8px; border-radius: 8px; flex-shrink: 0; white-space: nowrap;
+      color: var(--text-muted); border-color: var(--border);
+    }
+    .btn-interne.on { background: var(--bg-muted); color: var(--text); border-color: var(--text-muted); font-weight: 700; }
+    .imp-summary-box {
+      display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 0 0 12px;
+      padding: 10px 12px; background: var(--bg-muted); border-radius: 12px; font-size: 13px;
+    }
+    .imp-summary-box strong { font-weight: 700; }
+    .imp-summary-box .s-dep { color: var(--expense); }
+    .imp-summary-box .s-rev { color: var(--income); }
+    .imp-summary-box .s-int { color: var(--text-muted); }
+    .imp-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+    .imp-tabs button {
+      border: 1px solid var(--border); background: var(--bg-elev); color: var(--text);
+      border-radius: 999px; padding: 6px 11px; font-size: 12px; font-weight: 650;
+    }
+    .imp-tabs button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-hover); }
+    .imp-type-badge {
+      display: inline-flex; align-items: center; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .03em; padding: 2px 6px; border-radius: 6px;
+    }
+    .imp-type-badge.depense { background: var(--expense-soft); color: var(--expense); }
+    .imp-type-badge.revenu { background: var(--income-soft); color: var(--income); }
+    .imp-type-badge.exclu, .imp-type-badge.virement { background: var(--bg-muted); color: var(--text-muted); }
+    .imp-type-badge.epargne { background: var(--accent-soft); color: var(--accent-hover); }
+    .imp-type-badge.retrait { background: rgba(0, 206, 201, 0.14); color: #0E8A82; }
+    html[data-theme="dark"] .imp-type-badge.retrait { color: #5EEAE4; }
+    .imp-sample { margin-top: 12px; }
+    .kw-list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; min-height: 28px; }
+    .kw-list li {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg-muted); border-radius: 999px; padding: 4px 8px 4px 10px;
+      font-size: 13px; font-weight: 650;
+    }
+    .kw-list li button { border: 0; background: transparent; color: var(--text-muted); font-size: 16px; line-height: 1; padding: 0 2px; }
+    #app-prompt-overlay.overlay { display: none; position: fixed; inset: 0; z-index: 90;
+      background: rgba(15, 20, 19, 0.45); align-items: flex-start; justify-content: center;
+      padding: calc(24px + var(--safe-t)) 16px 24px; overflow: auto; }
+    #app-prompt-overlay.open { display: flex; }
     .tx-tools { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
     .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .chip {
@@ -387,6 +428,10 @@
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .type-toggle.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .type-toggle.cols-5 { grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 560px) {
+      .type-toggle.cols-5 { grid-template-columns: repeat(5, 1fr); }
+    }
     .type-toggle label {
       display: flex; align-items: center; justify-content: center; gap: 6px;
       padding: 10px; border-radius: 12px; border: 1px solid var(--border);
@@ -397,6 +442,8 @@
     .type-toggle label.on-depense { background: var(--expense-soft); border-color: var(--expense); color: var(--expense); }
     .type-toggle label.on-retrait { background: rgba(0, 206, 201, 0.14); border-color: #00CEC9; color: #0E8A82; }
     html[data-theme="dark"] .type-toggle label.on-retrait { color: #5EEAE4; }
+    .type-toggle label.on-epargne { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-hover); }
+    .type-toggle label.on-virement { background: var(--bg-muted); border-color: var(--text-muted); color: var(--text-muted); }
     .check-row { display: flex; align-items: center; gap: 10px; font-size: 14px; }
     .check-row input { width: 18px; height: 18px; accent-color: var(--accent); }
     .month-chip-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
@@ -995,6 +1042,20 @@
             <button type="button" class="btn btn-sm btn-danger" id="btn-reset">Tout effacer</button>
           </div>
         </article>
+        <article class="card" id="internal-settings">
+          <div class="card-title"><h3>Virements internes</h3></div>
+          <p class="hint" style="margin-bottom:8px">Ajoutez des mots-clés (votre nom, Livret A, un extrait de n° de compte…). Tout libellé qui en contient un est détecté comme virement interne à l’import, et peut être appliqué aux opérations déjà saisies. Ils sont alors exclus des totaux, tout en restant visibles dans la liste.</p>
+          <ul class="kw-list" id="internal-kw-list"></ul>
+          <div class="setting-row">
+            <input id="internal-kw-input" class="field" type="text" maxlength="80" placeholder="Ex. votre nom, LIVRET A, 12345" aria-label="Nouveau mot-clé de virement interne"/>
+            <button type="button" class="btn btn-sm" id="btn-internal-kw-add">Ajouter</button>
+          </div>
+          <div class="hint" id="internal-kw-suggest" hidden></div>
+          <div class="setting-row">
+            <div class="hint">Applique la détection (mots-clés et règles intégrées) aux transactions déjà présentes.</div>
+            <button type="button" class="btn btn-sm" id="btn-internal-apply">Appliquer aux transactions existantes</button>
+          </div>
+        </article>
         <article class="card">
           <div class="card-title"><h3>À propos</h3></div>
           <p class="hint">Application personnelle, sans connexion bancaire. Les données restent dans ce navigateur (stockage local). Pensez à exporter une sauvegarde JSON de temps en temps.</p>
@@ -1146,6 +1207,9 @@
   </div>
   <div class="toast" id="toast" role="status"></div>
   <div id="tx-bulk-bar" class="tx-bulk-bar" hidden></div>
+  <div class="overlay" id="app-prompt-overlay">
+    <div class="modal" id="app-prompt" role="dialog" aria-modal="true" aria-labelledby="prompt-title"></div>
+  </div>
   <script>
 (function () {
   "use strict";
@@ -1198,7 +1262,8 @@
     calc: { years: 30, mode: "year", incomeRate: 0, expenseRate: 0 },
     importMaps: {},
     importRules: {},
-    importHistory: []
+    importHistory: [],
+    internalKeywords: []
   };
 
   let toastTimer = null;
@@ -1352,13 +1417,198 @@
   function isExcluded(t) {
     return !!(t && t.excluded);
   }
+  function internalKeywordList() {
+    return (state.internalKeywords || []).map(function (k) { return String(k || "").trim(); }).filter(Boolean);
+  }
   function isInternalTx(t) {
     if (!t) return false;
     if (isExcluded(t)) return true;
     var label = t.description || t.label || "";
-    if (typeof BankImport !== "undefined" && BankImport.isInternalTransferHint) return BankImport.isInternalTransferHint(label);
+    if (typeof BankImport !== "undefined" && BankImport.isInternalTransferHint) {
+      return BankImport.isInternalTransferHint(label, internalKeywordList());
+    }
     return /vir(?:ement)?\s+interne|transfert\s+interne|vir\s+compte|compte a compte|de compte a compte/i.test(label);
   }
+
+  function openAppPrompt(html) {
+    var ov = document.getElementById("app-prompt-overlay");
+    var box = document.getElementById("app-prompt");
+    if (!ov || !box) return;
+    box.innerHTML = html;
+    ov.classList.add("open");
+    var first = box.querySelector("input, select, button");
+    if (first) setTimeout(function () { first.focus(); }, 30);
+  }
+  function closeAppPrompt() {
+    var ov = document.getElementById("app-prompt-overlay");
+    var box = document.getElementById("app-prompt");
+    if (box) box.innerHTML = "";
+    if (ov) ov.classList.remove("open");
+  }
+  function hasInternalKeyword(kw) {
+    var f = (typeof BankImport !== "undefined" && BankImport.foldText) ? BankImport.foldText(kw) : String(kw || "").toLowerCase();
+    if (!f) return false;
+    return internalKeywordList().some(function (k) {
+      var fk = (typeof BankImport !== "undefined" && BankImport.foldText) ? BankImport.foldText(k) : String(k).toLowerCase();
+      return fk === f;
+    });
+  }
+  function addInternalKeyword(raw, opts) {
+    var kw = String(raw || "").trim();
+    if (kw.length < 3) { toast("Le mot-clé doit faire au moins 3 caractères."); return false; }
+    if (hasInternalKeyword(kw)) { toast("Ce mot-clé est déjà dans la liste."); return false; }
+    state.internalKeywords = internalKeywordList().concat([kw]);
+    persist();
+    renderInternalSettings();
+    toast("Mot-clé « " + kw + " » ajouté.");
+    if (opts && opts.suggestLast === false) return true;
+    var last = (typeof BankImport !== "undefined" && BankImport.lastNameSuggestion) ? BankImport.lastNameSuggestion(kw) : "";
+    if (last && !hasInternalKeyword(last)) {
+      var box = document.getElementById("internal-kw-suggest");
+      if (box) {
+        box.hidden = false;
+        box.innerHTML = "Ajouter aussi le nom « <strong>" + esc(last) + "</strong> » ? <button type=\"button\" class=\"btn btn-sm\" id=\"btn-internal-kw-lastname\" data-kw=\"" + esc(last) + "\">Ajouter " + esc(last) + "</button>";
+      }
+    }
+    return true;
+  }
+  function removeInternalKeyword(kw) {
+    var f = (typeof BankImport !== "undefined" && BankImport.foldText) ? BankImport.foldText(kw) : String(kw || "").toLowerCase();
+    state.internalKeywords = internalKeywordList().filter(function (k) {
+      var fk = (typeof BankImport !== "undefined" && BankImport.foldText) ? BankImport.foldText(k) : String(k).toLowerCase();
+      return fk !== f;
+    });
+    persist();
+    renderInternalSettings();
+  }
+  function renderInternalSettings() {
+    var list = document.getElementById("internal-kw-list");
+    if (!list) return;
+    var kws = internalKeywordList();
+    if (!kws.length) {
+      list.innerHTML = '<li class="hint" style="background:transparent;font-weight:500">Aucun mot-clé pour l’instant.</li>';
+    } else {
+      list.innerHTML = kws.map(function (k) {
+        return "<li>" + esc(k) + ' <button type="button" data-kw-del="' + esc(k) + '" aria-label="Retirer ' + esc(k) + '">×</button></li>';
+      }).join("");
+    }
+  }
+  function txsMatchingInternalDetection(onlyNotExcluded) {
+    var out = [];
+    (state.transactions || []).forEach(function (t) {
+      if (onlyNotExcluded && t.excluded) return;
+      if (isInternalTx(Object.assign({}, t, { excluded: false })) || (typeof BankImport !== "undefined" && BankImport.isInternalTransferHint(t.description, internalKeywordList()))) {
+        if (!t.excluded) out.push(t);
+      }
+    });
+    (state.recurring || []).forEach(function (r) {
+      if (onlyNotExcluded && r.excluded) return;
+      if (BankImport.isInternalTransferHint(r.description, internalKeywordList())) {
+        if (!r.excluded) out.push(r);
+      }
+    });
+    return out;
+  }
+  function applyInternalToExisting() {
+    var hits = txsMatchingInternalDetection(true);
+    var html = '<h3 id="prompt-title">Appliquer aux transactions existantes</h3>';
+    if (!hits.length) {
+      html += "<p>Aucune opération supplémentaire ne correspond aux mots-clés ou aux règles intégrées (Livret, compte à compte, etc.).</p>";
+      html += '<div class="modal-actions"><button type="button" class="btn btn-primary" id="btn-prompt-close">Fermer</button></div>';
+      openAppPrompt(html);
+      return;
+    }
+    html += "<p><strong>" + hits.length + " opération" + (hits.length > 1 ? "s" : "") + "</strong> " + (hits.length > 1 ? "seront marquées" : "sera marquée") + " comme virements internes et exclues des totaux.</p>";
+    html += '<ul class="hint" style="max-height:160px;overflow:auto;margin:0 0 12px;padding-left:18px">';
+    hits.slice(0, 12).forEach(function (t) {
+      html += "<li>" + esc((t.description || t.date || "Opération")) + (t.amount != null ? " · " + esc(fmtMoney(t.amount)) : "") + "</li>";
+    });
+    if (hits.length > 12) html += "<li>… et " + (hits.length - 12) + " de plus</li>";
+    html += "</ul>";
+    html += '<div class="modal-actions"><button type="button" class="btn btn-ghost" id="btn-prompt-close">Annuler</button>';
+    html += '<button type="button" class="btn btn-primary" id="btn-internal-apply-confirm">Appliquer</button></div>';
+    openAppPrompt(html);
+  }
+  function confirmApplyInternalToExisting() {
+    var hits = txsMatchingInternalDetection(true);
+    if (!hits.length) { closeAppPrompt(); return; }
+    bulkSnapshot = snapshotFinance();
+    var ids = {};
+    hits.forEach(function (t) { if (t.id) ids[t.id] = true; });
+    state.transactions.forEach(function (t) { if (ids[t.id]) t.excluded = true; });
+    state.recurring.forEach(function (r) { if (ids[r.id]) r.excluded = true; });
+    persist();
+    closeAppPrompt();
+    renderAll();
+    toastUndo(hits.length + " opération" + (hits.length > 1 ? "s" : "") + " marquées comme virements internes.");
+  }
+  function offerLearnInternal(label, keepWizard) {
+    if (!label || typeof BankImport === "undefined" || !BankImport.suggestInternalKeyword) return;
+    var kw = BankImport.suggestInternalKeyword(label);
+    if (!kw || hasInternalKeyword(kw)) return;
+    var html = '<h3 id="prompt-title">Toujours traiter ce libellé comme interne ?</h3>';
+    html += "<p>Toujours traiter les libellés contenant « <strong id='learn-kw-preview'></strong> » comme virements internes ?</p>";
+    html += '<div class="form-row"><label for="learn-kw-input">Mot-clé</label><input id="learn-kw-input" class="field" type="text" maxlength="80"/></div>';
+    html += '<p class="hint">Vous pourrez retirer ce mot-clé dans Paramètres → Virements internes.</p>';
+    html += '<div class="modal-actions"><button type="button" class="btn btn-ghost" id="btn-prompt-close">Non</button>';
+    html += '<button type="button" class="btn btn-primary" id="btn-learn-kw-yes">Oui, mémoriser</button></div>';
+    openAppPrompt(html);
+    var inp = document.getElementById("learn-kw-input");
+    var prev = document.getElementById("learn-kw-preview");
+    if (inp) inp.value = kw;
+    if (prev) prev.textContent = kw;
+    if (inp) inp.addEventListener("input", function () { if (prev) prev.textContent = inp.value.trim() || kw; });
+  }
+  function acceptLearnKeyword() {
+    var inp = document.getElementById("learn-kw-input");
+    var kw = inp ? inp.value.trim() : "";
+    closeAppPrompt();
+    if (kw) addInternalKeyword(kw, { suggestLast: true });
+  }
+  function toggleInternalTx(id) {
+    if (!id) return;
+    var t = findTxById(id);
+    if (!t) return;
+    bulkSnapshot = snapshotFinance();
+    var on;
+    if (t.recurring && t.recurringId) {
+      var rec = state.recurring.find(function (r) { return r.id === t.recurringId; });
+      if (!rec) return;
+      on = !isExcluded(t);
+      rec.excluded = on;
+      state.overrides.forEach(function (o) {
+        if (o.recurringId === rec.id && !o.deleted) o.excluded = on;
+      });
+    } else {
+      var raw = state.transactions.find(function (x) { return x.id === id; });
+      if (!raw) return;
+      on = !raw.excluded;
+      raw.excluded = on;
+    }
+    persist();
+    renderAll();
+    toastUndo(on ? "Marqué comme virement interne (exclu des totaux)." : "Retiré des virements internes.");
+    if (on) offerLearnInternal(t.description || "", false);
+  }
+  function applyBulkInternal() {
+    if (!selectedItems().length) return;
+    var n = selectedItems().length;
+    var first = selectedItems()[0];
+    bulkSnapshot = snapshotFinance();
+    forEachSelectedTarget(function (raw) {
+      raw.excluded = true;
+    }, function (rec) {
+      rec.excluded = true;
+      state.overrides.forEach(function (o) {
+        if (o.recurringId === rec.id && !o.deleted) o.excluded = true;
+      });
+    });
+    persist();
+    renderAll();
+    toastUndo("Type « virement interne (exclu des totaux) » appliqué à " + n + " opération" + (n > 1 ? "s" : "") + ".");
+    if (first) offerLearnInternal(first.description || "", false);
+  }
+
   function isCardTx(t) {
     if (!t) return false;
     var label = t.description || t.label || "";
@@ -1550,7 +1800,8 @@
       calc: sanitizeCalc(state.calc),
       importMaps: state.importMaps || {},
       importRules: state.importRules || {},
-      importHistory: state.importHistory || []
+      importHistory: state.importHistory || [],
+      internalKeywords: state.internalKeywords || []
     };
     storageSet(JSON.stringify(payload));
     updateStorageBanner();
@@ -2592,6 +2843,7 @@
       '<div class="bulk-meta">' + esc(meta) +
         '<div class="hint">Les séries récurrentes sont traitées en entier.</div>' +
       "</div>" +
+      '<button type="button" class="btn btn-sm" id="btn-bulk-interne">Marquer comme virement interne</button>' +
       '<button type="button" class="btn btn-sm" id="btn-bulk-type">Changer le type</button>' +
       '<button type="button" class="btn btn-sm" id="btn-bulk-cat">Changer la catégorie</button>' +
       '<button type="button" class="btn btn-sm btn-danger" id="btn-bulk-delete">Supprimer</button>' +
@@ -2828,6 +3080,7 @@
       if (t.recurring) {
         html += '<button type="button" class="btn btn-sm btn-stop-rec" data-rec="' + esc(t.recurringId) + '" data-month="' + esc(t.date.slice(0, 7)) + '" title="Arrêter cette série à partir d\'un mois donné">Arrêter…</button>';
       }
+      html += '<button type="button" class="btn btn-sm btn-interne' + (isExcluded(t) ? " on" : "") + '" data-interne="' + esc(t.id) + '" aria-pressed="' + (isExcluded(t) ? "true" : "false") + '" title="Virement interne, exclu des totaux">⇄ Interne</button>';
       var amtKind = isExcluded(t) ? "depense" : (t.type === "retrait" ? "depense" : t.type);
       html += '<div class="amt num ' + (isExcluded(t) ? "" : t.type) + '">' + esc(fmtMoneySigned(t.amount, amtKind)) + "</div></div>";
     });
@@ -3567,6 +3820,7 @@
     renderYearTotalsWidget();
     renderCalculator();
     updateImportUndoButtons();
+    if (typeof renderInternalSettings === "function") renderInternalSettings();
   }
 
 
@@ -4446,13 +4700,18 @@
 
   var INTERNAL_TRANSFER_HINTS = [
     "vir interne", "virement interne", "transfert interne",
-    "vir compte", "de compte a compte", "virement compte a compte"
+    "vir compte", "de compte a compte", "virement compte a compte",
+    "vers mon compte", "de mon compte", "vers votre compte", "de votre compte",
+    "entre comptes", "vers compte joint", "depuis livret", "vers livret"
   ];
   var CARD_STATEMENT_HINTS = [
     "releve carte", "releve cb", "prelevement carte differe",
     "prelevement cb differe", "differe carte", "carte differe"
   ];
   var TRANSFER_HINTS = INTERNAL_TRANSFER_HINTS.concat(CARD_STATEMENT_HINTS);
+  var SAVINGS_PRODUCT_RE = /\b(livret|ldds|lep|pel|cel|epargne|compte joint)\b/;
+  var TRANSFER_VERB_RE = /\b(vir|virement|versement|transfert)\b/;
+  var INCOME_LABEL_RE = /\b(salaire|employeur|payroll|paie|virement salaire|vir salaire)\b/;
 
   function labelHasHint(label, hints) {
     var f = " " + foldText(label) + " ";
@@ -4461,14 +4720,97 @@
     }
     return false;
   }
-  function isInternalTransferHint(label) {
-    return labelHasHint(label, INTERNAL_TRANSFER_HINTS);
+  function isIncomeLikeLabel(label) {
+    return INCOME_LABEL_RE.test(foldText(label));
+  }
+  function isBuiltinInternalTransfer(label) {
+    if (isIncomeLikeLabel(label)) return false;
+    if (labelHasHint(label, INTERNAL_TRANSFER_HINTS)) return true;
+    var f = foldText(label);
+    if (TRANSFER_VERB_RE.test(f) && SAVINGS_PRODUCT_RE.test(f)) return true;
+    return false;
+  }
+  function keywordMatchesLabel(label, keywords) {
+    if (!keywords || !keywords.length || isIncomeLikeLabel(label)) return false;
+    var f = " " + foldText(label) + " ";
+    for (var i = 0; i < keywords.length; i++) {
+      var k = foldText(keywords[i]);
+      if (!k || k.length < 3) continue;
+      if (f.indexOf(" " + k + " ") !== -1 || f.indexOf(k) !== -1) return true;
+    }
+    return false;
+  }
+  function isInternalTransferHint(label, keywords) {
+    return isBuiltinInternalTransfer(label) || keywordMatchesLabel(label, keywords);
   }
   function isCardStatementHint(label) {
     return labelHasHint(label, CARD_STATEMENT_HINTS);
   }
-  function isTransferHint(label) {
-    return isInternalTransferHint(label) || isCardStatementHint(label);
+  function isTransferHint(label, keywords) {
+    return isInternalTransferHint(label, keywords) || isCardStatementHint(label);
+  }
+  function daysBetweenISO(a, b) {
+    if (!a || !b) return 99;
+    var da = Date.parse(a + "T00:00:00Z");
+    var db = Date.parse(b + "T00:00:00Z");
+    if (!isFinite(da) || !isFinite(db)) return 99;
+    return Math.abs(da - db) / 86400000;
+  }
+  function hasVirWord(label) {
+    return TRANSFER_VERB_RE.test(foldText(label));
+  }
+  function findInternalPairs(records) {
+    var hits = {};
+    var list = records || [];
+    var i, j, a, b, ka, kb;
+    for (i = 0; i < list.length; i++) {
+      a = list[i];
+      if (!a || !isFinite(a.amount) || !a.amount || !a.date) continue;
+      if (isIncomeLikeLabel(a.label) || !hasVirWord(a.label)) continue;
+      for (j = i + 1; j < list.length; j++) {
+        b = list[j];
+        if (!b || !isFinite(b.amount) || !b.amount || !b.date) continue;
+        if (Math.sign(a.amount) === Math.sign(b.amount)) continue;
+        if (moneyCents(Math.abs(a.amount)) !== moneyCents(Math.abs(b.amount))) continue;
+        if (daysBetweenISO(a.date, b.date) > 3) continue;
+        if (isIncomeLikeLabel(b.label) || !hasVirWord(b.label)) continue;
+        ka = a.rowIndex != null ? a.rowIndex : i;
+        kb = b.rowIndex != null ? b.rowIndex : j;
+        hits[ka] = true;
+        hits[kb] = true;
+      }
+    }
+    return hits;
+  }
+  var KEYWORD_STOP = {
+    vir: 1, virement: 1, sepa: 1, emis: 1, recu: 1, de: 1, du: 1, des: 1, le: 1, la: 1, les: 1,
+    vers: 1, pour: 1, par: 1, m: 1, mr: 1, mme: 1, mlle: 1, monsieur: 1, madame: 1, inst: 1,
+    instantane: 1, permanent: 1, ref: 1, reference: 1, id: 1, libelle: 1, compte: 1, en: 1,
+    au: 1, aux: 1, et: 1, numero: 1, n: 1, cb: 1, re: 1, votre: 1, mon: 1, ma: 1, mes: 1,
+    nos: 1, date: 1, a: 1, the: 1, of: 1
+  };
+  var KEYWORD_BUILTIN = { livret: 1, ldds: 1, lep: 1, pel: 1, cel: 1, epargne: 1, interne: 1, joint: 1 };
+  function suggestInternalKeyword(label) {
+    var f = foldText(label);
+    var parts = f.split(" ").filter(function (p) {
+      if (!p || p.length < 3) return false;
+      if (KEYWORD_STOP[p]) return false;
+      if (/^\d+$/.test(p)) return false;
+      if (/^(19|20)\d{2}$/.test(p)) return false;
+      return true;
+    });
+    if (!parts.length) return "";
+    var names = parts.filter(function (p) { return !KEYWORD_BUILTIN[p]; });
+    var use = names.length ? names : parts;
+    var transferLike = /\b(vir|virement|transfert|versement)\b/.test(f);
+    if (transferLike) return use[use.length - 1] || "";
+    return use.join(" ");
+  }
+  function lastNameSuggestion(input) {
+    var parts = String(input || "").trim().split(/\s+/).filter(Boolean);
+    if (parts.length < 2) return "";
+    var last = parts[parts.length - 1];
+    return last.length >= 3 ? last : "";
   }
 
   function ruleKeyword(label) {
@@ -4620,6 +4962,11 @@
     isTransferHint: isTransferHint,
     isInternalTransferHint: isInternalTransferHint,
     isCardStatementHint: isCardStatementHint,
+    isIncomeLikeLabel: isIncomeLikeLabel,
+    findInternalPairs: findInternalPairs,
+    suggestInternalKeyword: suggestInternalKeyword,
+    lastNameSuggestion: lastNameSuggestion,
+    keywordMatchesLabel: keywordMatchesLabel,
     ruleKeyword: ruleKeyword,
     labelsSimilar: labelsSimilar,
     isDuplicateOf: isDuplicateOf,
@@ -4636,11 +4983,15 @@
     state.importMaps = (raw && raw.importMaps && typeof raw.importMaps === "object") ? raw.importMaps : {};
     state.importRules = (raw && raw.importRules && typeof raw.importRules === "object") ? raw.importRules : {};
     state.importHistory = (raw && Array.isArray(raw.importHistory)) ? raw.importHistory : [];
+    state.internalKeywords = (raw && Array.isArray(raw.internalKeywords))
+      ? raw.internalKeywords.map(function (k) { return String(k || "").trim(); }).filter(Boolean)
+      : (state.internalKeywords || []);
   }
   function resetImportExtras() {
     state.importMaps = {};
     state.importRules = {};
     state.importHistory = [];
+    state.internalKeywords = [];
   }
   function updateImportUndoButtons() {
     var has = !!(state.importHistory && state.importHistory.length);
@@ -4725,6 +5076,8 @@
         filename: file.name,
         recalled: recalled,
         excludeTransfers: true,
+        step: "map",
+        previewTab: "all",
         items: []
       };
       rebuildImportItems(true);
@@ -4755,7 +5108,8 @@
       var cat = BankImport.categorize(rec.label, rec.bankCategory, state.importRules, rec.amount);
       var type = (isFinite(rec.amount) && rec.amount > 0) ? "revenu" : "depense";
       if (cat.categoryId === "epargne" && type === "depense") type = "epargne";
-      var internal = BankImport.isInternalTransferHint(rec.label);
+      var kws = internalKeywordList();
+      var internal = BankImport.isInternalTransferHint(rec.label, kws);
       var card = BankImport.isCardStatementHint(rec.label);
       if (old && !resetUser && old.userSet) {
         type = old.type;
@@ -4781,10 +5135,12 @@
         transfer: internal || card,
         internal: internal,
         card: card,
+        pair: false,
         savingsOver: false
       };
       if (old && old.userSet) item.included = old.included;
-      var key = (item.date || "") + "|" + BankImport.foldText(item.label) + "|" + (isFinite(item.amount) ? Math.round(Math.abs(item.amount) * 100) : "");
+      var signed = isFinite(item.amount) ? Math.round(item.amount * 100) : "";
+      var key = (item.date || "") + "|" + BankImport.foldText(item.label) + "|" + signed;
       if (seen[key]) item.dupInFile = true;
       else seen[key] = true;
       var ex;
@@ -4793,6 +5149,16 @@
       }
       if (item.dupExisting && !item.userSet) item.included = false;
       return item;
+    });
+    var pairs = BankImport.findInternalPairs(importState.items.map(function (it) {
+      return { rowIndex: it.rowIndex, date: it.date, label: it.label, amount: it.amount };
+    }));
+    importState.items.forEach(function (it) {
+      if (pairs[it.rowIndex]) {
+        it.pair = true;
+        it.internal = true;
+        if (importState.excludeTransfers !== false && !it.userSet) it.type = "exclu";
+      }
     });
     flagImportSavings();
   }
@@ -4839,16 +5205,22 @@
     return html;
   }
 
-  function renderImportWizard() {
-    if (!importState) return;
+  function importTypeLabel(typ) {
+    return typ === "revenu" ? "Revenu" : typ === "epargne" ? "Épargne" : typ === "retrait" ? "Retrait" : typ === "exclu" ? "Interne" : "Dépense";
+  }
+  function importTypeBadge(typ) {
+    var cls = typ === "exclu" ? "exclu" : typ;
+    return '<span class="imp-type-badge ' + cls + '">' + importTypeLabel(typ) + "</span>";
+  }
+  function renderImportMappingStep() {
     var map = importState.map;
-    var items = importState.items || [];
     var kindLabel = { csv: "CSV / texte", xlsx: "Excel (.xlsx)", ofx: "OFX / QFX", qif: "QIF" }[importState.parsed.kind] || importState.parsed.kind;
     var html = '<div class="import-wizard">';
     html += '<h3 id="modal-title">Importer un relevé bancaire</h3>';
     html += '<p class="hint">Fichier : <strong>' + esc(importState.filename) + "</strong> · format détecté : " + esc(kindLabel) +
       (importState.recalled ? " · colonnes mémorisées pour cette banque" : "") +
       ". Aucune donnée n’est envoyée vers un serveur.</p>";
+    html += '<p class="hint">Vérifiez d’abord que la date, le libellé et le montant sont bien reconnus sur l’échantillon, puis continuez.</p>';
     html += '<div class="import-map">';
     html += '<div class="form-row"><label>Date</label><select id="imp-col-date">' + importColOptions(map, map.dateCol, "Non détectée") + "</select></div>";
     html += '<div class="form-row"><label>Libellé</label><select id="imp-col-label">' + importColOptions(map, map.labelCol, "Non détecté") + "</select></div>";
@@ -4858,25 +5230,89 @@
     html += '<div class="form-row"><label>Catégorie banque</label><select id="imp-col-category">' + importColOptions(map, map.categoryCol) + "</select></div>";
     html += '<div class="form-row"><label>Format de date</label><select id="imp-date-format">';
     [["auto","Auto (détecté)"],["dmy","jj/mm/aaaa"],["ymd","aaaa-mm-jj"],["mdy","mm/jj/aaaa"],["excel","Série Excel"]].forEach(function (p) {
-      var sel = (map.dateFormat === p[0] || (p[0] === "auto" && !map.dateFormat)) ? " selected" : "";
-      if (p[0] !== "auto" && map.dateFormat === p[0]) sel = " selected";
       html += '<option value="' + p[0] + '"' + (map.dateFormat === p[0] ? " selected" : "") + ">" + p[1] + "</option>";
     });
     html += "</select></div>";
     html += '<div class="form-row check-row" style="justify-content:flex-start;align-items:center"><label><input type="checkbox" id="imp-invert"' + (map.invertSign ? " checked" : "") + "/> Inverser les signes</label></div>";
+    html += "</div>";
+    var samples = (importState.items || []).filter(function (it) { return it.date || isFinite(it.amount) || it.label; }).slice(0, 3);
+    html += '<div class="imp-sample"><h4 style="font-size:13px;margin:0 0 8px">Échantillon (3 premières lignes)</h4>';
+    html += '<div class="table-wrap"><table class="data"><thead><tr><th>Date</th><th>Libellé</th><th class="right">Montant</th></tr></thead><tbody>';
+    if (!samples.length) html += '<tr><td colspan="3" class="hint">Aucune ligne lisible avec ce mapping. Corrigez les colonnes.</td></tr>';
+    samples.forEach(function (it) {
+      var amt = isFinite(it.amount) ? fmtMoneySigned(Math.abs(it.amount), it.amount >= 0 ? "revenu" : "depense") : "—";
+      html += "<tr><td>" + (it.date ? esc(it.date.split("-").reverse().join("/")) : '<span class="badge warn">Date ?</span>') + "</td>";
+      html += "<td>" + esc(it.label || "—") + "</td>";
+      html += '<td class="right num">' + (isFinite(it.amount) ? amt : '<span class="badge warn">Montant ?</span>') + "</td></tr>";
+    });
+    html += "</tbody></table></div></div>";
+    html += '<div class="modal-actions">';
+    html += '<button type="button" class="btn btn-ghost" id="btn-cancel-modal">Annuler</button>';
+    html += '<button type="button" class="btn btn-primary" id="imp-continue">Continuer vers l’aperçu</button>';
+    html += "</div></div>";
+    openModal(html);
+    var modal = document.getElementById("modal");
+    if (modal) modal.classList.add("wide");
+  }
+  function renderImportPreviewStep() {
+    var map = importState.map;
+    var items = importState.items || [];
+    var kindLabel = { csv: "CSV / texte", xlsx: "Excel (.xlsx)", ofx: "OFX / QFX", qif: "QIF" }[importState.parsed.kind] || importState.parsed.kind;
+    var html = '<div class="import-wizard">';
+    html += '<h3 id="modal-title">Aperçu de l’import</h3>';
+    html += '<p class="hint">Fichier : <strong>' + esc(importState.filename) + "</strong> · " + esc(kindLabel) +
+      (importState.recalled ? " · colonnes mémorisées pour cette banque" : "") +
+      ". Corrigez le type au besoin (Dépense, Revenu, <strong>Virement interne</strong>…).</p>";
     html += '<div class="form-row check-row" style="justify-content:flex-start;align-items:flex-start;flex-direction:column;gap:4px">';
     html += '<label><input type="checkbox" id="imp-exclude-transfers"' + (importState.excludeTransfers !== false ? " checked" : "") + "/> Exclure les virements internes détectés</label>";
-    html += '<p class="hint">Coché par défaut : les virements entre vos comptes (VIR INTERNE, etc.) sont importés avec le type « Virement interne (exclu) » et n’entrent pas dans les totaux. Les lignes « relevé carte » restent incluses, car elles correspondent souvent à de vraies dépenses.</p>';
-    html += "</div></div>";
+    html += '<p class="hint">Coché par défaut : virements entre vos comptes (Livret, compte à compte, paires vir+/vir−, mots-clés) exclus des totaux. Les « relevés carte » restent inclus.</p>';
+    html += "</div>";
 
+    var tab = importState.previewTab || "all";
     var q = (importState.filter || "").toLowerCase();
+    function inTab(it) {
+      if (tab === "depense") return it.type === "depense" || it.type === "epargne" || it.type === "retrait";
+      if (tab === "revenu") return it.type === "revenu";
+      if (tab === "exclu") return it.type === "exclu" || it.internal;
+      if (tab === "dup") return !!(it.dupExisting || it.dupInFile);
+      return true;
+    }
     var visible = items.filter(function (it) {
+      if (!inTab(it)) return false;
       if (!q) return true;
       return (it.label + " " + (it.date || "")).toLowerCase().indexOf(q) !== -1;
     });
     var nInc = items.filter(function (it) { return it.included && it.date && isFinite(it.amount); }).length;
     var nSkip = items.filter(function (it) { return it.dupExisting; }).length;
     var nOver = items.filter(function (it) { return it.savingsOver; }).length;
+    var sumDep = 0, sumRev = 0, sumInt = 0, nDep = 0, nRev = 0, nInt = 0;
+    items.forEach(function (it) {
+      if (!it.included || !isFinite(it.amount)) return;
+      var a = Math.abs(it.amount);
+      if (it.type === "exclu") { sumInt += a; nInt++; }
+      else if (it.type === "revenu") { sumRev += a; nRev++; }
+      else { sumDep += a; nDep++; }
+    });
+    html += '<div class="imp-summary-box" id="imp-summary-box">';
+    html += '<span class="s-dep"><strong>' + nDep + " dépense" + (nDep > 1 ? "s" : "") + "</strong> = " + esc(fmtMoney(sumDep)) + "</span>";
+    html += '<span class="s-rev"><strong>' + nRev + " revenu" + (nRev > 1 ? "s" : "") + "</strong> = " + esc(fmtMoney(sumRev)) + "</span>";
+    html += '<span class="s-int"><strong>' + nInt + " interne" + (nInt > 1 ? "s" : "") + " exclu" + (nInt > 1 ? "s" : "") + "</strong> = " + esc(fmtMoney(sumInt)) + "</span>";
+    if (nSkip) html += '<span class="hint">' + nSkip + " déjà importée" + (nSkip > 1 ? "s" : "") + "</span>";
+    if (nOver) html += '<span class="hint">' + nOver + " versement" + (nOver > 1 ? "s" : "") + " d’épargne au-dessus du disponible</span>";
+    html += "</div>";
+
+    var nTab = {
+      all: items.length,
+      depense: items.filter(function (it) { return it.type === "depense" || it.type === "epargne" || it.type === "retrait"; }).length,
+      revenu: items.filter(function (it) { return it.type === "revenu"; }).length,
+      exclu: items.filter(function (it) { return it.type === "exclu" || it.internal; }).length,
+      dup: items.filter(function (it) { return it.dupExisting || it.dupInFile; }).length
+    };
+    html += '<div class="imp-tabs" id="imp-tabs">';
+    [["all","Tout"],["depense","Dépenses"],["revenu","Revenus"],["exclu","Internes"],["dup","Doublons"]].forEach(function (p) {
+      html += '<button type="button" class="' + (tab === p[0] ? "active" : "") + '" data-imp-tab="' + p[0] + '">' + p[1] + " (" + nTab[p[0]] + ")</button>";
+    });
+    html += "</div>";
 
     html += '<div class="import-toolbar">';
     html += '<input type="search" id="imp-filter" placeholder="Filtrer les lignes…" value="' + esc(importState.filter || "") + '"/>';
@@ -4884,16 +5320,14 @@
     html += '<button type="button" class="btn btn-sm" id="imp-uncheck-all">Tout décocher</button>';
     html += '<select id="imp-bulk-cat" aria-label="Catégorie à appliquer"><option value="">Catégorie…</option>' + categoryOptions("", null) + "</select>";
     html += '<button type="button" class="btn btn-sm" id="imp-apply-cat">Appliquer aux lignes cochées</button>';
+    html += '<button type="button" class="btn btn-sm" id="imp-bulk-interne">Marquer comme virement interne</button>';
     html += "</div>";
-    html += '<p class="hint" id="imp-summary">' + items.length + " ligne" + (items.length > 1 ? "s" : "") + " · " + nInc + " à importer" +
-      (nSkip ? " · " + nSkip + " déjà importée" + (nSkip > 1 ? "s" : "") : "") +
-      (nOver ? " · " + nOver + " versement" + (nOver > 1 ? "s" : "") + " d’épargne au-dessus du disponible (décoché" + (nOver > 1 ? "s" : "") + " par défaut)" : "") +
-      ".</p>";
+    html += '<p class="hint" id="imp-summary">' + visible.length + " ligne" + (visible.length > 1 ? "s" : "") + " affichée" + (visible.length > 1 ? "s" : "") + " · " + nInc + " à importer.</p>";
     html += '<div class="import-preview table-wrap"><table class="data import-table"><thead><tr>';
     html += '<th></th><th>Date</th><th>Libellé</th><th class="right">Montant</th><th>Type</th><th>Catégorie</th><th>Sous-cat.</th><th></th>';
     html += "</tr></thead><tbody>";
     if (!visible.length) {
-      html += '<tr><td colspan="8" class="hint">Aucune ligne ne correspond au filtre.</td></tr>';
+      html += '<tr><td colspan="8" class="hint">Aucune ligne ne correspond à ce filtre.</td></tr>';
     }
     visible.forEach(function (it) {
       var invalid = !it.date || !isFinite(it.amount);
@@ -4903,9 +5337,9 @@
       html += "<td>" + (it.date ? esc(it.date.split("-").reverse().join("/")) : '<span class="badge warn">Date ?</span>') + "</td>";
       html += "<td>" + esc(it.label || "—") + "</td>";
       html += '<td class="right num">' + (invalid && !isFinite(it.amount) ? '<span class="badge warn">Montant ?</span>' : amt) + "</td>";
-      html += "<td><select data-imp-type=\"" + it.rowIndex + "\">";
-      [["depense","Dépense"],["revenu","Revenu"],["epargne","Épargne (versement)"],["retrait","Retrait d'épargne"],["exclu","Virement interne (exclu)"]].forEach(function (p) {
-        html += '<option value="' + p[0] + '"' + (it.type === p[0] ? " selected" : "") + ">" + p[1] + "</option>";
+      html += "<td>" + importTypeBadge(it.type) + " <select data-imp-type=\"" + it.rowIndex + "\">";
+      [["depense","Dépense"],["revenu","Revenu"],["epargne","Épargne (versement)"],["retrait","Retrait d'épargne"],["exclu","Virement interne"]].forEach(function (opt) {
+        html += '<option value="' + opt[0] + '"' + (it.type === opt[0] ? " selected" : "") + ">" + opt[1] + "</option>";
       });
       html += "</select></td>";
       html += "<td><select data-imp-cat=\"" + it.rowIndex + "\">" + importCatOptions(it.categoryId, it.type) + "</select></td>";
@@ -4913,20 +5347,26 @@
       html += "<td>";
       if (it.dupExisting) html += '<span class="badge dup">Déjà importé</span> ';
       if (it.dupInFile) html += '<span class="badge">Doublon (fichier)</span> ';
-      if (it.internal) html += '<span class="badge">Virement interne</span> ';
+      if (it.pair) html += '<span class="badge exclu">Paire détectée</span> ';
+      else if (it.internal) html += '<span class="badge exclu">Virement interne</span> ';
       else if (it.card) html += '<span class="badge">Relevé carte</span> ';
-      else if (it.transfer) html += '<span class="badge">Virement / carte</span> ';
       if (it.savingsOver) html += '<span class="badge warn">Dépasse l’épargne dispo.</span> ';
       html += "</td></tr>";
     });
     html += "</tbody></table></div>";
     html += '<div class="modal-actions">';
+    html += '<button type="button" class="btn btn-ghost" id="imp-back-map">Retour au mapping</button>';
     html += '<button type="button" class="btn btn-ghost" id="btn-cancel-modal">Annuler</button>';
     html += '<button type="button" class="btn btn-primary" id="imp-confirm">Importer ' + nInc + " opération" + (nInc > 1 ? "s" : "") + "</button>";
     html += "</div></div>";
     openModal(html);
     var modal = document.getElementById("modal");
     if (modal) modal.classList.add("wide");
+  }
+  function renderImportWizard() {
+    if (!importState) return;
+    if (importState.step === "preview") renderImportPreviewStep();
+    else renderImportMappingStep();
   }
 
   function importItemByRow(rowIndex) {
@@ -5058,13 +5498,49 @@
     var t = e.target;
     var id = t.id || "";
     if (id === "imp-col-date" || id === "imp-col-label" || id === "imp-col-amount" || id === "imp-col-debit" || id === "imp-col-credit" || id === "imp-col-category" || id === "imp-date-format" || id === "imp-invert") {
-      onImportMappingChange();
-      return true;
+      // Re-render only after a completed change. A click/input would destroy the
+      // <select> while its native menu is opening (open/close instantly).
+      if (e.type === "change") onImportMappingChange();
+      return e.type === "change";
     }
     if (id === "imp-exclude-transfers") {
-      importState.excludeTransfers = !!t.checked;
-      rebuildImportItems(false);
+      if (e.type === "change") {
+        importState.excludeTransfers = !!t.checked;
+        rebuildImportItems(false);
+        renderImportWizard();
+      }
+      return e.type === "change";
+    }
+    if (id === "imp-continue") {
+      importState.step = "preview";
       renderImportWizard();
+      return true;
+    }
+    if (id === "imp-back-map") {
+      importState.step = "map";
+      renderImportWizard();
+      return true;
+    }
+    if (t.getAttribute && t.getAttribute("data-imp-tab")) {
+      importState.previewTab = t.getAttribute("data-imp-tab") || "all";
+      renderImportWizard();
+      return true;
+    }
+    if (id === "imp-bulk-interne") {
+      var n = 0;
+      importState.items.forEach(function (it) {
+        if (!it.included) return;
+        it.type = "exclu";
+        it.userSet = true;
+        it.internal = true;
+        n++;
+      });
+      flagImportSavings();
+      renderImportWizard();
+      if (n) {
+        var first = importState.items.find(function (it) { return it.included && it.type === "exclu"; });
+        if (first) offerLearnInternal(first.label, true);
+      }
       return true;
     }
     if (id === "imp-filter" && e.type === "input") {
@@ -5110,6 +5586,8 @@
       if (it2) {
         it2.type = t.value;
         it2.userSet = true;
+        if (it2.type === "exclu") it2.internal = true;
+        if (it2.type === "exclu") offerLearnInternal(it2.label, true);
         if (it2.type === "epargne" || it2.type === "retrait") {
           var ep = state.categories.find(function (c) { return c.id === "epargne"; });
           if (ep) it2.categoryId = ep.id;
@@ -5147,7 +5625,9 @@
   function openModal(html) {
     document.getElementById("modal").innerHTML = html;
     document.getElementById("modal-overlay").classList.add("open");
-    const first = document.querySelector("#modal input, #modal select, #modal textarea, #modal button");
+    // Do not auto-focus <select> or date inputs: on iOS/Safari that opens the
+    // native picker, and a later re-render would slam it shut.
+    var first = document.querySelector("#modal input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=date]):not([type=file]), #modal textarea");
     if (first) setTimeout(function () { first.focus(); }, 40);
   }
   function closeModal() {
@@ -5197,13 +5677,22 @@
       '<h3 id="modal-title">' + (isEdit ? "Modifier la transaction" : "Nouvelle transaction") + "</h3>" +
       (t.demo ? '<p class="hint" style="margin-bottom:10px">Cette opération fait partie des données d\'exemple.</p>' : "") +
       '<form id="tx-form" data-edit="' + (isEdit ? esc(t.id) : "") + '" data-recurring-id="' + esc(t.recurringId || "") + '" data-sub="' + esc((rec0 && rec0.subcategoryId) || t.subcategoryId || "") + '">' +
-      '<div class="form-row"><label>Type</label><div class="type-toggle cols-3" id="type-toggle">' +
-      '<label class="' + (t.type === "revenu" ? "on-revenu" : "") + '"><input type="radio" name="type" value="revenu"' + (t.type === "revenu" ? " checked" : "") + '/> Revenu</label>' +
-      '<label class="' + (t.type === "depense" ? "on-depense" : "") + '"><input type="radio" name="type" value="depense"' + (t.type === "depense" ? " checked" : "") + '/> Dépense</label>' +
-      '<label class="' + (t.type === "retrait" ? "on-retrait" : "") + '"><input type="radio" name="type" value="retrait"' + (t.type === "retrait" ? " checked" : "") + '/> Retrait épargne</label>' +
-      "</div></div>" +
-      '<div class="form-row check-row"><label><input type="checkbox" id="f-excluded"' + (t.excluded ? " checked" : "") + '/> Virement interne (exclu des totaux)</label>' +
-      '<div class="hint">La ligne reste visible dans la liste (grisée, badge Exclu) mais est retirée des revenus, dépenses, épargne, solde, cash, budgets et calculatrice.</div></div>' +
+      '<div class="form-row"><label>Type</label><div class="type-toggle cols-5" id="type-toggle">' +
+      (function () {
+        var formType = t.excluded ? "virement" : (t.type === "revenu" ? "revenu" : (t.type === "retrait" ? "retrait" : ((t.type === "depense" && (t.categoryId === "epargne" || (typeof isEpargne === "function" && isEpargne(t.categoryId)))) ? "epargne" : "depense")));
+        if (preset && preset.formType) formType = preset.formType;
+        var opts = [
+          ["depense", "Dépense", "on-depense"],
+          ["revenu", "Revenu", "on-revenu"],
+          ["epargne", "Épargne", "on-epargne"],
+          ["retrait", "Retrait", "on-retrait"],
+          ["virement", "Virement interne", "on-virement"]
+        ];
+        return opts.map(function (o) {
+          return '<label class="' + (formType === o[0] ? o[2] : "") + '"><input type="radio" name="type" value="' + o[0] + '"' + (formType === o[0] ? " checked" : "") + "/> " + o[1] + "</label>";
+        }).join("");
+      })() +
+      '</div><div class="hint">« Virement interne » reste visible (badge Exclu) mais est retiré de tous les totaux.</div></div>' +
       '<div class="form-grid">' +
       '<div class="form-row"><label for="f-date">Date</label><input id="f-date" name="date" type="date" required value="' + esc(t.date) + '"/></div>' +
       '<div class="form-row"><label for="f-amount">Montant (€)</label><input id="f-amount" name="amount" type="text" inputmode="decimal" required placeholder="0,00" value="' + (t.amount !== "" && t.amount != null ? String(t.amount).replace(".", ",") : "") + '"/></div>' +
@@ -5242,15 +5731,18 @@
     const type = (form.querySelector('input[name="type"]:checked') || {}).value || "depense";
     const sel = form.querySelector("#f-cat");
     const current = sel.value;
-    sel.innerHTML = categoryOptions(current, type);
-    if (type === "retrait") {
+    var kind = type === "epargne" ? "retrait" : (type === "virement" || type === "exclu" ? "depense" : type);
+    sel.innerHTML = categoryOptions(current, kind);
+    if (type === "retrait" || type === "epargne") {
       var ep = state.categories.find(function (c) { return c.id === "epargne"; }) || state.categories.find(function (c) { return isEpargne(c.id); });
       if (ep) sel.value = ep.id;
     }
     const labels = form.querySelectorAll("#type-toggle label");
-    if (labels[0]) labels[0].className = type === "revenu" ? "on-revenu" : "";
-    if (labels[1]) labels[1].className = type === "depense" ? "on-depense" : "";
-    if (labels[2]) labels[2].className = type === "retrait" ? "on-retrait" : "";
+    var cls = { revenu: "on-revenu", depense: "on-depense", epargne: "on-epargne", retrait: "on-retrait", virement: "on-virement", exclu: "on-virement" };
+    for (var li = 0; li < labels.length; li++) {
+      var val = (labels[li].querySelector("input") || {}).value;
+      labels[li].className = val === type ? (cls[val] || "") : "";
+    }
     const freq = (form.querySelector('input[name="frequency"]:checked') || {}).value || "none";
     const freqLabels = form.querySelectorAll("#freq-toggle label");
     if (freqLabels[0]) freqLabels[0].className = freq === "none" ? "on-freq" : "";
@@ -5319,8 +5811,9 @@
   }
 
   function saveTxFromForm(form) {
-    const type = (form.querySelector('input[name="type"]:checked') || {}).value;
-    var excluded = !!(form.querySelector("#f-excluded") || {}).checked;
+    const formType = (form.querySelector('input[name="type"]:checked') || {}).value;
+    var excluded = formType === "virement" || formType === "exclu";
+    var type = formType === "virement" || formType === "exclu" ? "depense" : (formType === "epargne" ? "depense" : formType);
     const date = form.date.value;
     const amount = parseAmount(form.amount.value);
     const categoryId = form.categoryId.value;
@@ -5347,13 +5840,18 @@
       return;
     }
     var finalCat = categoryId;
-    if (type === "retrait") {
+    if (type === "retrait" || formType === "epargne") {
       var ep = state.categories.find(function (c) { return c.id === "epargne"; }) || state.categories.find(function (c) { return isEpargne(c.id); });
       if (ep) finalCat = ep.id;
     }
+    if (formType === "virement" || formType === "exclu") {
+      excluded = true;
+      var editExisting = state.transactions.find(function (x) { return x.id === form.getAttribute("data-edit"); });
+      if (editExisting && (editExisting.type === "revenu" || editExisting.type === "retrait")) type = editExisting.type;
+    }
     var finalSub = sanitizeSubId(finalCat, (form.querySelector("#f-subcat") || {}).value || "");
 
-    var savingsErr = savingsContributionError(form, type, date, amount, finalCat, freq, endDate);
+    var savingsErr = excluded ? "" : savingsContributionError(form, type, date, amount, finalCat, freq, endDate);
     if (savingsErr) {
       setTxFormError(form, savingsErr);
       toast(savingsErr);
@@ -5406,6 +5904,7 @@
     closeModal();
     renderAll();
     toast(editId ? "Transaction mise à jour." : "Transaction ajoutée.");
+    if (excluded) offerLearnInternal(description, false);
   }
 
   function confirmDeleteTx(id, recId, date) {
@@ -5756,7 +6255,8 @@
       },
       importMaps: state.importMaps || {},
       importRules: state.importRules || {},
-      importHistory: state.importHistory || []
+      importHistory: state.importHistory || [],
+      internalKeywords: state.internalKeywords || []
     };
     downloadBlob("mon-budget-sauvegarde.json", "application/json", JSON.stringify(payload, null, 2));
     toast("Sauvegarde JSON téléchargée.");
@@ -5965,6 +6465,7 @@
       if (btn.id === "btn-bulk-delete") openBulkDeleteModal();
       if (btn.id === "btn-bulk-cat") openBulkCategoryModal();
       if (btn.id === "btn-bulk-type") openBulkTypeModal();
+      if (btn.id === "btn-bulk-interne") applyBulkInternal();
       if (btn.id === "btn-bulk-clear") clearSelection();
     });
     on(document.getElementById("filter-sort"), "change", function (e) { state.filters.sort = e.target.value; renderTransactions(); });
@@ -5998,6 +6499,13 @@
         openStopModal(stop.getAttribute("data-rec"), stop.getAttribute("data-month"));
         return;
       }
+      const interneBtn = e.target.closest(".btn-interne");
+      if (interneBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleInternalTx(interneBtn.getAttribute("data-interne"));
+        return;
+      }
       const check = e.target.closest(".tx-check") || e.target.closest("[data-tx-check]");
       if (check) {
         e.stopPropagation();
@@ -6026,7 +6534,7 @@
       updateBulkBar();
     });
     on(document.getElementById("tx-list"), "keydown", function (e) {
-      if (e.target.closest(".btn-stop-rec") || e.target.closest(".tx-check")) return;
+      if (e.target.closest(".btn-stop-rec") || e.target.closest(".tx-check") || e.target.closest(".btn-interne")) return;
       if (e.key !== "Enter" && e.key !== " ") return;
       const item = e.target.closest(".tx-item");
       if (!item) return;
@@ -6097,6 +6605,34 @@
     on(document.getElementById("btn-import-json"), "click", function () { document.getElementById("import-file").click(); });
     on(document.getElementById("btn-import-bank"), "click", openBankFilePicker);
     on(document.getElementById("btn-import-bank-settings"), "click", openBankFilePicker);
+    on(document.getElementById("btn-internal-kw-add"), "click", function () {
+      var inp = document.getElementById("internal-kw-input");
+      if (inp && addInternalKeyword(inp.value)) inp.value = "";
+    });
+    on(document.getElementById("internal-kw-input"), "keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (addInternalKeyword(e.target.value)) e.target.value = "";
+      }
+    });
+    on(document.getElementById("internal-kw-list"), "click", function (e) {
+      var del = e.target.closest("[data-kw-del]");
+      if (del) removeInternalKeyword(del.getAttribute("data-kw-del"));
+    });
+    on(document.getElementById("internal-kw-suggest"), "click", function (e) {
+      var btn = e.target.closest("#btn-internal-kw-lastname");
+      if (!btn) return;
+      addInternalKeyword(btn.getAttribute("data-kw"), { suggestLast: false });
+      var box = document.getElementById("internal-kw-suggest");
+      if (box) { box.hidden = true; box.innerHTML = ""; }
+    });
+    on(document.getElementById("btn-internal-apply"), "click", applyInternalToExisting);
+    var promptOv = document.getElementById("app-prompt-overlay");
+    on(promptOv, "click", function (e) {
+      if (e.target === promptOv || e.target.id === "btn-prompt-close") closeAppPrompt();
+      if (e.target.id === "btn-internal-apply-confirm") confirmApplyInternalToExisting();
+      if (e.target.id === "btn-learn-kw-yes") acceptLearnKeyword();
+    });
     on(document.getElementById("btn-undo-import"), "click", undoLastImport);
     on(document.getElementById("btn-undo-import-settings"), "click", undoLastImport);
     on(document.getElementById("bank-import-file"), "change", function (e) {
@@ -6116,7 +6652,11 @@
 
     const overlay = document.getElementById("modal-overlay");
     on(overlay, "click", function (e) { if (e.target === overlay) closeModal(); });
-    on(overlay, "click", function (e) { if (handleImportWizardEvent(e)) e.preventDefault(); });
+    on(overlay, "click", function (e) {
+      var t = e.target;
+      if (t && (t.tagName === "SELECT" || t.tagName === "OPTION" || t.tagName === "INPUT" && (t.type === "date" || t.type === "search" || t.type === "text"))) return;
+      if (handleImportWizardEvent(e)) e.preventDefault();
+    });
     on(overlay, "click", function (e) {
       if (e.target.id === "btn-cancel-modal") closeModal();
       if (e.target.id === "btn-delete-tx") {
