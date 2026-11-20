@@ -16,7 +16,8 @@ Application web de budget personnel, simple et autonome : saisissez vous-même v
 - **Suivi d’épargne pluriannuel** : encours cumulé d’une année sur l’autre, versements, retraits, objectif
 - **Calculatrice** de projection sur N années (1, 5, 10, 20, 30 ou saisie libre), avec évolution annuelle composée optionnelle
 - **Export / import** JSON et export CSV
-- **Import de relevé bancaire** (CSV, Excel .xlsx, OFX/QFX, QIF), entièrement local
+- **Import de relevé bancaire** (CSV, Excel .xlsx, OFX/QFX, QIF), entièrement local, avec détection des virements internes, liste **Mes comptes** et livrets d’épargne
+- **Assistant IA optionnel** (Qwen en ligne ou Ollama en local), désactivé par défaut
 - **Mode sombre** et affichage adapté au mobile
 
 
@@ -38,6 +39,34 @@ Vous pouvez intégrer les opérations de n’importe quelle banque, sans créer 
 
 Les montants au format français (`1 234,56`, `12,50-`, etc.) et les dates `jj/mm/aaaa`, `aaaa-mm-jj`, etc. sont reconnus, y compris les dates « série » d’Excel. Les opérations importées sont des transactions ponctuelles : elles alimentent le budget mensuel et annuel, le cash disponible et les budgets par catégorie.
 
+Dans **Paramètres > Virements internes / Épargne**, vous pouvez lister **Mes comptes** (noms de vos banques, par ex. Revolut, N26, Crédit Agricole) : les virements et recharges vers ces comptes sont exclus des totaux. Les livrets (Livret A, LDDS, LEP, PEL, CEL) sont reconnus comme épargne. Les mouvements de bourse, crypto ou poches d’investissement sont exclus par défaut ; une option permet de les compter comme épargne si vous le souhaitez.
+
+## Assistant IA (optionnel)
+
+Désactivé par défaut. Rien ne quitte l’appareil tant que vous n’activez pas un fournisseur dans **Paramètres**.
+
+### Qwen en ligne (DashScope)
+
+1. Créez une clé API sur le [Model Studio / DashScope](https://www.alibabacloud.com/help/en/model-studio/get-api-key) (région internationale par défaut).
+2. Dans Paramètres, choisissez **Qwen en ligne (DashScope)**, collez la clé, et éventuellement l’URL (défaut : `https://dashscope-intl.aliyuncs.com/compatible-mode/v1`) et le modèle (`qwen-plus`, `qwen-turbo` ou `qwen-max`).
+3. La clé reste dans ce navigateur (`localStorage` dédié). Elle n’est **jamais** incluse dans une sauvegarde JSON, sauf case explicitement cochée (déconseillé). Aucune clé n’est présente dans le dépôt public.
+
+### Qwen local (Ollama)
+
+1. Installez [Ollama](https://ollama.com) puis `ollama pull qwen2.5` (ou `qwen3`).
+2. Lancez le serveur, par exemple :
+
+```bash
+OLLAMA_ORIGINS=https://khaldiahmed91-cyber.github.io,http://localhost,capacitor://localhost \
+OLLAMA_HOST=0.0.0.0:11434 ollama serve
+```
+
+`OLLAMA_ORIGINS=*` est plus simple en local. Pour un iPhone sur le même Wi-Fi, indiquez l’IP du Mac dans l’app (ex. `http://192.168.1.20:11434`).
+
+3. Le site GitHub Pages est en HTTPS : Safari bloque souvent `http://localhost` (contenu mixte). Chrome autorise localhost. L’app iOS autorise le réseau local.
+
+Au premier envoi, une notice explique ce qui part : totaux agrégés seulement, ou aussi les libellés (nécessaires à la catégorisation). Les propositions de catégories ne sont jamais appliquées automatiquement : vous les acceptez une par une, par référent, ou toutes, avec possibilité d’annuler.
+
 ## Utilisation locale
 
 1. Téléchargez le fichier [`index.html`](index.html).
@@ -46,7 +75,7 @@ Les montants au format français (`1 234,56`, `12,50-`, etc.) et les dates `jj/m
 
 ## Confidentialité
 
-Toutes les données restent **100 % locales**, dans le `localStorage` de votre navigateur. Aucun serveur n’est contacté, aucune donnée n’est envoyée ailleurs. Pour changer d’appareil, utilisez l’export JSON.
+Les données restent **locales**, dans le `localStorage` de votre navigateur. Aucun serveur de l’éditeur n’est contacté. L’assistant IA, s’il est activé, envoie uniquement au fournisseur que vous avez choisi (DashScope ou votre Ollama) le résumé ou les libellés que vous avez acceptés. Pour changer d’appareil, utilisez l’export JSON.
 
 ## Captures d’écran
 
@@ -76,6 +105,6 @@ Les contributions sont les bienvenues : issues, suggestions et pull requests.
 
 **Mon Budget** is a self-contained personal budget web app (French UI, EUR). You enter income and expenses yourself — there is no bank connection.
 
-**[Try it online](https://khaldiahmed91-cyber.github.io/Mon-Budget/)** or download [`index.html`](index.html) and open it in a browser. Features include monthly and yearly recurrences with optional end dates, categories and subcategories, monthly budgets, a multi-year savings tracker, an N-year projection calculator, a local bank-statement importer (CSV, XLSX, OFX, QIF), JSON/CSV export, and dark mode.
+**[Try it online](https://khaldiahmed91-cyber.github.io/Mon-Budget/)** or download [`index.html`](index.html) and open it in a browser. Features include monthly and yearly recurrences with optional end dates, categories and subcategories, monthly budgets, a multi-year savings tracker, an N-year projection calculator, a local bank-statement importer (CSV, XLSX, OFX, QIF) with internal-transfer detection, an optional Qwen assistant (DashScope or local Ollama, off by default), JSON/CSV export, and dark mode.
 
-All data stays in your browser’s `localStorage`. Nothing is sent to a server. Licensed under the [MIT License](LICENSE). Contributions are welcome.
+Budget data stays in your browser’s `localStorage`. Nothing is sent to the publisher. If you enable the optional assistant, a summary (or transaction labels, if you agree) is sent only to the provider you chose. Licensed under the [MIT License](LICENSE). Contributions are welcome.

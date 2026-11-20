@@ -521,10 +521,10 @@
       .grid-2, .grid-2.eq { grid-template-columns: 1fr; }
     }
     @media (max-width: 720px) {
-      :root { --nav-h: 60px; }
+      :root { --nav-h: 64px; }
       .desktop-nav { display: none; }
       .bottom-nav {
-        display: grid; grid-template-columns: repeat(6, 1fr);
+        display: grid; grid-template-columns: repeat(7, 1fr);
         position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
         height: calc(var(--nav-h) + var(--safe-b));
         padding-bottom: var(--safe-b);
@@ -538,7 +538,7 @@
         gap: 2px; font-size: 10px; font-weight: 650;
       }
       .bottom-nav button.active { color: var(--accent); }
-      .bottom-nav svg { width: 20px; height: 20px; }
+      .bottom-nav svg { width: 18px; height: 18px; }
       .fab { display: grid; place-items: center; }
       .topbar { padding: var(--safe-t) calc(12px + var(--safe-r)) 0 calc(12px + var(--safe-l)); }
       .year-totals-bar { padding: 6px calc(12px + var(--safe-r)) 6px calc(12px + var(--safe-l)); gap: 10px; }
@@ -660,7 +660,90 @@
       .import-table select { max-width: 110px; }
       .page-head .tx-actions { width: 100%; justify-content: flex-start; }
     }
-</style>
+
+    .btn-referent {
+      flex-shrink: 0; white-space: nowrap;
+      font-size: 11px; font-weight: 650;
+      min-height: 36px; min-width: 36px;
+      padding: 6px 8px; border-radius: 999px;
+      color: var(--text-muted); border-color: var(--border);
+    }
+    .btn-referent:hover, .btn-referent:focus { border-color: var(--accent); color: var(--accent-hover); }
+    .imp-sel-banner {
+      display: none; flex-wrap: wrap; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: 12px; margin: 0 0 8px;
+      background: var(--accent-soft); color: var(--text);
+      font-size: 13px; font-weight: 650;
+    }
+    .imp-sel-banner.show { display: flex; }
+    .imp-sel-bar {
+      display: none; flex-wrap: wrap; align-items: center; gap: 8px;
+      position: sticky; bottom: 0;
+      padding: 10px 12px; border-radius: 12px; margin-top: 8px;
+      background: var(--bg-elev); color: var(--text);
+      border: 1px solid var(--border); box-shadow: var(--shadow-lg);
+      z-index: 3; max-height: min(36vh, 220px); overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .imp-sel-bar.show { display: flex; }
+    .imp-sel-bar .bulk-meta { flex: 1 1 140px; min-width: 0; font-size: 13px; font-weight: 650; }
+    .imp-sel-bar .hint { font-weight: 500; }
+    .import-table tr.imp-selected td { background: var(--accent-soft); }
+    .import-table .imp-sel, .import-table .imp-inc { width: 38px; text-align: center; }
+    .import-table input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+    .import-th-check { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; color: var(--text-muted); white-space: nowrap; }
+    #chip-imp-referent, #chip-tx-referent { min-height: 36px; }
+
+    /* ---------- Assistant IA ---------- */
+    .bottom-nav { }
+    .ai-status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 650; color: var(--text-muted);
+    }
+    .ai-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
+    .ai-status.on .dot { background: var(--accent); }
+    .ai-status.off .dot { background: #c0392b; }
+    .ai-settings .ai-provider-fields { display: none; margin-top: 10px; }
+    .ai-settings[data-provider="dashscope"] .ai-dashscope { display: block; }
+    .ai-settings[data-provider="ollama"] .ai-ollama { display: block; }
+    .ai-settings .field, .ai-settings select.field { width: 100%; }
+    .ai-help { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; margin: 8px 0 0; }
+    .ai-help code { font-size: 11.5px; background: var(--bg-muted); padding: 1px 5px; border-radius: 6px; }
+    .ai-chat {
+      display: flex; flex-direction: column; gap: 12px;
+      min-height: calc(100vh - 180px);
+    }
+    .ai-quick { display: flex; flex-wrap: wrap; gap: 8px; }
+    .ai-msgs {
+      flex: 1; display: flex; flex-direction: column; gap: 10px;
+      min-height: 240px; max-height: min(62vh, 640px); overflow: auto;
+      padding: 8px 2px 16px;
+    }
+    .ai-bubble {
+      max-width: 92%; padding: 10px 14px; border-radius: 16px;
+      font-size: 14px; line-height: 1.45; white-space: pre-wrap; word-break: break-word;
+    }
+    .ai-bubble.user { align-self: flex-end; background: var(--accent); color: #07312A; border-bottom-right-radius: 6px; }
+    html[data-theme="dark"] .ai-bubble.user { color: #06241E; }
+    .ai-bubble.assistant { align-self: flex-start; background: var(--bg-elev); border: 1px solid var(--border); border-bottom-left-radius: 6px; }
+    .ai-bubble.system { align-self: stretch; max-width: 100%; background: var(--accent-soft); border: 0; color: var(--text); font-size: 13px; }
+    .ai-bubble.error { background: rgba(192,57,43,0.12); border-color: #e74c3c; color: var(--text); }
+    .ai-composer { display: flex; gap: 8px; align-items: flex-end; position: sticky; bottom: calc(8px + var(--nav-h) + var(--safe-b)); }
+    .ai-composer textarea {
+      flex: 1; min-height: 44px; max-height: 140px; resize: vertical;
+    }
+    .ai-suggestion { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .badge.ai { background: var(--accent-soft); color: var(--accent-hover); border: 0; }
+    #ai-privacy-overlay.overlay { z-index: 95; }
+    .ai-privacy-choices { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+    .ai-privacy-choices label {
+      display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px;
+      border: 1px solid var(--border); border-radius: 12px; background: var(--bg-elev); cursor: pointer;
+    }
+    .ai-privacy-choices label.active { border-color: var(--accent); background: var(--accent-soft); }
+    .ai-busy { opacity: 0.7; pointer-events: none; }
+
+  </style>
 </head>
 <body>
   <noscript class="app-banner show">JavaScript est requis pour utiliser Mon Budget. Activez-le dans votre navigateur, ou désactivez le bloqueur de scripts pour ce site.</noscript>
@@ -682,7 +765,7 @@
       </div>
       <div class="brand-text">
         <h1>Mon Budget</h1>
-        <p id="greeting">Bonjour Ahmed</p>
+        <p id="greeting">Bonjour</p>
       </div>
     </div>
     <nav class="desktop-nav" aria-label="Navigation">
@@ -691,6 +774,7 @@
       <button type="button" data-view="epargne">Épargne</button>
       <button type="button" data-view="budgets">Budgets</button>
       <button type="button" data-view="calculatrice">Calculatrice</button>
+      <button type="button" data-view="assistant">Assistant IA</button>
       <button type="button" data-view="parametres">Paramètres</button>
     </nav>
     <div class="top-actions">
@@ -823,6 +907,8 @@
         </div>
         <div class="tx-actions" style="display:flex;gap:8px;flex-wrap:wrap">
           <button type="button" class="btn" id="btn-import-bank">Importer un relevé bancaire</button>
+          <button type="button" class="btn" id="btn-ai-cat-tx">Catégoriser avec l’IA</button>
+          <button type="button" class="btn" id="btn-ai-tx-accept-all">Accepter les suggestions IA</button>
           <button type="button" class="btn" id="btn-undo-import" hidden>Annuler le dernier import</button>
           <button type="button" class="btn btn-primary" id="btn-add-tx">+ Ajouter</button>
         </div>
@@ -857,6 +943,7 @@
         </div>
         <div class="tx-select-row">
           <label><input type="checkbox" class="tx-check" id="tx-check-all"/> Tout sélectionner</label>
+          <button type="button" class="chip" id="chip-tx-referent" aria-pressed="false" title="Cocher une ligne sélectionne toutes les opérations du même commerçant ou destinataire">Sélection par référent</button>
           <button type="button" class="btn btn-sm" id="btn-select-transfers" hidden>Sélectionner tous les virements internes</button>
         </div>
       </div>
@@ -1043,7 +1130,7 @@
           </div>
         </article>
         <article class="card" id="internal-settings">
-          <div class="card-title"><h3>Virements internes</h3></div>
+          <div class="card-title"><h3>Virements internes / Épargne</h3></div>
           <p class="hint" style="margin-bottom:8px">Ajoutez des mots-clés (votre nom, Livret A, un extrait de n° de compte…). Tout libellé qui en contient un est détecté comme virement interne à l’import, et peut être appliqué aux opérations déjà saisies. Ils sont alors exclus des totaux, tout en restant visibles dans la liste.</p>
           <ul class="kw-list" id="internal-kw-list"></ul>
           <div class="setting-row">
@@ -1055,10 +1142,93 @@
             <div class="hint">Applique la détection (mots-clés et règles intégrées) aux transactions déjà présentes.</div>
             <button type="button" class="btn btn-sm" id="btn-internal-apply">Appliquer aux transactions existantes</button>
           </div>
+          <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:8px">
+            <div>
+              <strong>Mes comptes</strong>
+              <div class="hint">Noms de vos banques ou comptes (ex. Revolut, N26, Crédit Agricole). Les virements depuis ou vers ces comptes, et les recharges par carte, sont traités comme internes et exclus des totaux. N’indiquez pas des commerçants. Le nom du titulaire lu en en-tête d’un relevé (M., Mme) sert aussi, le temps de l’import.</div>
+            </div>
+            <ul class="kw-list" id="own-accounts-list"></ul>
+            <div class="setting-row">
+              <input id="own-account-input" class="field" type="text" maxlength="80" placeholder="Ex. Revolut, N26, Crédit Agricole" aria-label="Nom d’un de vos comptes"/>
+              <button type="button" class="btn btn-sm" id="btn-own-account-add">Ajouter</button>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div>
+              <strong>Placements</strong>
+              <div class="hint">Par défaut, bourse, crypto et poches d’investissement sont des virements internes (exclus des totaux), pas de l’épargne. Les livrets (Livret A, LDDS, LEP, PEL, CEL) restent de l’épargne.</div>
+            </div>
+            <label><input type="checkbox" id="count-placements-savings"/> Compter les placements (bourse, crypto, poches d’investissement) comme épargne</label>
+          </div>
+        </article>
+        <article class="card ai-settings" id="ai-settings" data-provider="off">
+          <div class="card-title"><h3>Assistant IA (Qwen)</h3></div>
+          <p class="hint">Désactivé par défaut. Rien ne quitte l’appareil tant que vous n’activez pas un fournisseur. La clé API est stockée uniquement dans ce navigateur, jamais dans les sauvegardes JSON sauf si vous le demandez explicitement.</p>
+          <div class="setting-row">
+            <div>
+              <strong>Fournisseur</strong>
+              <div class="hint" id="ai-settings-status">Désactivé (rien n’est envoyé)</div>
+            </div>
+            <select id="ai-provider" class="field" aria-label="Fournisseur d’IA" style="max-width:260px">
+              <option value="off">Désactivé</option>
+              <option value="dashscope">Qwen en ligne (DashScope)</option>
+              <option value="ollama">Qwen local (Ollama)</option>
+            </select>
+          </div>
+          <div class="ai-provider-fields ai-dashscope">
+            <div class="form-row"><label for="ai-dashscope-url">URL de l’API</label>
+              <input id="ai-dashscope-url" class="field" type="url" placeholder="https://dashscope-intl.aliyuncs.com/compatible-mode/v1"/>
+            </div>
+            <div class="form-row"><label for="ai-dashscope-model">Modèle</label>
+              <input id="ai-dashscope-model" class="field" type="text" list="ai-dashscope-models" placeholder="qwen-plus"/>
+              <datalist id="ai-dashscope-models">
+                <option value="qwen-plus"></option>
+                <option value="qwen-turbo"></option>
+                <option value="qwen-max"></option>
+              </datalist>
+            </div>
+            <div class="form-row"><label for="ai-dashscope-key">Clé API DashScope</label>
+              <input id="ai-dashscope-key" class="field" type="password" autocomplete="off" placeholder="sk-…"/>
+            </div>
+            <p class="ai-help">Créez une clé sur le <a href="https://www.alibabacloud.com/help/en/model-studio/get-api-key" target="_blank" rel="noopener">Model Studio / DashScope</a> (région internationale par défaut). Elle n’est jamais envoyée à l’éditeur de Mon Budget.</p>
+          </div>
+          <div class="ai-provider-fields ai-ollama">
+            <div class="form-row"><label for="ai-ollama-url">URL d’Ollama</label>
+              <input id="ai-ollama-url" class="field" type="url" placeholder="http://localhost:11434"/>
+            </div>
+            <div class="form-row"><label for="ai-ollama-model">Modèle</label>
+              <input id="ai-ollama-model" class="field" type="text" list="ai-ollama-models" placeholder="qwen2.5"/>
+              <datalist id="ai-ollama-models">
+                <option value="qwen2.5"></option>
+                <option value="qwen3"></option>
+                <option value="qwen2.5:7b"></option>
+              </datalist>
+            </div>
+            <p class="ai-help">Sur le Mac : <code>ollama pull qwen2.5</code> puis <code>ollama serve</code>. Pour le site en HTTPS (GitHub Pages), Safari bloque souvent <code>http://localhost</code> : préférez Chrome, ou l’app iOS. Autorisez CORS, par ex. <code>OLLAMA_ORIGINS=https://khaldiahmed91-cyber.github.io ollama serve</code>. Pour l’iPhone sur le même réseau Wi-Fi : <code>OLLAMA_HOST=0.0.0.0:11434</code> et indiquez l’IP du Mac (ex. <code>http://192.168.1.20:11434</code>).</p>
+          </div>
+          <div class="setting-row">
+            <div>
+              <strong>Données envoyées aux analyses</strong>
+              <div class="hint">La catégorisation demande toujours les libellés, après une confirmation.</div>
+            </div>
+            <select id="ai-send-mode" class="field" style="max-width:260px" aria-label="Données envoyées">
+              <option value="aggregates">Totaux agrégés seulement</option>
+              <option value="labels">Autoriser aussi les libellés</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label><input type="checkbox" id="ai-export-settings"/> Inclure ces réglages IA (sans la clé) dans la sauvegarde JSON</label>
+          </div>
+          <div class="setting-row">
+            <label><input type="checkbox" id="ai-export-key" disabled/> Inclure aussi la clé API dans la sauvegarde (déconseillé)</label>
+          </div>
+          <div class="setting-row">
+            <button type="button" class="btn btn-sm" id="btn-ai-test">Tester la connexion</button>
+          </div>
         </article>
         <article class="card">
           <div class="card-title"><h3>À propos</h3></div>
-          <p class="hint">Application personnelle, sans connexion bancaire. Les données restent dans ce navigateur (stockage local). Pensez à exporter une sauvegarde JSON de temps en temps.</p>
+          <p class="hint">Application personnelle, sans connexion bancaire. Les données restent dans ce navigateur (stockage local). L’assistant IA est optionnel et désactivé par défaut. Pensez à exporter une sauvegarde JSON de temps en temps.</p>
         </article>
       </div>
     </section>
@@ -1171,6 +1341,30 @@
         <div class="table-wrap" id="calc-year-table"></div>
       </article>
     </section>
+
+    <section id="view-assistant" class="view">
+      <div class="page-head">
+        <div>
+          <h2>Assistant IA</h2>
+          <p class="sub">Questions sur votre budget, analyses et conseils d’épargne. Désactivé par défaut.</p>
+        </div>
+        <div id="ai-chat-status" class="ai-status off"><span class="dot"></span>IA désactivée</div>
+      </div>
+      <div class="card ai-chat">
+        <div class="ai-quick">
+          <button type="button" class="chip" id="btn-ai-analyze">Analyse de mes dépenses</button>
+          <button type="button" class="chip" id="btn-ai-advice">Conseils d’épargne</button>
+          <button type="button" class="chip" id="btn-ai-save">Où puis-je économiser ?</button>
+          <button type="button" class="chip" data-ai-q="Quel a été mon plus gros poste de dépenses cette année ?">Plus gros poste ?</button>
+          <button type="button" class="chip" data-ai-q="Combien puis-je épargner par mois avec mon cash disponible ?">Épargne mensuelle possible</button>
+        </div>
+        <div class="ai-msgs" id="ai-msgs" aria-live="polite"></div>
+        <form class="ai-composer" id="ai-form">
+          <textarea id="ai-input" class="field" rows="2" placeholder="Posez une question sur votre budget…" aria-label="Message à l’assistant"></textarea>
+          <button type="submit" class="btn btn-primary" id="btn-ai-send">Envoyer</button>
+        </form>
+      </div>
+    </section>
   </main>
 
   <button type="button" class="fab" id="fab-add" aria-label="Ajouter une transaction">+</button>
@@ -1196,6 +1390,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M16 12h2M8 17h2M12 17h2M16 17h2"/></svg>
       Calcul
     </button>
+    <button type="button" data-view="assistant">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><circle cx="18.5" cy="16.5" r="2.5"/><circle cx="6.5" cy="17.5" r="1.7"/></svg>
+      IA
+    </button>
     <button type="button" data-view="parametres">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H8a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V8c.3.7 1 1.2 1.8 1.2H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1.8z"/></svg>
       Réglages
@@ -1206,6 +1404,21 @@
     <div class="modal" id="modal"></div>
   </div>
   <div class="toast" id="toast" role="status"></div>
+  <div class="overlay" id="ai-privacy-overlay" hidden>
+    <div class="modal" id="ai-privacy-modal" role="dialog" aria-modal="true" aria-labelledby="ai-privacy-title">
+      <h3 id="ai-privacy-title">Avant d’envoyer des données à l’IA</h3>
+      <p>Rien ne quitte cet appareil tant que l’assistant est désactivé. Si vous continuez, un résumé ou des libellés seront envoyés au fournisseur que vous avez choisi (Qwen / DashScope en ligne, ou Ollama sur votre machine). L’éditeur de Mon Budget ne reçoit rien. La clé API reste dans ce navigateur, hors des sauvegardes JSON par défaut.</p>
+      <p id="ai-privacy-need-labels" class="hint" hidden>La catégorisation automatique a besoin des <strong>libellés</strong> des opérations (pas seulement des totaux).</p>
+      <div class="ai-privacy-choices">
+        <label><input type="radio" name="ai-privacy-mode" id="ai-privacy-aggregates" value="aggregates"/> <span><strong>Totaux agrégés seulement</strong> — mois, catégories, épargne, cash disponible, récurrences. Pas de libellés d’opérations. Suffisant pour les analyses et conseils.</span></label>
+        <label><input type="radio" name="ai-privacy-mode" id="ai-privacy-labels" value="labels"/> <span><strong>Libellés des opérations</strong> — nécessaires pour proposer une catégorie. Les noms de commerçants sont envoyés, pas vos numéros de compte.</span></label>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="ai-privacy-cancel">Annuler</button>
+        <button type="button" class="btn btn-primary" id="ai-privacy-accept">J’ai compris, continuer</button>
+      </div>
+    </div>
+  </div>
   <div id="tx-bulk-bar" class="tx-bulk-bar" hidden></div>
   <div class="overlay" id="app-prompt-overlay">
     <div class="modal" id="app-prompt" role="dialog" aria-modal="true" aria-labelledby="prompt-title"></div>
@@ -1263,7 +1476,10 @@
     importMaps: {},
     importRules: {},
     importHistory: [],
-    internalKeywords: []
+    internalKeywords: [],
+    ownAccounts: [],
+    detectedHolders: [],
+    countPlacementsAsSavings: false
   };
 
   let toastTimer = null;
@@ -1420,12 +1636,53 @@
   function internalKeywordList() {
     return (state.internalKeywords || []).map(function (k) { return String(k || "").trim(); }).filter(Boolean);
   }
+  function ownAccountList() {
+    return (state.ownAccounts || []).map(function (k) { return String(k || "").trim(); }).filter(Boolean);
+  }
+  function detectedHolderList() {
+    return (state.detectedHolders || []).map(function (k) { return String(k || "").trim(); }).filter(Boolean);
+  }
+  function mergeDetectedHolders(names) {
+    if (!names || !names.length) return;
+    var fold = (typeof BankImport !== "undefined" && BankImport.foldText) ? BankImport.foldText : function (s) { return String(s || "").toLowerCase(); };
+    var have = {};
+    detectedHolderList().forEach(function (k) { have[fold(k)] = true; });
+    var next = detectedHolderList().slice();
+    names.forEach(function (n) {
+      var k = fold(n);
+      if (!k || k.length < 3 || have[k]) return;
+      have[k] = true;
+      next.push(String(n).trim());
+    });
+    state.detectedHolders = next;
+  }
+  function addOwnAccount(name) {
+    var kw = String(name || "").trim();
+    if (kw.length < 3) { toast("Indiquez au moins 3 caractères (nom de banque ou de compte)."); return false; }
+    var fold = (typeof BankImport !== "undefined" && BankImport.foldText) ? BankImport.foldText : function (s) { return String(s || "").toLowerCase(); };
+    if (ownAccountList().some(function (k) { return fold(k) === fold(kw); })) { toast("Ce compte est déjà dans la liste."); return false; }
+    state.ownAccounts = ownAccountList().concat([kw]);
+    persist();
+    renderInternalSettings();
+    toast("Compte « " + kw + " » ajouté.");
+    return true;
+  }
+  function removeOwnAccount(name) {
+    var fold = (typeof BankImport !== "undefined" && BankImport.foldText) ? BankImport.foldText : function (s) { return String(s || "").toLowerCase(); };
+    var target = fold(name);
+    state.ownAccounts = ownAccountList().filter(function (k) { return fold(k) !== target; });
+    persist();
+    renderInternalSettings();
+  }
   function isInternalTx(t) {
     if (!t) return false;
     if (isExcluded(t)) return true;
     var label = t.description || t.label || "";
     if (typeof BankImport !== "undefined" && BankImport.isInternalTransferHint) {
-      return BankImport.isInternalTransferHint(label, internalKeywordList());
+      if (BankImport.isInternalTransferHint(label, internalKeywordList())) return true;
+      if (BankImport.isOwnAccountTransfer && BankImport.isOwnAccountTransfer(label, ownAccountList().concat(detectedHolderList()))) return true;
+      if (BankImport.isPlacementTransferLabel && BankImport.isPlacementTransferLabel(label) && !state.countPlacementsAsSavings) return true;
+      return false;
     }
     return /vir(?:ement)?\s+interne|transfert\s+interne|vir\s+compte|compte a compte|de compte a compte/i.test(label);
   }
@@ -1483,15 +1740,29 @@
   }
   function renderInternalSettings() {
     var list = document.getElementById("internal-kw-list");
-    if (!list) return;
-    var kws = internalKeywordList();
-    if (!kws.length) {
-      list.innerHTML = '<li class="hint" style="background:transparent;font-weight:500">Aucun mot-clé pour l’instant.</li>';
-    } else {
-      list.innerHTML = kws.map(function (k) {
-        return "<li>" + esc(k) + ' <button type="button" data-kw-del="' + esc(k) + '" aria-label="Retirer ' + esc(k) + '">×</button></li>';
-      }).join("");
+    if (list) {
+      var kws = internalKeywordList();
+      if (!kws.length) {
+        list.innerHTML = '<li class="hint" style="background:transparent;font-weight:500">Aucun mot-clé pour l’instant.</li>';
+      } else {
+        list.innerHTML = kws.map(function (k) {
+          return "<li>" + esc(k) + ' <button type="button" data-kw-del="' + esc(k) + '" aria-label="Retirer ' + esc(k) + '">×</button></li>';
+        }).join("");
+      }
     }
+    var alist = document.getElementById("own-accounts-list");
+    if (alist) {
+      var accs = ownAccountList();
+      if (!accs.length) {
+        alist.innerHTML = '<li class="hint" style="background:transparent;font-weight:500">Aucun compte pour l’instant.</li>';
+      } else {
+        alist.innerHTML = accs.map(function (k) {
+          return "<li>" + esc(k) + ' <button type="button" data-own-del="' + esc(k) + '" aria-label="Retirer ' + esc(k) + '">×</button></li>';
+        }).join("");
+      }
+    }
+    var cb = document.getElementById("count-placements-savings");
+    if (cb) cb.checked = !!state.countPlacementsAsSavings;
   }
   function txsMatchingInternalDetection(onlyNotExcluded) {
     var out = [];
@@ -1503,7 +1774,7 @@
     });
     (state.recurring || []).forEach(function (r) {
       if (onlyNotExcluded && r.excluded) return;
-      if (BankImport.isInternalTransferHint(r.description, internalKeywordList())) {
+      if (isInternalTx(Object.assign({}, r, { excluded: false, description: r.description }))) {
         if (!r.excluded) out.push(r);
       }
     });
@@ -1767,6 +2038,7 @@
     if (!raw) state.year = 2026;
     state.calc = sanitizeCalc(raw && raw.calc);
     loadImportExtras(raw);
+    if (typeof loadAiSettings === "function") loadAiSettings();
   }
   function defaultCalc() {
     return { years: 30, mode: "year", incomeRate: 0, expenseRate: 0 };
@@ -1801,7 +2073,10 @@
       importMaps: state.importMaps || {},
       importRules: state.importRules || {},
       importHistory: state.importHistory || [],
-      internalKeywords: state.internalKeywords || []
+      internalKeywords: state.internalKeywords || [],
+      ownAccounts: state.ownAccounts || [],
+      detectedHolders: state.detectedHolders || [],
+      countPlacementsAsSavings: !!state.countPlacementsAsSavings
     };
     storageSet(JSON.stringify(payload));
     updateStorageBanner();
@@ -2270,6 +2545,11 @@
     });
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { try { window.scrollTo(0, 0); } catch (e2) {} }
     if (typeof updateBulkBar === "function") updateBulkBar();
+    if (name === "assistant" && typeof renderAssistant === "function") renderAssistant();
+    if (name === "parametres") {
+      if (typeof renderInternalSettings === "function") renderInternalSettings();
+      if (typeof renderAiSettings === "function") renderAiSettings();
+    }
   }
   var toastUndoFn = null;
   function toast(msg, action) {
@@ -2756,6 +3036,7 @@
 
   var selectedTx = {};
   var bulkSnapshot = null;
+  var selectByReferentTx = false;
 
   function pruneSelection() {
     Object.keys(selectedTx).forEach(function (id) {
@@ -2777,6 +3058,60 @@
   function setTxSelected(id, on) {
     if (on) selectedTx[id] = true;
     else delete selectedTx[id];
+  }
+  function txRefOf(t) {
+    return txReferent(t && t.description);
+  }
+  function visibleReferentMatches(key) {
+    if (!key) return [];
+    return filteredTransactions().filter(function (t) { return txReferent(t.description).key === key; });
+  }
+  function sharedTxReferent(items) {
+    if (!items || !items.length) return null;
+    var k = txReferent(items[0].description);
+    if (!k.key) return null;
+    var i;
+    for (i = 1; i < items.length; i++) if (txReferent(items[i].description).key !== k.key) return null;
+    return k;
+  }
+  function syncReferentChip() {
+    var chip = document.getElementById("chip-tx-referent");
+    if (!chip) return;
+    chip.classList.toggle("active", !!selectByReferentTx);
+    chip.setAttribute("aria-pressed", selectByReferentTx ? "true" : "false");
+  }
+  function refreshTxSelectionDOM() {
+    document.querySelectorAll("#tx-list .tx-item").forEach(function (el) {
+      var id = el.getAttribute("data-tx");
+      var on = !!(id && selectedTx[id]);
+      el.classList.toggle("selected", on);
+      var box = el.querySelector("input.tx-check");
+      if (box) box.checked = on;
+    });
+    updateBulkBar();
+  }
+  function setTxSelectedGroup(id, on, fromUser) {
+    var t = findTxById(id);
+    if (!t) return;
+    var ref = txReferent(t.description);
+    var expand = !!selectByReferentTx && !!ref.key;
+    if (expand) {
+      visibleReferentMatches(ref.key).forEach(function (row) { setTxSelected(row.id, on); });
+    } else {
+      setTxSelected(id, on);
+    }
+    refreshTxSelectionDOM();
+    if (fromUser && expand && on) {
+      var n = visibleReferentMatches(ref.key).length;
+      if (n > 1) toast(n + " lignes « " + ref.display + " » sélectionnées");
+    }
+  }
+  function extendSelectionToReferent(key) {
+    if (!key) return 0;
+    var n = 0;
+    visibleReferentMatches(key).forEach(function (row) { setTxSelected(row.id, true); n++; });
+    renderTransactions();
+    return n;
   }
   function snapshotFinance() {
     return {
@@ -2813,6 +3148,7 @@
     });
     var btn = document.getElementById("btn-select-transfers");
     if (btn) btn.hidden = internalsInYear().length === 0;
+    syncReferentChip();
   }
   function updateBulkBar() {
     var bar = document.getElementById("tx-bulk-bar");
@@ -2837,13 +3173,21 @@
       if (t.type === "revenu") total += amt;
       else total -= amt;
     });
+    var shared = sharedTxReferent(items);
+    var extra = 0;
+    if (shared) extra = visibleReferentMatches(shared.key).filter(function (t) { return !selectedTx[t.id]; }).length;
     var meta = items.length + " sélectionnée" + (items.length > 1 ? "s" : "") +
       " · " + fmtMoney(total);
+    if (shared) meta += " · « " + shared.display + " »";
     bar.innerHTML =
       '<div class="bulk-meta">' + esc(meta) +
         '<div class="hint">Les séries récurrentes sont traitées en entier.</div>' +
       "</div>" +
+      (extra > 0 && shared
+        ? '<button type="button" class="btn btn-sm btn-primary" id="btn-bulk-extend-ref">+ Sélectionner tout « ' + esc(shared.display) + " » (" + (items.length + extra) + ")</button>"
+        : "") +
       '<button type="button" class="btn btn-sm" id="btn-bulk-interne">Marquer comme virement interne</button>' +
+      '<button type="button" class="btn btn-sm" id="btn-bulk-ai-cat">Catégoriser avec l’IA</button>' +
       '<button type="button" class="btn btn-sm" id="btn-bulk-type">Changer le type</button>' +
       '<button type="button" class="btn btn-sm" id="btn-bulk-cat">Changer la catégorie</button>' +
       '<button type="button" class="btn btn-sm btn-danger" id="btn-bulk-delete">Supprimer</button>' +
@@ -3053,6 +3397,11 @@
     }
     let html = "";
     let lastMonth = null;
+    var refCounts = {};
+    list.forEach(function (t) {
+      var rk = txReferent(t.description).key;
+      if (rk) refCounts[rk] = (refCounts[rk] || 0) + 1;
+    });
     list.forEach(function (t) {
       const p = parseYMD(t.date);
       if (p.m !== lastMonth) {
@@ -3080,7 +3429,20 @@
       if (t.recurring) {
         html += '<button type="button" class="btn btn-sm btn-stop-rec" data-rec="' + esc(t.recurringId) + '" data-month="' + esc(t.date.slice(0, 7)) + '" title="Arrêter cette série à partir d\'un mois donné">Arrêter…</button>';
       }
+      var refInfo = txReferent(t.description);
+      var refN = (refInfo.key && refCounts[refInfo.key]) || 0;
+      if (refN > 1) {
+        html += '<button type="button" class="btn btn-sm btn-referent" data-ref-sel="' + esc(t.id) + '" title="Sélectionner les ' + refN + " opérations « " + esc(refInfo.display) + ' »">×' + refN + "</button>";
+      }
       html += '<button type="button" class="btn btn-sm btn-interne' + (isExcluded(t) ? " on" : "") + '" data-interne="' + esc(t.id) + '" aria-pressed="' + (isExcluded(t) ? "true" : "false") + '" title="Virement interne, exclu des totaux">⇄ Interne</button>';
+      if (typeof aiTxProposals !== "undefined" && aiTxProposals && aiTxProposals[t.id]) {
+        var sug = aiTxProposals[t.id];
+        html += '<span class="ai-proposal-badge">IA : ' + esc(sug.categoryLabel || sug.categoryId);
+        if (sug.subcategoryLabel) html += " · " + esc(sug.subcategoryLabel);
+        html += ' <button type="button" class="btn btn-sm" data-ai-tx-accept="' + esc(t.id) + '">OK</button>';
+        html += ' <button type="button" class="btn btn-sm" data-ai-tx-accept-ref="' + esc(t.id) + '">Tout le référent</button>';
+        html += ' <button type="button" class="btn btn-sm" data-ai-tx-reject="' + esc(t.id) + '">×</button></span>';
+      }
       var amtKind = isExcluded(t) ? "depense" : (t.type === "retrait" ? "depense" : t.type);
       html += '<div class="amt num ' + (isExcluded(t) ? "" : t.type) + '">' + esc(fmtMoneySigned(t.amount, amtKind)) + "</div></div>";
     });
@@ -3821,6 +4183,8 @@
     renderCalculator();
     updateImportUndoButtons();
     if (typeof renderInternalSettings === "function") renderInternalSettings();
+    if (typeof renderAiSettings === "function") renderAiSettings();
+    if (state.view === "assistant" && typeof renderAssistant === "function") renderAssistant();
   }
 
 
@@ -3854,21 +4218,56 @@
     return new Uint8Array(buf);
   }
 
+  function decodeUtf8Manual(u8) {
+    var out = "", i = 0, c, c2, c3, c4, cp, repl = 0;
+    while (i < u8.length) {
+      c = u8[i];
+      if (c < 0x80) { out += String.fromCharCode(c); i++; continue; }
+      if ((c & 0xE0) === 0xC0 && i + 1 < u8.length) {
+        c2 = u8[i + 1];
+        if ((c2 & 0xC0) === 0x80) {
+          cp = ((c & 0x1F) << 6) | (c2 & 0x3F);
+          if (cp >= 0x80) { out += String.fromCharCode(cp); i += 2; continue; }
+        }
+      } else if ((c & 0xF0) === 0xE0 && i + 2 < u8.length) {
+        c2 = u8[i + 1]; c3 = u8[i + 2];
+        if ((c2 & 0xC0) === 0x80 && (c3 & 0xC0) === 0x80) {
+          cp = ((c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | (c3 & 0x3F);
+          if (cp >= 0x800 && (cp < 0xD800 || cp > 0xDFFF)) { out += String.fromCharCode(cp); i += 3; continue; }
+        }
+      } else if ((c & 0xF8) === 0xF0 && i + 3 < u8.length) {
+        c2 = u8[i + 1]; c3 = u8[i + 2]; c4 = u8[i + 3];
+        if ((c2 & 0xC0) === 0x80 && (c3 & 0xC0) === 0x80 && (c4 & 0xC0) === 0x80) {
+          cp = ((c & 0x07) << 18) | ((c2 & 0x3F) << 12) | ((c3 & 0x3F) << 6) | (c4 & 0x3F);
+          if (cp >= 0x10000 && cp <= 0x10FFFF) {
+            cp -= 0x10000;
+            out += String.fromCharCode(0xD800 + (cp >> 10), 0xDC00 + (cp & 0x3FF));
+            i += 4; continue;
+          }
+        }
+      }
+      out += "\uFFFD"; repl++; i++;
+    }
+    return { text: out, repl: repl };
+  }
   function decodeText(buf) {
     var u8 = bytesOf(buf);
     var offset = 0;
     if (u8.length >= 3 && u8[0] === 0xEF && u8[1] === 0xBB && u8[2] === 0xBF) offset = 3;
     var slice = offset ? u8.subarray(offset) : u8;
-    var utf8 = "";
-    try { utf8 = new TextDecoder("utf-8").decode(slice); } catch (e) {
-      utf8 = "";
-      for (var i = 0; i < slice.length; i++) utf8 += String.fromCharCode(slice[i]);
+    var utf8 = "", utf8Trusted = false;
+    try {
+      utf8 = new TextDecoder("utf-8").decode(slice);
+      utf8Trusted = true;
+    } catch (e) {
+      var manual = decodeUtf8Manual(slice);
+      utf8 = manual.text;
+      utf8Trusted = manual.repl === 0;
     }
     var repl = 0;
     for (var j = 0; j < utf8.length; j++) if (utf8.charCodeAt(j) === 0xFFFD) repl++;
-    var ratio = utf8.length ? repl / utf8.length : 0;
     if (repl === 0) return utf8;
-    if (ratio < 0.002 && repl < 2) return utf8;
+    if (utf8Trusted && utf8.length && repl / utf8.length < 0.002 && repl < 2) return utf8;
     var latin = "";
     try { latin = new TextDecoder("windows-1252").decode(slice); }
     catch (e2) {
@@ -4252,16 +4651,28 @@
     return rows;
   }
 
+  function rowLooksLikeHeaderLite(cells) {
+    var n = 0, i, f;
+    for (i = 0; i < (cells || []).length; i++) {
+      f = foldText(cells[i]);
+      if (!f) continue;
+      if (/^(date|libelle|label|description|montant|amount|debit|credit|etat|status|statut)/.test(f) ||
+          f.indexOf("debit") !== -1 || f.indexOf("credit") !== -1 ||
+          f.indexOf("libelle") !== -1 || f.indexOf("date") === 0) n++;
+    }
+    return n >= 2;
+  }
   function detectDelimiter(text) {
-    var lines = String(text || "").split(/\r?\n/).slice(0, 30);
     var cands = [";", ",", "\t", "|"];
     var best = ";", bestScore = -1;
+    var src = String(text || "");
     cands.forEach(function (d) {
+      var rows = parseCsv(src, d).slice(0, 40);
       var counts = [];
-      lines.forEach(function (line) {
-        if (!line.trim()) return;
-        var n = parseCsv(line, d)[0] ? parseCsv(line, d)[0].length : 0;
-        if (n > 1) counts.push(n);
+      rows.forEach(function (r) {
+        var filled = 0, i;
+        for (i = 0; i < r.length; i++) if (String(r[i] || "").trim() !== "") filled++;
+        if (filled > 1) counts.push(r.length);
       });
       if (!counts.length) return;
       var freq = {};
@@ -4269,7 +4680,15 @@
       var mode = 0, modeN = 0;
       Object.keys(freq).forEach(function (k) { if (freq[k] > mode) { mode = freq[k]; modeN = +k; } });
       var score = mode * 10 + modeN;
-      if (d === ";" ) score += 2;
+      if (d === ";") score += 2;
+      rows.slice(0, 25).forEach(function (r) {
+        if (rowLooksLikeHeaderLite(r)) score += 80;
+      });
+      var map = detectMapping(rows, "csv");
+      if (map && map.headerRow >= 0) score += 80;
+      if (map && map.dateCol >= 0) score += 40;
+      if (map && map.debitCol >= 0 && map.creditCol >= 0) score += 80;
+      else if (map && map.amountCol >= 0 && map.dateCol >= 0) score += 40;
       if (score > bestScore) { bestScore = score; best = d; }
     });
     return best;
@@ -4280,6 +4699,7 @@
   var AMOUNT_HEADERS = ["montant","montant eur","montant euro","amount","somme","value","trnamt","operation amount","montant operation","solde operation"];
   var DEBIT_HEADERS = ["debit","debits","withdrawal","withdrawals","sorties","sortie","expenses","depense","depenses","montant debit"];
   var CREDIT_HEADERS = ["credit","credits","deposit","deposits","entrees","entree","income","montant credit"];
+  var STATUS_HEADERS = ["etat","status","state","statut","situation"];
   var CATEGORY_HEADERS = ["categorie","category","rubrique","class","classification","famille","type operation","sous categorie"];
 
   function headerRole(name) {
@@ -4297,6 +4717,7 @@
     if (hit(DEBIT_HEADERS)) return "debit";
     if (hit(CREDIT_HEADERS)) return "credit";
     if (hit(AMOUNT_HEADERS) && f.indexOf("solde") === -1) return "amount";
+    if (hit(STATUS_HEADERS)) return "status";
     if (hit(CATEGORY_HEADERS)) return "category";
     if (hit(LABEL_HEADERS)) return "label";
     return "";
@@ -4312,6 +4733,8 @@
     if (typeof str === "number") return isFinite(str) ? Math.round(str * 100) / 100 : NaN;
     var t = String(str || "").trim();
     if (!t) return NaN;
+    if (/^\d{1,2}[./-]\d{1,2}[./-]\d{2,4}([ T].*)?$/.test(t)) return NaN;
+    if (/^\d{4}[./-]\d{1,2}[./-]\d{1,2}([ T].*)?$/.test(t)) return NaN;
     t = t.replace(/[€$£]|EUR|USD|GBP/gi, "");
     t = t.replace(/[\s\u00a0\u202f\u2009\u2007\u2028]/g, "");
     var neg = false;
@@ -4434,7 +4857,7 @@
     var width = 0;
     rows.forEach(function (r) { if (r && r.length > width) width = r.length; });
     var i, role, map = {
-      dateCol: -1, labelCol: -1, amountCol: -1, debitCol: -1, creditCol: -1, categoryCol: -1,
+      dateCol: -1, labelCol: -1, amountCol: -1, debitCol: -1, creditCol: -1, categoryCol: -1, statusCol: -1,
       amountMode: "signed", dateFormat: "dmy", invertSign: false, headerRow: headerRow, kind: kind || "table"
     };
     if (headerRow >= 0) {
@@ -4448,6 +4871,7 @@
         else if (role === "amount" && map.amountCol < 0) map.amountCol = i;
         else if (role === "debit" && map.debitCol < 0) map.debitCol = i;
         else if (role === "credit" && map.creditCol < 0) map.creditCol = i;
+        else if (role === "status" && map.statusCol < 0) map.statusCol = i;
         else if (role === "category" && map.categoryCol < 0) map.categoryCol = i;
       }
     } else {
@@ -4481,6 +4905,12 @@
     return map;
   }
 
+  function isCancelledStatus(status) {
+    var f = foldText(status);
+    if (!f) return false;
+    return /^(renvoye|renvoyee|rejete|rejetee|annule|annulee|declined|cancelled|canceled|returned|failed|refuse|refusee|unsuccessful|reversed|void|expired|blocked|revoked)$/.test(f);
+  }
+
   function applyMapping(rows, map) {
     var out = [], i, r, dateRaw, label, amount, debit, credit, cat;
     var start = map.dataStart || 0;
@@ -4489,6 +4919,8 @@
       dateRaw = map.dateCol >= 0 ? r[map.dateCol] : "";
       label = map.labelCol >= 0 ? String(r[map.labelCol] == null ? "" : r[map.labelCol]).trim() : "";
       cat = map.categoryCol >= 0 ? String(r[map.categoryCol] == null ? "" : r[map.categoryCol]).trim() : "";
+      var status = map.statusCol >= 0 ? String(r[map.statusCol] == null ? "" : r[map.statusCol]).trim() : "";
+      if (isCancelledStatus(status)) continue;
       if (map.amountMode === "debit-credit") {
         debit = map.debitCol >= 0 ? parseAmountBank(r[map.debitCol]) : NaN;
         credit = map.creditCol >= 0 ? parseAmountBank(r[map.creditCol]) : NaN;
@@ -4702,16 +5134,28 @@
     "vir interne", "virement interne", "transfert interne",
     "vir compte", "de compte a compte", "virement compte a compte",
     "vers mon compte", "de mon compte", "vers votre compte", "de votre compte",
-    "entre comptes", "vers compte joint", "depuis livret", "vers livret"
+    "entre comptes", "vers compte joint",
+    "paiement envoye par", "payment sent by",
+    "change en eur", "change en usd", "change en gbp", "change en chf",
+    "envoye depuis revolut", "envoye depuis n26", "envoye depuis wise",
+    "envoye depuis bunq", "envoye depuis lydia", "envoye depuis nickel",
+    "envoye depuis boursorama", "envoye depuis fortuneo", "envoye depuis bforbank",
+    "envoye depuis qonto", "envoye depuis shine",
+    "recharge via"
   ];
   var CARD_STATEMENT_HINTS = [
     "releve carte", "releve cb", "prelevement carte differe",
     "prelevement cb differe", "differe carte", "carte differe"
   ];
   var TRANSFER_HINTS = INTERNAL_TRANSFER_HINTS.concat(CARD_STATEMENT_HINTS);
-  var SAVINGS_PRODUCT_RE = /\b(livret|ldds|lep|pel|cel|epargne|compte joint)\b/;
-  var TRANSFER_VERB_RE = /\b(vir|virement|versement|transfert)\b/;
-  var INCOME_LABEL_RE = /\b(salaire|employeur|payroll|paie|virement salaire|vir salaire)\b/;
+  var SAVINGS_PRODUCT_RE = /\b(livret|ldds|lep|pel|cel|epargne|assurance vie)\b/;
+  var PLACEMENT_RE = /\b(compte d investissement|compte dinvestissement|dinvestissement|investissement|investment|portfolio|digital assets|compte titres|pea|crypto|bourse)\b/;
+  var TRANSFER_VERB_RE = /\b(vir|virement|versement|transfert|transfer)\b/;
+  var INCOME_LABEL_RE = /\b(salaire|employeur|payroll|paie|virement salaire|vir salaire|caf|caisse d allocations|allocations familiales|pole emploi|france travail|demande de financement)\b/;
+  var BOOKKEEPING_LABEL_RE = /^(solde initial|solde de \d+|solde d ouverture|nouveau solde)\b/;
+  var FX_LABEL_RE = /\bchange en (eur|usd|gbp|chf)\b|\b(exchange to|fx conversion|conversion de devise)\b/;
+  var BOURSE_BUY_RE = /\bachat en bourse\b/;
+  var BOURSE_SELL_RE = /\bvente en bourse\b/;
 
   function labelHasHint(label, hints) {
     var f = " " + foldText(label) + " ";
@@ -4723,11 +5167,97 @@
   function isIncomeLikeLabel(label) {
     return INCOME_LABEL_RE.test(foldText(label));
   }
+  function isBookkeepingLabel(label) {
+    return BOOKKEEPING_LABEL_RE.test(foldText(label));
+  }
+  function isSavingsTransferLabel(label) {
+    var f = foldText(label);
+    if (!f || isIncomeLikeLabel(label)) return false;
+    return SAVINGS_PRODUCT_RE.test(f);
+  }
+  function isPlacementTransferLabel(label) {
+    var f = foldText(label);
+    if (!f || isIncomeLikeLabel(label)) return false;
+    if (isSavingsTransferLabel(label)) return false;
+    if (BOURSE_BUY_RE.test(f) || BOURSE_SELL_RE.test(f)) return true;
+    if (PLACEMENT_RE.test(f)) return true;
+    if (/vers le compte d ?investissement/.test(f)) return true;
+    return false;
+  }
+  function placementTransferKind(label, amount) {
+    if (!isPlacementTransferLabel(label)) return "";
+    var f = foldText(label);
+    if (BOURSE_SELL_RE.test(f)) return "retrait";
+    if (Number(amount) > 0) return "retrait";
+    return "epargne";
+  }
+  function extractAccountHolderNames(text, maxLines) {
+    var names = [];
+    var seen = {};
+    function add(n) {
+      var k = foldText(n);
+      if (!k || k.length < 3) return;
+      if (seen[k]) return;
+      if (/\b(compte|carte|solde|releve|banque|credit|agricole|depot|courant)\b/.test(k)) return;
+      seen[k] = true;
+      names.push(String(n).trim());
+    }
+    var lines = String(text || "").split(/\r?\n/);
+    var limit = typeof maxLines === "number" ? maxLines : 30;
+    var re = /\b(?:monsieur|madame|mademoiselle|mme|mlle|mr|mrs)\s+([a-z][a-z''’ -]{2,}(?:\s+[a-z][a-z''’ -]{1,}){0,3})/gi;
+    for (var i = 0; i < lines.length && i < limit; i++) {
+      var line = lines[i];
+      if (/date d['’]op[eé]ration|libell[eé]|d[eé]bit euros|^type\s*[,;\t]|date de d[eé]but/i.test(line) && /[;,\t]/.test(line)) break;
+      var m;
+      var src = foldText(line);
+      re.lastIndex = 0;
+      while ((m = re.exec(src))) {
+        var full = String(m[1] || "").replace(/\s+/g, " ").trim();
+        add(full);
+        var parts = full.split(/\s+/).filter(Boolean);
+        if (parts.length >= 2) add(parts.slice().reverse().join(" "));
+        var longest = parts.slice().sort(function (a, b) { return b.length - a.length; })[0];
+        if (longest && longest.length >= 5) add(longest);
+      }
+    }
+    return names;
+  }
+  function isOwnAccountTransfer(label, names) {
+    if (!label || !names || !names.length) return false;
+    if (isIncomeLikeLabel(label)) return false;
+    var f = " " + foldText(label) + " ";
+    var hit = "";
+    for (var i = 0; i < names.length; i++) {
+      var k = foldText(names[i]);
+      if (!k || k.length < 3) continue;
+      if (f.indexOf(" " + k + " ") !== -1) { hit = k; break; }
+    }
+    if (!hit) return false;
+    if (isPairableTransferLabel(label)) return true;
+    if (/\b(paiement par carte|paiement cb|ajout de fonds|recharge)\b/.test(f)) return true;
+    if (/\b(vers|depuis|to|from|emis|envoye)\b/.test(f)) return true;
+    return false;
+  }
+  function savingsTransferKind(label, amount) {
+    if (!isSavingsTransferLabel(label)) return "";
+    var f = foldText(label);
+    if (BOURSE_SELL_RE.test(f)) return "retrait";
+    if (/\btransfer from\b/.test(f) && SAVINGS_PRODUCT_RE.test(f)) return "retrait";
+    if (/\bdepuis\b/.test(f) && SAVINGS_PRODUCT_RE.test(f)) return "retrait";
+    if (/\bretrait\b/.test(f) && SAVINGS_PRODUCT_RE.test(f)) return "retrait";
+    if (isFinite(amount) && amount > 0 && SAVINGS_PRODUCT_RE.test(f) && !/\b(vers|to)\b/.test(f)) return "retrait";
+    return "epargne";
+  }
   function isBuiltinInternalTransfer(label) {
     if (isIncomeLikeLabel(label)) return false;
+    if (isSavingsTransferLabel(label)) return false;
+    if (isPlacementTransferLabel(label)) return true;
+    if (isBookkeepingLabel(label)) return true;
     if (labelHasHint(label, INTERNAL_TRANSFER_HINTS)) return true;
     var f = foldText(label);
-    if (TRANSFER_VERB_RE.test(f) && SAVINGS_PRODUCT_RE.test(f)) return true;
+    if (/^recharge(\s+via\b|\s*$)/.test(f)) return true;
+    if (FX_LABEL_RE.test(f)) return true;
+    if (/\bvirement emis(?: web)? ouverture\b/.test(f)) return true;
     return false;
   }
   function keywordMatchesLabel(label, keywords) {
@@ -4736,7 +5266,7 @@
     for (var i = 0; i < keywords.length; i++) {
       var k = foldText(keywords[i]);
       if (!k || k.length < 3) continue;
-      if (f.indexOf(" " + k + " ") !== -1 || f.indexOf(k) !== -1) return true;
+      if (f.indexOf(" " + k + " ") !== -1) return true;
     }
     return false;
   }
@@ -4759,6 +5289,43 @@
   function hasVirWord(label) {
     return TRANSFER_VERB_RE.test(foldText(label));
   }
+  function isPairableTransferLabel(label) {
+    if (isIncomeLikeLabel(label) || isBookkeepingLabel(label)) return false;
+    var f = foldText(label);
+    if (!f) return false;
+    if (TRANSFER_VERB_RE.test(f)) return true;
+    if (/\bpaiement envoye par\b|\bpayment sent by\b|\benvoye depuis\b|\benvoye par\b/.test(f)) return true;
+    if (/^recharge(\s+via\b|\s*$)/.test(f)) return true;
+    if (FX_LABEL_RE.test(f)) return true;
+    if (/\bajout de fonds\b/.test(f)) return true;
+    if (/^to [a-z]/.test(f)) return true;
+    return false;
+  }
+  function isWeakReferentKey(key) {
+    var parts = String(key || "").split(/\s+/).filter(Boolean);
+    if (!parts.length) return true;
+    var strong = 0;
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      if (p.length < 3) continue;
+      if (KEYWORD_STOP[p]) continue;
+      if (/^(recharge|ajout|fonds|paiement|envoye|web|transfer|transfert|ouverture|change|conversion)$/.test(p)) continue;
+      strong++;
+    }
+    return strong === 0;
+  }
+  function pairReferentsCompatible(labelA, labelB) {
+    var ra = extractReferentKey(labelA);
+    var rb = extractReferentKey(labelB);
+    if (isWeakReferentKey(ra.key) || isWeakReferentKey(rb.key)) return true;
+    if (referentsMatch(ra, rb)) return true;
+    var aa = String(ra.key).split(/\s+/).filter(function (p) { return p.length >= 3 && !isWeakReferentKey(p); });
+    var bb = String(rb.key).split(/\s+/).filter(function (p) { return p.length >= 3 && !isWeakReferentKey(p); });
+    for (var i = 0; i < aa.length; i++) {
+      if (bb.indexOf(aa[i]) !== -1) return true;
+    }
+    return false;
+  }
   function findInternalPairs(records) {
     var hits = {};
     var list = records || [];
@@ -4766,18 +5333,20 @@
     for (i = 0; i < list.length; i++) {
       a = list[i];
       if (!a || !isFinite(a.amount) || !a.amount || !a.date) continue;
-      if (isIncomeLikeLabel(a.label) || !hasVirWord(a.label)) continue;
+      if (isIncomeLikeLabel(a.label) || !isPairableTransferLabel(a.label)) continue;
       for (j = i + 1; j < list.length; j++) {
         b = list[j];
         if (!b || !isFinite(b.amount) || !b.amount || !b.date) continue;
         if (Math.sign(a.amount) === Math.sign(b.amount)) continue;
         if (moneyCents(Math.abs(a.amount)) !== moneyCents(Math.abs(b.amount))) continue;
         if (daysBetweenISO(a.date, b.date) > 3) continue;
-        if (isIncomeLikeLabel(b.label) || !hasVirWord(b.label)) continue;
+        if (isIncomeLikeLabel(b.label) || !isPairableTransferLabel(b.label)) continue;
+        if (!pairReferentsCompatible(a.label, b.label)) continue;
         ka = a.rowIndex != null ? a.rowIndex : i;
         kb = b.rowIndex != null ? b.rowIndex : j;
-        hits[ka] = true;
-        hits[kb] = true;
+        if (hits[ka] || hits[kb]) continue;
+        hits[ka] = kb;
+        hits[kb] = ka;
       }
     }
     return hits;
@@ -4813,6 +5382,118 @@
     return last.length >= 3 ? last : "";
   }
 
+
+  var REF_PREFIXES = [
+    ["paiement", "envoye", "par"],
+    ["payment", "sent", "by"],
+    ["virement", "en", "votre", "faveur"],
+    ["virement", "emis", "web"],
+    ["virement", "emis"],
+    ["vir", "inst", "vers"],
+    ["vir", "inst", "de"],
+    ["envoye", "depuis"],
+    ["transfer", "to"],
+    ["transfer", "from"],
+    ["vers", "le", "compte"],
+    ["recharge", "via"],
+    ["ajout", "de", "fonds"],
+    ["paiement", "par", "carte"],
+    ["paiement", "cb"],
+    ["achat", "cb"],
+    ["paiement"],
+    ["achat"],
+    ["vir", "sepa", "recu"],
+    ["vir", "sepa", "emis"],
+    ["virement", "sepa"],
+    ["virement", "inst"],
+    ["virement", "permanent"],
+    ["vir", "sepa"],
+    ["vir", "inst"],
+    ["vir", "permanent"],
+    ["virement"],
+    ["vir"],
+    ["prlv", "sepa"],
+    ["prelevement", "sepa"],
+    ["prelevement"],
+    ["prlv"],
+    ["retrait", "dab"],
+    ["retrait"],
+    ["dab"],
+    ["carte"],
+    ["cb"],
+    ["chq"],
+    ["cheque"],
+    ["avoir"],
+    ["remboursement"],
+    ["echeance"],
+    ["ech"],
+    ["f", "cotis"],
+    ["cotis"],
+    ["facture"]
+  ];
+  var REF_START_FILLERS = { de: 1, du: 1, des: 1, pour: 1, vers: 1, par: 1, chez: 1, au: 1, aux: 1, le: 1, la: 1, les: 1, en: 1, a: 1, of: 1 };
+  var REF_NOISE = { ref: 1, reference: 1, id: 1, numero: 1, n: 1, no: 1, nr: 1, cb: 1, carte: 1, visa: 1, mastercard: 1, eurocard: 1, libelle: 1, inst: 1, sepa: 1, permanent: 1, dab: 1 };
+  var REF_LEGAL = { sas: 1, sarl: 1, sa: 1, eurl: 1, snc: 1, sasu: 1, sci: 1, inc: 1, ltd: 1, gmbh: 1 };
+  var REF_GEO = { fr: 1, france: 1, paris: 1, lyon: 1, lille: 1, marseille: 1, toulouse: 1, bordeaux: 1, nantes: 1, nice: 1, strasbourg: 1, montpellier: 1, rennes: 1, grenoble: 1, cedex: 1 };
+  var REF_TITLE = { m: 1, mr: 1, mme: 1, mlle: 1, melle: 1, monsieur: 1, madame: 1, mademoiselle: 1 };
+
+  function tokensStartWith(tokens, prefix) {
+    if (tokens.length < prefix.length) return false;
+    var i;
+    for (i = 0; i < prefix.length; i++) if (tokens[i] !== prefix[i]) return false;
+    return true;
+  }
+  function isCodeToken(tok) {
+    if (!tok) return true;
+    if (/^\d+$/.test(tok)) return true;
+    if (/^(19|20)\d{2}$/.test(tok)) return true;
+    if ((tok.match(/\d/g) || []).length >= 4) return true;
+    if (/^x+\d+$/.test(tok)) return true;
+    return false;
+  }
+  function extractReferentKey(label) {
+    var raw = String(label || "");
+    var folded = foldText(raw);
+    var tokens = folded ? folded.split(/\s+/).filter(Boolean) : [];
+    var orig = tokens.slice();
+    var changed = true, guard = 0, i;
+    while (changed && guard++ < 12) {
+      changed = false;
+      for (i = 0; i < REF_PREFIXES.length; i++) {
+        if (tokensStartWith(tokens, REF_PREFIXES[i])) {
+          tokens = tokens.slice(REF_PREFIXES[i].length);
+          changed = true;
+          break;
+        }
+      }
+      if (!changed && tokens.length && REF_START_FILLERS[tokens[0]]) {
+        tokens = tokens.slice(1);
+        changed = true;
+      }
+    }
+    tokens = tokens.filter(function (t) { return !REF_NOISE[t] && !isCodeToken(t); });
+    while (tokens.length && (REF_LEGAL[tokens[tokens.length - 1]] || REF_GEO[tokens[tokens.length - 1]])) {
+      tokens = tokens.slice(0, -1);
+    }
+    var displayTokens = tokens.slice();
+    var keyTokens = tokens.filter(function (t) { return !REF_TITLE[t]; });
+    if (!keyTokens.length) keyTokens = displayTokens.slice();
+    if (!keyTokens.length) {
+      var fallback = orig.join(" ") || folded || raw.toLowerCase();
+      return { key: fallback, display: fallback ? fallback.toUpperCase() : "", raw: raw };
+    }
+    return {
+      key: keyTokens.join(" "),
+      display: displayTokens.join(" ").toUpperCase(),
+      raw: raw
+    };
+  }
+  function referentsMatch(a, b) {
+    var ka = a && typeof a === "object" ? a.key : extractReferentKey(a).key;
+    var kb = b && typeof b === "object" ? b.key : extractReferentKey(b).key;
+    return !!ka && !!kb && ka === kb;
+  }
+
   function ruleKeyword(label) {
     var f = foldText(label);
     var parts = f.split(" ").filter(function (p) { return p.length >= 3; }).slice(0, 4);
@@ -4837,11 +5518,13 @@
 
   function matchBuiltin(label) {
     var f = " " + foldText(label) + " ";
-    var best = null, bestLen = 0, i, k;
+    var best = null, bestLen = 0, i, k, kk;
     for (i = 0; i < KEYWORD_RULES.length; i++) {
       k = KEYWORD_RULES[i].k;
-      if (f.indexOf(k) !== -1 && k.length > bestLen) {
-        bestLen = k.length;
+      kk = String(k || "").trim();
+      if (!kk) continue;
+      if (f.indexOf(" " + kk + " ") !== -1 && kk.length > bestLen) {
+        bestLen = kk.length;
         best = KEYWORD_RULES[i];
       }
     }
@@ -4884,6 +5567,10 @@
     if (!row || !existing) return false;
     if (row.date !== existing.date) return false;
     if (moneyCents(Math.abs(row.amount)) !== moneyCents(existing.amount)) return false;
+    var existingSigned = (existing.type === "revenu" || existing.type === "retrait")
+      ? Math.abs(Number(existing.amount) || 0)
+      : -Math.abs(Number(existing.amount) || 0);
+    if (row.amount && existingSigned && Math.sign(row.amount) !== Math.sign(existingSigned)) return false;
     return labelsSimilar(row.label, existing.description || "");
   }
 
@@ -4963,9 +5650,20 @@
     isInternalTransferHint: isInternalTransferHint,
     isCardStatementHint: isCardStatementHint,
     isIncomeLikeLabel: isIncomeLikeLabel,
+    isBookkeepingLabel: isBookkeepingLabel,
+    isCancelledStatus: isCancelledStatus,
+    isSavingsTransferLabel: isSavingsTransferLabel,
+    isPlacementTransferLabel: isPlacementTransferLabel,
+    placementTransferKind: placementTransferKind,
+    isOwnAccountTransfer: isOwnAccountTransfer,
+    extractAccountHolderNames: extractAccountHolderNames,
+    savingsTransferKind: savingsTransferKind,
+    isPairableTransferLabel: isPairableTransferLabel,
     findInternalPairs: findInternalPairs,
     suggestInternalKeyword: suggestInternalKeyword,
     lastNameSuggestion: lastNameSuggestion,
+    extractReferentKey: extractReferentKey,
+    referentsMatch: referentsMatch,
     keywordMatchesLabel: keywordMatchesLabel,
     ruleKeyword: ruleKeyword,
     labelsSimilar: labelsSimilar,
@@ -4986,12 +5684,22 @@
     state.internalKeywords = (raw && Array.isArray(raw.internalKeywords))
       ? raw.internalKeywords.map(function (k) { return String(k || "").trim(); }).filter(Boolean)
       : (state.internalKeywords || []);
+    state.ownAccounts = (raw && Array.isArray(raw.ownAccounts))
+      ? raw.ownAccounts.map(function (k) { return String(k || "").trim(); }).filter(Boolean)
+      : (state.ownAccounts || []);
+    state.countPlacementsAsSavings = !!(raw && raw.countPlacementsAsSavings);
+    state.detectedHolders = (raw && Array.isArray(raw.detectedHolders))
+      ? raw.detectedHolders.map(function (k) { return String(k || "").trim(); }).filter(Boolean)
+      : (state.detectedHolders || []);
   }
   function resetImportExtras() {
     state.importMaps = {};
     state.importRules = {};
     state.importHistory = [];
     state.internalKeywords = [];
+    state.ownAccounts = [];
+    state.detectedHolders = [];
+    state.countPlacementsAsSavings = false;
   }
   function updateImportUndoButtons() {
     var has = !!(state.importHistory && state.importHistory.length);
@@ -5024,7 +5732,7 @@
     var m = importState.map;
     state.importMaps[m.signature] = {
       dateCol: m.dateCol, labelCol: m.labelCol, amountCol: m.amountCol,
-      debitCol: m.debitCol, creditCol: m.creditCol, categoryCol: m.categoryCol,
+      debitCol: m.debitCol, creditCol: m.creditCol, categoryCol: m.categoryCol, statusCol: m.statusCol,
       amountMode: m.amountMode, dateFormat: m.dateFormat, invertSign: !!m.invertSign
     };
   }
@@ -5032,7 +5740,7 @@
   function applySavedMap(map) {
     var saved = state.importMaps && state.importMaps[map.signature];
     if (!saved) return false;
-    ["dateCol", "labelCol", "amountCol", "debitCol", "creditCol", "categoryCol", "amountMode", "dateFormat", "invertSign"].forEach(function (k) {
+    ["dateCol", "labelCol", "amountCol", "debitCol", "creditCol", "categoryCol", "statusCol", "amountMode", "dateFormat", "invertSign"].forEach(function (k) {
       if (saved[k] != null) map[k] = saved[k];
     });
     return true;
@@ -5078,7 +5786,9 @@
         excludeTransfers: true,
         step: "map",
         previewTab: "all",
-        items: []
+        items: [],
+        selectByReferent: true,
+        selected: {}
       };
       rebuildImportItems(true);
       renderImportWizard();
@@ -5093,6 +5803,9 @@
 
   function rebuildImportItems(resetUser) {
     if (!importState) return;
+    importState.holderNames = (typeof BankImport !== "undefined" && BankImport.extractAccountHolderNames)
+      ? BankImport.extractAccountHolderNames((importState.parsed && importState.parsed.text) || "")
+      : [];
     var prev = {};
     if (!resetUser && importState.items) {
       importState.items.forEach(function (it) {
@@ -5109,11 +5822,30 @@
       var type = (isFinite(rec.amount) && rec.amount > 0) ? "revenu" : "depense";
       if (cat.categoryId === "epargne" && type === "depense") type = "epargne";
       var kws = internalKeywordList();
+      var accounts = ownAccountList().concat(detectedHolderList()).concat(importState.holderNames || []);
       var internal = BankImport.isInternalTransferHint(rec.label, kws);
+      if (!internal && BankImport.isOwnAccountTransfer(rec.label, accounts)) internal = true;
       var card = BankImport.isCardStatementHint(rec.label);
+      var bookkeeping = BankImport.isBookkeepingLabel(rec.label);
+      var savKind = BankImport.savingsTransferKind(rec.label, rec.amount);
+      var placeKind = BankImport.placementTransferKind(rec.label, rec.amount);
       if (old && !resetUser && old.userSet) {
         type = old.type;
         cat = { categoryId: old.categoryId, subcategoryId: old.subcategoryId, via: old.via };
+      } else if (bookkeeping) {
+        type = "exclu";
+        internal = true;
+      } else if (savKind === "epargne" || savKind === "retrait") {
+        type = savKind;
+        cat = { categoryId: "epargne", subcategoryId: (cat.categoryId === "epargne" ? cat.subcategoryId : null), via: "savings" };
+        internal = false;
+      } else if (placeKind && state.countPlacementsAsSavings) {
+        type = placeKind;
+        cat = { categoryId: "epargne", subcategoryId: (cat.categoryId === "epargne" ? cat.subcategoryId : null), via: "placement" };
+        internal = false;
+      } else if (placeKind) {
+        type = "exclu";
+        internal = true;
       } else if (importState.excludeTransfers !== false && internal) {
         type = "exclu";
       }
@@ -5128,16 +5860,22 @@
         categoryId: cat.categoryId,
         subcategoryId: cat.subcategoryId,
         via: cat.via,
-        included: true,
+        included: bookkeeping ? false : true,
         userSet: !!(old && old.userSet),
         dupExisting: false,
         dupInFile: false,
-        transfer: internal || card,
+        transfer: internal || card || !!savKind,
         internal: internal,
         card: card,
         pair: false,
-        savingsOver: false
+        pairExistingId: "",
+        savingsOver: false,
+        referentKey: "",
+        referentDisplay: ""
       };
+      var pref = (typeof BankImport !== "undefined" && BankImport.extractReferentKey) ? BankImport.extractReferentKey(rec.label) : { key: "", display: "" };
+      item.referentKey = pref.key || "";
+      item.referentDisplay = pref.display || "";
       if (old && old.userSet) item.included = old.included;
       var signed = isFinite(item.amount) ? Math.round(item.amount * 100) : "";
       var key = (item.date || "") + "|" + BankImport.foldText(item.label) + "|" + signed;
@@ -5150,32 +5888,79 @@
       if (item.dupExisting && !item.userSet) item.included = false;
       return item;
     });
-    var pairs = BankImport.findInternalPairs(importState.items.map(function (it) {
+    function signedExistingAmount(t) {
+      var amt = Math.abs(Number(t.amount) || 0);
+      if (t.type === "revenu" || t.type === "retrait") return amt;
+      return -amt;
+    }
+    var existingRecs = existing.filter(function (t) {
+      return t && t.date && isFinite(Number(t.amount)) && Number(t.amount);
+    }).map(function (t) {
+      return { rowIndex: "ex:" + t.id, date: t.date, label: t.description || "", amount: signedExistingAmount(t) };
+    });
+    var pairRecs = importState.items.map(function (it) {
       return { rowIndex: it.rowIndex, date: it.date, label: it.label, amount: it.amount };
-    }));
+    }).concat(existingRecs);
+    var pairs = BankImport.findInternalPairs(pairRecs);
+    var existingById = {};
+    existing.forEach(function (t) { if (t && t.id) existingById[t.id] = t; });
     importState.items.forEach(function (it) {
-      if (pairs[it.rowIndex]) {
-        it.pair = true;
-        it.internal = true;
-        if (importState.excludeTransfers !== false && !it.userSet) it.type = "exclu";
+      var partner = pairs[it.rowIndex];
+      if (partner == null || partner === false) return;
+      it.pair = true;
+      var partnerIsExisting = String(partner).indexOf("ex:") === 0;
+      var partnerId = partnerIsExisting ? String(partner).slice(3) : "";
+      var partnerItem = partnerIsExisting ? null : importState.items.filter(function (x) { return x.rowIndex === partner; })[0];
+      var partnerTx = partnerIsExisting ? existingById[partnerId] : null;
+      var partnerIsSavings = false;
+      if (partnerItem && (partnerItem.type === "epargne" || partnerItem.type === "retrait")) partnerIsSavings = true;
+      if (partnerTx && (partnerTx.type === "retrait" || isEpargne(partnerTx.categoryId))) partnerIsSavings = true;
+      var selfIsSavings = (it.type === "epargne" || it.type === "retrait");
+      if (selfIsSavings) {
+        if (it.amount > 0 && (partnerIsSavings || (partnerItem && partnerItem.amount < 0 && (partnerItem.type === "epargne" || partnerItem.type === "exclu" || !partnerItem)))) {
+          if (!it.userSet) { it.type = "exclu"; it.internal = true; }
+        }
+        if (partnerIsExisting) it.pairExistingId = partnerId;
+        return;
       }
+      if (importState.excludeTransfers !== false && !it.userSet) {
+        it.type = "exclu";
+        it.internal = true;
+      } else {
+        it.internal = true;
+      }
+      if (partnerIsExisting) it.pairExistingId = partnerId;
     });
     flagImportSavings();
   }
 
   function flagImportSavings() {
     if (!importState) return;
-    var added = {};
+    var extra = {};
     importState.items.forEach(function (it) {
       it.savingsOver = false;
+      if (!it.included || !it.date || !isFinite(it.amount)) return;
+      if (it.type === "exclu" || it.type === "epargne") return;
+      var p = parseYMD(it.date);
+      if (!p.y) return;
+      var key = monthKey(p.y, p.m);
+      extra[key] = extra[key] || { rev: 0, dep: 0, ret: 0 };
+      var amt = Math.abs(it.amount);
+      if (it.type === "revenu") extra[key].rev += amt;
+      else if (it.type === "retrait") extra[key].ret += amt;
+      else if (it.type === "depense") extra[key].dep += amt;
+    });
+    var added = {};
+    importState.items.forEach(function (it) {
       if (it.type !== "epargne") return;
       if (!it.date || !isFinite(it.amount)) return;
       var p = parseYMD(it.date);
       if (!p.y) return;
       var key = monthKey(p.y, p.m);
       var cf = monthCashflow(p.y, p.m, null);
+      var ex = extra[key] || { rev: 0, dep: 0, ret: 0 };
       var used = added[key] || 0;
-      var avail = moneyCents(cf.available) - used;
+      var avail = moneyCents(cf.available + ex.rev - ex.dep + ex.ret) - used;
       if (moneyCents(Math.abs(it.amount)) > avail) {
         it.savingsOver = true;
         if (!it.userSet) it.included = false;
@@ -5212,6 +5997,211 @@
     var cls = typ === "exclu" ? "exclu" : typ;
     return '<span class="imp-type-badge ' + cls + '">' + importTypeLabel(typ) + "</span>";
   }
+
+  function txReferent(label) {
+    if (typeof BankImport !== "undefined" && BankImport.extractReferentKey) return BankImport.extractReferentKey(label);
+    var s = String(label || "").trim();
+    return { key: s.toLowerCase(), display: s, raw: s };
+  }
+  function visibleImportItems() {
+    if (!importState || !importState.items) return [];
+    var tab = importState.previewTab || "all";
+    var q = (importState.filter || "").toLowerCase();
+    return importState.items.filter(function (it) {
+      if (tab === "depense") { if (!(it.type === "depense" || it.type === "epargne" || it.type === "retrait")) return false; }
+      else if (tab === "revenu") { if (it.type !== "revenu") return false; }
+      else if (tab === "exclu") { if (!(it.type === "exclu" || it.internal)) return false; }
+      else if (tab === "dup") { if (!(it.dupExisting || it.dupInFile)) return false; }
+      if (q && (it.label + " " + (it.date || "")).toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
+  }
+  function importSelectedList() {
+    if (!importState || !importState.selected) return [];
+    return (importState.items || []).filter(function (it) { return importState.selected[it.rowIndex]; });
+  }
+  function importVisibleSelected() {
+    return visibleImportItems().filter(function (it) { return importState.selected && importState.selected[it.rowIndex]; });
+  }
+  function importReferentMatches(key, list) {
+    if (!key) return [];
+    return (list || visibleImportItems()).filter(function (it) { return it.referentKey === key; });
+  }
+  function sharedImportReferent(items) {
+    if (!items || !items.length) return null;
+    var key = items[0].referentKey || "";
+    if (!key) return null;
+    for (var i = 1; i < items.length; i++) if (items[i].referentKey !== key) return null;
+    return { key: key, display: items[0].referentDisplay || key.toUpperCase() };
+  }
+  function importSelectionMeta() {
+    var vis = visibleImportItems();
+    var sel = vis.filter(function (it) { return importState.selected && importState.selected[it.rowIndex]; });
+    var shared = sharedImportReferent(sel);
+    var extra = 0;
+    if (shared) {
+      extra = vis.filter(function (it) { return it.referentKey === shared.key && !importState.selected[it.rowIndex]; }).length;
+    }
+    return { vis: vis, sel: sel, shared: shared, extra: extra };
+  }
+  function renderImportSelBarHTML() {
+    var meta = importSelectionMeta();
+    var n = meta.sel.length;
+    var html = "";
+    if (!n) return html;
+    html += '<div class="bulk-meta">' + n + " sélectionnée" + (n > 1 ? "s" : "");
+    if (meta.shared) html += " · « " + esc(meta.shared.display) + " »";
+    html += '<div class="hint">Actions groupées : type, catégorie, importer ou ignorer. Les totaux d’aperçu se mettent à jour tout de suite.</div></div>';
+    if (meta.extra > 0 && meta.shared) {
+      html += '<button type="button" class="btn btn-sm btn-primary" id="imp-sel-extend">+ Sélectionner tout « ' + esc(meta.shared.display) + " » (" + (n + meta.extra) + ")</button>";
+    }
+    html += '<select id="imp-sel-type" aria-label="Type pour la sélection"><option value="">Type…</option>';
+    [["depense","Dépense"],["revenu","Revenu"],["epargne","Épargne (versement)"],["retrait","Retrait épargne"],["exclu","Virement interne (exclu)"]].forEach(function (o) {
+      html += '<option value="' + o[0] + '">' + o[1] + "</option>";
+    });
+    html += "</select>";
+    html += '<select id="imp-sel-cat" aria-label="Catégorie pour la sélection"><option value="">Catégorie…</option>' + categoryOptions("", null) + "</select>";
+    html += '<select id="imp-sel-sub" aria-label="Sous-catégorie pour la sélection"><option value="">Sous-catégorie…</option></select>';
+    html += '<button type="button" class="btn btn-sm" id="imp-sel-include">Importer</button>';
+    html += '<button type="button" class="btn btn-sm" id="imp-sel-exclude">Ne pas importer</button>';
+    html += '<button type="button" class="btn btn-sm" id="imp-sel-interne">Marquer comme virement interne</button>';
+    html += '<button type="button" class="btn btn-sm btn-ghost" id="imp-sel-clear">Tout désélectionner</button>';
+    return html;
+  }
+  function updateImportSelectionUI() {
+    if (!importState || importState.step !== "preview") return;
+    if (!importState.selected) importState.selected = {};
+    var vis = visibleImportItems();
+    var selCount = 0;
+    document.querySelectorAll("tr[data-imp-row]").forEach(function (tr) {
+      var idx = parseInt(tr.getAttribute("data-imp-row"), 10);
+      var on = !!(importState.selected[idx]);
+      if (on) selCount++;
+      tr.classList.toggle("imp-selected", on);
+      var box = tr.querySelector("input[data-imp-sel]");
+      if (box) box.checked = on;
+    });
+    var allBox = document.getElementById("imp-sel-all");
+    if (allBox) {
+      var nVis = vis.length;
+      allBox.checked = nVis > 0 && vis.every(function (it) { return importState.selected[it.rowIndex]; });
+      allBox.indeterminate = selCount > 0 && !allBox.checked;
+    }
+    var meta = importSelectionMeta();
+    var banner = document.getElementById("imp-sel-banner");
+    if (banner) {
+      if (meta.sel.length && meta.shared && meta.sel.length > 1) {
+        banner.innerHTML = meta.sel.length + " opérations « " + esc(meta.shared.display) + " » sélectionnées";
+        banner.classList.add("show");
+      } else if (meta.sel.length) {
+        banner.innerHTML = meta.sel.length + " opération" + (meta.sel.length > 1 ? "s" : "") + " sélectionnée" + (meta.sel.length > 1 ? "s" : "");
+        banner.classList.add("show");
+      } else {
+        banner.innerHTML = "";
+        banner.classList.remove("show");
+      }
+    }
+    var bar = document.getElementById("imp-sel-bar");
+    if (bar) {
+      if (meta.sel.length) {
+        bar.innerHTML = renderImportSelBarHTML();
+        bar.classList.add("show");
+      } else {
+        bar.innerHTML = "";
+        bar.classList.remove("show");
+      }
+    }
+  }
+  function setImportRowSelected(rowIndex, on, fromUser) {
+    if (!importState) return;
+    if (!importState.selected) importState.selected = {};
+    var it = importItemByRow(rowIndex);
+    if (!it) return;
+    var expand = importState.selectByReferent !== false && it.referentKey;
+    var list = visibleImportItems();
+    if (expand) {
+      list.forEach(function (row) {
+        if (row.referentKey === it.referentKey) {
+          if (on) importState.selected[row.rowIndex] = true;
+          else delete importState.selected[row.rowIndex];
+        }
+      });
+    } else if (on) importState.selected[rowIndex] = true;
+    else delete importState.selected[rowIndex];
+    updateImportSelectionUI();
+    if (fromUser && expand && on) {
+      var n = list.filter(function (row) { return row.referentKey === it.referentKey; }).length;
+      if (n > 1) toast(n + " opérations « " + (it.referentDisplay || it.referentKey) + " » sélectionnées");
+    }
+  }
+  function selectImportReferent(key, on) {
+    if (!importState || !key) return 0;
+    if (!importState.selected) importState.selected = {};
+    var n = 0;
+    visibleImportItems().forEach(function (row) {
+      if (row.referentKey !== key) return;
+      if (on) importState.selected[row.rowIndex] = true;
+      else delete importState.selected[row.rowIndex];
+      n++;
+    });
+    updateImportSelectionUI();
+    return n;
+  }
+  function selectAllVisibleImport(on) {
+    if (!importState) return;
+    if (!importState.selected) importState.selected = {};
+    visibleImportItems().forEach(function (it) {
+      if (on) importState.selected[it.rowIndex] = true;
+      else delete importState.selected[it.rowIndex];
+    });
+    if (!on) importState.selected = {};
+    updateImportSelectionUI();
+  }
+  function applyImportSelection(fn) {
+    var list = importSelectedList();
+    if (!list.length) { toast("Sélectionnez d’abord des lignes pour une action groupée."); return 0; }
+    list.forEach(fn);
+    flagImportSavings();
+    renderImportWizard();
+    updateImportSelectionUI();
+    return list.length;
+  }
+  function applyImportSelType(typ) {
+    if (!typ) return;
+    var n = applyImportSelection(function (it) {
+      it.type = typ;
+      it.userSet = true;
+      if (typ === "exclu") it.internal = true;
+      if (typ === "epargne" || typ === "retrait") {
+        var ep = state.categories.find(function (c) { return c.id === "epargne"; });
+        if (ep) it.categoryId = ep.id;
+      } else if (typ === "revenu" && catById(it.categoryId).kind !== "revenu") it.categoryId = "salaire";
+      else if (typ === "depense" && catById(it.categoryId).kind === "revenu") it.categoryId = "divers";
+      it.subcategoryId = sanitizeSubId(it.categoryId, it.subcategoryId);
+    });
+    if (n && typ === "exclu") {
+      var first = importSelectedList()[0];
+      if (first) offerLearnInternal(first.label, true);
+    }
+    if (n) toast("Type appliqué à " + n + " opération" + (n > 1 ? "s" : "") + ".");
+  }
+  function applyImportSelCategory(cat, sub) {
+    if (!cat) { toast("Choisissez une catégorie à appliquer."); return; }
+    var n = applyImportSelection(function (it) {
+      it.categoryId = cat;
+      it.subcategoryId = sub || null;
+      it.userSet = true;
+      if (cat === "epargne" && it.type === "depense") it.type = "epargne";
+    });
+    if (n) toast("Catégorie appliquée à " + n + " opération" + (n > 1 ? "s" : "") + ".");
+  }
+  function applyImportSelIncluded(on) {
+    var n = applyImportSelection(function (it) {
+      if (it.date && isFinite(it.amount)) { it.included = !!on; it.userSet = true; }
+    });
+    if (n) toast((on ? "Lignes remises dans l’import : " : "Lignes ignorées : ") + n + ".");
+  }
+
   function renderImportMappingStep() {
     var map = importState.map;
     var kindLabel = { csv: "CSV / texte", xlsx: "Excel (.xlsx)", ofx: "OFX / QFX", qif: "QIF" }[importState.parsed.kind] || importState.parsed.kind;
@@ -5265,7 +6255,18 @@
       ". Corrigez le type au besoin (Dépense, Revenu, <strong>Virement interne</strong>…).</p>";
     html += '<div class="form-row check-row" style="justify-content:flex-start;align-items:flex-start;flex-direction:column;gap:4px">';
     html += '<label><input type="checkbox" id="imp-exclude-transfers"' + (importState.excludeTransfers !== false ? " checked" : "") + "/> Exclure les virements internes détectés</label>";
-    html += '<p class="hint">Coché par défaut : virements entre vos comptes (Livret, compte à compte, paires vir+/vir−, mots-clés) exclus des totaux. Les « relevés carte » restent inclus.</p>';
+    html += '<p class="hint">Coché par défaut : virements entre vos comptes (Livret, Mes comptes, paires vir+/vir−, mots-clés, placements) exclus des totaux. Les « relevés carte » restent inclus.</p>';
+    if (importState.holderNames && importState.holderNames.length) {
+      html += '<p class="hint">Titulaire détecté sur ce relevé : les virements vers ou depuis « ' + esc(importState.holderNames.filter(function (n, i, a) { return a.indexOf(n) === i; }).join(" », « ")) + " » sont traités comme internes (sans enregistrer le nom dans Mes comptes, sauf si vous l’ajoutez).</p>";
+    }
+    html += "</div>";
+    html += '<div class="setting-row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap">';
+    html += '<button type="button" class="btn btn-sm" id="btn-ai-cat-import">Proposer des catégories avec l’IA</button>';
+    var nProp = items.filter(function (it) { return it.aiProposal; }).length;
+    if (nProp) {
+      html += '<button type="button" class="btn btn-sm btn-primary" id="btn-ai-cat-accept-all-import">Accepter les ' + nProp + " proposition" + (nProp > 1 ? "s" : "") + "</button>";
+      html += '<button type="button" class="btn btn-sm" id="btn-ai-reject-all-import">Ignorer les propositions</button>';
+    }
     html += "</div>";
 
     var tab = importState.previewTab || "all";
@@ -5314,26 +6315,38 @@
     });
     html += "</div>";
 
+    var refOn = importState.selectByReferent !== false;
     html += '<div class="import-toolbar">';
+    html += '<button type="button" class="chip' + (refOn ? " active" : "") + '" id="chip-imp-referent" aria-pressed="' + (refOn ? "true" : "false") + '" title="Cocher une ligne sélectionne toutes les opérations du même commerçant ou destinataire">Sélection par référent</button>';
     html += '<input type="search" id="imp-filter" placeholder="Filtrer les lignes…" value="' + esc(importState.filter || "") + '"/>';
-    html += '<button type="button" class="btn btn-sm" id="imp-check-all">Tout cocher</button>';
-    html += '<button type="button" class="btn btn-sm" id="imp-uncheck-all">Tout décocher</button>';
+    html += '<button type="button" class="btn btn-sm" id="imp-select-all">Tout sélectionner</button>';
+    html += '<button type="button" class="btn btn-sm" id="imp-check-all">Tout importer</button>';
+    html += '<button type="button" class="btn btn-sm" id="imp-uncheck-all">Tout ignorer</button>';
     html += '<select id="imp-bulk-cat" aria-label="Catégorie à appliquer"><option value="">Catégorie…</option>' + categoryOptions("", null) + "</select>";
-    html += '<button type="button" class="btn btn-sm" id="imp-apply-cat">Appliquer aux lignes cochées</button>';
+    html += '<button type="button" class="btn btn-sm" id="imp-apply-cat">Appliquer à la sélection</button>';
     html += '<button type="button" class="btn btn-sm" id="imp-bulk-interne">Marquer comme virement interne</button>';
     html += "</div>";
+    html += '<p class="hint" id="imp-sel-hint">Cochez une ligne à gauche pour une action groupée' + (refOn ? " — le mode « Sélection par référent » est actif : toutes les lignes du même commerçant ou destinataire sont incluses." : " — désactivez ou activez « Sélection par référent » selon que vous voulez un groupe ou une seule ligne.") + ' La case « Importer » décide si la ligne est vraiment ajoutée.</p>';
+    html += '<div class="imp-sel-banner" id="imp-sel-banner"></div>';
     html += '<p class="hint" id="imp-summary">' + visible.length + " ligne" + (visible.length > 1 ? "s" : "") + " affichée" + (visible.length > 1 ? "s" : "") + " · " + nInc + " à importer.</p>";
     html += '<div class="import-preview table-wrap"><table class="data import-table"><thead><tr>';
-    html += '<th></th><th>Date</th><th>Libellé</th><th class="right">Montant</th><th>Type</th><th>Catégorie</th><th>Sous-cat.</th><th></th>';
+    html += '<th class="imp-sel"><input type="checkbox" id="imp-sel-all" aria-label="Tout sélectionner les lignes visibles"/></th>';
+    html += '<th class="imp-inc import-th-check">Importer</th><th>Date</th><th>Libellé</th><th class="right">Montant</th><th>Type</th><th>Catégorie</th><th>Sous-cat.</th><th></th>';
     html += "</tr></thead><tbody>";
     if (!visible.length) {
-      html += '<tr><td colspan="8" class="hint">Aucune ligne ne correspond à ce filtre.</td></tr>';
+      html += '<tr><td colspan="9" class="hint">Aucune ligne ne correspond à ce filtre.</td></tr>';
     }
     visible.forEach(function (it) {
       var invalid = !it.date || !isFinite(it.amount);
       var amt = isFinite(it.amount) ? fmtMoneySigned(Math.abs(it.amount), it.amount >= 0 ? "revenu" : "depense") : "—";
-      html += '<tr data-imp-row="' + it.rowIndex + '"' + (it.included ? "" : ' class="imp-skipped"') + ">";
-      html += '<td><input type="checkbox" data-imp-inc="' + it.rowIndex + '"' + (it.included ? " checked" : "") + (invalid ? " disabled" : "") + "/></td>";
+      var selOn = !!(importState.selected && importState.selected[it.rowIndex]);
+      var refN = it.referentKey ? visible.filter(function (o) { return o.referentKey === it.referentKey; }).length : 1;
+      var rowCls = [];
+      if (!it.included) rowCls.push("imp-skipped");
+      if (selOn) rowCls.push("imp-selected");
+      html += '<tr data-imp-row="' + it.rowIndex + '"' + (rowCls.length ? ' class="' + rowCls.join(" ") + '"' : "") + ">";
+      html += '<td class="imp-sel"><input type="checkbox" data-imp-sel="' + it.rowIndex + '" aria-label="Sélectionner pour une action groupée"' + (selOn ? " checked" : "") + "/></td>";
+      html += '<td class="imp-inc"><input type="checkbox" data-imp-inc="' + it.rowIndex + '" aria-label="Importer cette ligne"' + (it.included ? " checked" : "") + (invalid ? " disabled" : "") + "/></td>";
       html += "<td>" + (it.date ? esc(it.date.split("-").reverse().join("/")) : '<span class="badge warn">Date ?</span>') + "</td>";
       html += "<td>" + esc(it.label || "—") + "</td>";
       html += '<td class="right num">' + (invalid && !isFinite(it.amount) ? '<span class="badge warn">Montant ?</span>' : amt) + "</td>";
@@ -5351,9 +6364,20 @@
       else if (it.internal) html += '<span class="badge exclu">Virement interne</span> ';
       else if (it.card) html += '<span class="badge">Relevé carte</span> ';
       if (it.savingsOver) html += '<span class="badge warn">Dépasse l’épargne dispo.</span> ';
+      if (it.aiProposal) {
+        var sug = it.aiProposal;
+        html += ' <span class="ai-proposal-badge">IA : ' + esc(sug.categoryLabel || sug.categoryId);
+        if (sug.subcategoryLabel) html += " · " + esc(sug.subcategoryLabel);
+        html += ' <button type="button" class="btn btn-sm" data-ai-imp-accept="' + it.rowIndex + '">OK</button>';
+        if (refN > 1) html += ' <button type="button" class="btn btn-sm" data-ai-imp-accept-ref="' + it.rowIndex + '">Tout le référent</button>';
+        html += ' <button type="button" class="btn btn-sm" data-ai-imp-reject="' + it.rowIndex + '">×</button></span>';
+      }
+      if (it.referentDisplay) html += ' <span class="badge" title="Référent"> ' + esc(it.referentDisplay) + "</span> ";
+      if (refN > 1) html += '<button type="button" class="btn btn-sm btn-referent" data-imp-ref="' + it.rowIndex + '" title="Sélectionner les ' + refN + " opérations « " + esc(it.referentDisplay || "") + ' »">×' + refN + " similaires</button>";
       html += "</td></tr>";
     });
     html += "</tbody></table></div>";
+    html += '<div class="imp-sel-bar" id="imp-sel-bar"></div>';
     html += '<div class="modal-actions">';
     html += '<button type="button" class="btn btn-ghost" id="imp-back-map">Retour au mapping</button>';
     html += '<button type="button" class="btn btn-ghost" id="btn-cancel-modal">Annuler</button>';
@@ -5362,6 +6386,7 @@
     openModal(html);
     var modal = document.getElementById("modal");
     if (modal) modal.classList.add("wide");
+    updateImportSelectionUI();
   }
   function renderImportWizard() {
     if (!importState) return;
@@ -5449,6 +6474,15 @@
         excluded: excluded
       });
       ids.push(id);
+      if (it.pairExistingId) {
+        var exTx;
+        for (var xi = 0; xi < state.transactions.length; xi++) {
+          if (state.transactions[xi] && state.transactions[xi].id === it.pairExistingId) { exTx = state.transactions[xi]; break; }
+        }
+        if (exTx && exTx.type !== "retrait" && !isEpargne(exTx.categoryId)) {
+          exTx.excluded = true;
+        }
+      }
       if (!excluded) {
         if (type === "revenu") { totIn += Math.abs(it.amount); nInc++; }
         else { totOut += Math.abs(it.amount); nExp++; }
@@ -5458,6 +6492,7 @@
         state.importRules[kw] = { categoryId: cat, subcategoryId: sub || null };
       }
     });
+    if (typeof mergeDetectedHolders === "function") mergeDetectedHolders(importState.holderNames || []);
     state.importHistory.push({
       id: batchId,
       at: new Date().toISOString(),
@@ -5495,6 +6530,7 @@
 
   function handleImportWizardEvent(e) {
     if (!importState || !e.target) return false;
+    if (typeof handleAiEvent === "function" && handleAiEvent(e)) return true;
     var t = e.target;
     var id = t.id || "";
     if (id === "imp-col-date" || id === "imp-col-label" || id === "imp-col-amount" || id === "imp-col-debit" || id === "imp-col-credit" || id === "imp-col-category" || id === "imp-date-format" || id === "imp-invert") {
@@ -5526,21 +6562,68 @@
       renderImportWizard();
       return true;
     }
-    if (id === "imp-bulk-interne") {
-      var n = 0;
-      importState.items.forEach(function (it) {
-        if (!it.included) return;
-        it.type = "exclu";
-        it.userSet = true;
-        it.internal = true;
-        n++;
-      });
-      flagImportSavings();
+    if (id === "imp-bulk-interne" || id === "imp-sel-interne") {
+      if (e.type !== "click") return false;
+      applyImportSelType("exclu");
+      return true;
+    }
+    if (id === "chip-imp-referent") {
+      if (e.type !== "click") return false;
+      importState.selectByReferent = (importState.selectByReferent === false);
       renderImportWizard();
-      if (n) {
-        var first = importState.items.find(function (it) { return it.included && it.type === "exclu"; });
-        if (first) offerLearnInternal(first.label, true);
+      return true;
+    }
+    if (id === "imp-select-all") {
+      if (e.type !== "click") return false;
+      selectAllVisibleImport(true);
+      return true;
+    }
+    if (id === "imp-sel-all") {
+      if (e.type !== "change") return false;
+      selectAllVisibleImport(!!t.checked);
+      return true;
+    }
+    if (id === "imp-sel-clear") {
+      if (e.type !== "click") return false;
+      selectAllVisibleImport(false);
+      return true;
+    }
+    if (id === "imp-sel-extend") {
+      if (e.type !== "click") return false;
+      var shared = sharedImportReferent(importVisibleSelected());
+      if (shared) {
+        var nn = selectImportReferent(shared.key, true);
+        if (nn) toast(nn + " opérations « " + shared.display + " » sélectionnées");
       }
+      return true;
+    }
+    if (id === "imp-sel-include") {
+      if (e.type !== "click") return false;
+      applyImportSelIncluded(true);
+      return true;
+    }
+    if (id === "imp-sel-exclude") {
+      if (e.type !== "click") return false;
+      applyImportSelIncluded(false);
+      return true;
+    }
+    if (id === "imp-sel-type") {
+      if (e.type !== "change") return false;
+      if (t.value) applyImportSelType(t.value);
+      return true;
+    }
+    if (id === "imp-sel-cat") {
+      if (e.type !== "change") return false;
+      var subEl = document.getElementById("imp-sel-sub");
+      if (subEl) subEl.innerHTML = '<option value="">Sous-catégorie…</option>' + importSubOptions(t.value === "epargne" ? "epargne" : t.value, "");
+      if (t.value) applyImportSelCategory(t.value, (subEl && subEl.value) || null);
+      return true;
+    }
+    if (id === "imp-sel-sub") {
+      if (e.type !== "change") return false;
+      var catEl = document.getElementById("imp-sel-cat");
+      var catVal = (catEl && catEl.value) || "";
+      if (catVal) applyImportSelCategory(catVal, t.value || null);
       return true;
     }
     if (id === "imp-filter" && e.type === "input") {
@@ -5560,20 +6643,28 @@
       return true;
     }
     if (id === "imp-apply-cat") {
+      if (e.type !== "click") return false;
       var cat = (document.getElementById("imp-bulk-cat") || {}).value || "";
-      if (!cat) { toast("Choisissez une catégorie à appliquer."); return true; }
-      importState.items.forEach(function (it) {
-        if (!it.included) return;
-        it.categoryId = cat;
-        it.subcategoryId = null;
-        it.userSet = true;
-        if (cat === "epargne" && it.type === "depense") it.type = "epargne";
-      });
-      flagImportSavings();
-      renderImportWizard();
+      applyImportSelCategory(cat, null);
       return true;
     }
     if (id === "imp-confirm") { confirmBankImport(); return true; }
+    var selAttr = t.getAttribute && t.getAttribute("data-imp-sel");
+    if (selAttr != null) {
+      if (e.type !== "change") return false;
+      setImportRowSelected(parseInt(selAttr, 10), !!t.checked, true);
+      return true;
+    }
+    var refAttr = t.getAttribute && t.getAttribute("data-imp-ref");
+    if (refAttr != null) {
+      if (e.type !== "click") return false;
+      var itRef = importItemByRow(parseInt(refAttr, 10));
+      if (itRef && itRef.referentKey) {
+        var nRef = selectImportReferent(itRef.referentKey, true);
+        if (nRef) toast(nRef + " opérations « " + (itRef.referentDisplay || itRef.referentKey) + " » sélectionnées");
+      }
+      return true;
+    }
     var inc = t.getAttribute && t.getAttribute("data-imp-inc");
     if (inc != null && e.type === "change") {
       var it = importItemByRow(parseInt(inc, 10));
@@ -6256,8 +7347,13 @@
       importMaps: state.importMaps || {},
       importRules: state.importRules || {},
       importHistory: state.importHistory || [],
-      internalKeywords: state.internalKeywords || []
+      internalKeywords: state.internalKeywords || [],
+      ownAccounts: state.ownAccounts || [],
+      detectedHolders: state.detectedHolders || [],
+      countPlacementsAsSavings: !!state.countPlacementsAsSavings
     };
+    var aiSlice = (typeof aiExportSlice === "function") ? aiExportSlice() : null;
+    if (aiSlice) payload.ai = aiSlice;
     downloadBlob("mon-budget-sauvegarde.json", "application/json", JSON.stringify(payload, null, 2));
     toast("Sauvegarde JSON téléchargée.");
   }
@@ -6334,6 +7430,7 @@
     if (data.year) state.year = data.year;
     if (data.theme === "dark" || data.theme === "light" || data.theme === "auto") state.theme = data.theme;
     loadImportExtras(data);
+    if (typeof importAiSettingsFromBackup === "function") importAiSettingsFromBackup(data);
     persist(); applyTheme(); renderAll(); toast("Sauvegarde importée.");
   }
   function resetAll() {
@@ -6358,6 +7455,7 @@
     state.theme = "auto";
     state.calc = defaultCalc();
     resetImportExtras();
+    if (typeof clearAiSettings === "function") clearAiSettings();
     persist();
     applyTheme();
     closeModal();
@@ -6368,6 +7466,784 @@
 
   /* ---------- events ---------- */
   function on(el, ev, fn, opts) { if (el) el.addEventListener(ev, fn, opts); }
+
+  /* ---------- Assistant IA (Qwen / Ollama) — disabled by default, key never in persist() ---------- */
+  var AI_STORAGE_SUFFIX = "::ai";
+  var aiSettings = null;
+  var aiChat = [];
+  var aiBusy = false;
+  var aiTxProposals = {}; /* id -> { categoryId, subcategoryId, type, reason } */
+
+  function defaultAiSettings() {
+    return {
+      provider: "off",
+      dashscopeBaseUrl: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      dashscopeModel: "qwen-plus",
+      dashscopeApiKey: "",
+      ollamaBaseUrl: "http://localhost:11434",
+      ollamaModel: "qwen2.5",
+      privacyAccepted: false,
+      sendMode: "aggregates",
+      includeAiInExport: false,
+      includeAiKeyInExport: false
+    };
+  }
+  function aiStorageKey() { return STORAGE_KEY + AI_STORAGE_SUFFIX; }
+  function loadAiSettings() {
+    var d = defaultAiSettings();
+    var raw = null;
+    try {
+      var t = null;
+      try { t = localStorage.getItem(aiStorageKey()); } catch (e) { t = null; }
+      if (t) raw = JSON.parse(t);
+    } catch (e2) { raw = null; }
+    if (!raw || typeof raw !== "object") { aiSettings = d; return aiSettings; }
+    aiSettings = d;
+    if (raw.provider === "dashscope" || raw.provider === "ollama" || raw.provider === "off") aiSettings.provider = raw.provider;
+    if (typeof raw.dashscopeBaseUrl === "string" && raw.dashscopeBaseUrl.trim()) aiSettings.dashscopeBaseUrl = raw.dashscopeBaseUrl.trim();
+    if (typeof raw.dashscopeModel === "string" && raw.dashscopeModel.trim()) aiSettings.dashscopeModel = raw.dashscopeModel.trim();
+    if (typeof raw.dashscopeApiKey === "string") aiSettings.dashscopeApiKey = raw.dashscopeApiKey;
+    if (typeof raw.ollamaBaseUrl === "string" && raw.ollamaBaseUrl.trim()) aiSettings.ollamaBaseUrl = raw.ollamaBaseUrl.trim();
+    if (typeof raw.ollamaModel === "string" && raw.ollamaModel.trim()) aiSettings.ollamaModel = raw.ollamaModel.trim();
+    aiSettings.privacyAccepted = !!raw.privacyAccepted;
+    if (raw.sendMode === "labels" || raw.sendMode === "aggregates") aiSettings.sendMode = raw.sendMode;
+    aiSettings.includeAiInExport = !!raw.includeAiInExport;
+    aiSettings.includeAiKeyInExport = !!raw.includeAiKeyInExport;
+    return aiSettings;
+  }
+  function saveAiSettings() {
+    if (!aiSettings) loadAiSettings();
+    var payload = JSON.stringify(aiSettings);
+    try { localStorage.setItem(aiStorageKey(), payload); } catch (e) {
+      try { memoryStorage[aiStorageKey()] = payload; } catch (e2) {}
+    }
+  }
+  function clearAiSettings() {
+    aiSettings = defaultAiSettings();
+    try { localStorage.removeItem(aiStorageKey()); } catch (e) {}
+    aiChat = [];
+    aiTxProposals = {};
+  }
+  function aiExportSlice() {
+    if (!aiSettings || !aiSettings.includeAiInExport) return null;
+    var o = {
+      provider: aiSettings.provider,
+      dashscopeBaseUrl: aiSettings.dashscopeBaseUrl,
+      dashscopeModel: aiSettings.dashscopeModel,
+      ollamaBaseUrl: aiSettings.ollamaBaseUrl,
+      ollamaModel: aiSettings.ollamaModel,
+      sendMode: aiSettings.sendMode,
+      includeAiInExport: true,
+      exportIncludesKey: false
+    };
+    if (aiSettings.includeAiKeyInExport && aiSettings.dashscopeApiKey) {
+      o.dashscopeApiKey = aiSettings.dashscopeApiKey;
+      o.exportIncludesKey = true;
+    }
+    return o;
+  }
+  function importAiSettingsFromBackup(data) {
+    if (!data || !data.ai || typeof data.ai !== "object") return;
+    loadAiSettings();
+    var raw = data.ai;
+    if (raw.provider === "dashscope" || raw.provider === "ollama" || raw.provider === "off") aiSettings.provider = raw.provider;
+    if (typeof raw.dashscopeBaseUrl === "string" && raw.dashscopeBaseUrl.trim()) aiSettings.dashscopeBaseUrl = raw.dashscopeBaseUrl.trim();
+    if (typeof raw.dashscopeModel === "string" && raw.dashscopeModel.trim()) aiSettings.dashscopeModel = raw.dashscopeModel.trim();
+    if (typeof raw.ollamaBaseUrl === "string" && raw.ollamaBaseUrl.trim()) aiSettings.ollamaBaseUrl = raw.ollamaBaseUrl.trim();
+    if (typeof raw.ollamaModel === "string" && raw.ollamaModel.trim()) aiSettings.ollamaModel = raw.ollamaModel.trim();
+    if (raw.sendMode === "labels" || raw.sendMode === "aggregates") aiSettings.sendMode = raw.sendMode;
+    if (raw.exportIncludesKey && typeof raw.dashscopeApiKey === "string") {
+      aiSettings.dashscopeApiKey = raw.dashscopeApiKey;
+    }
+    saveAiSettings();
+  }
+  function isCapacitorNative() {
+    try {
+      return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === "function" && window.Capacitor.isNativePlatform());
+    } catch (e) { return false; }
+  }
+  function isLikelySafari() {
+    var ua = navigator.userAgent || "";
+    return /iP(hone|ad|od)/.test(ua) || (/Safari/i.test(ua) && !/Chrome|Chromium|Android|Edg|OPR|Firefox/i.test(ua));
+  }
+  function isLocalhostHost(host) {
+    host = String(host || "").toLowerCase().replace(/^\[|\]$/g, "");
+    return host === "localhost" || host === "127.0.0.1" || host === "::1";
+  }
+  function mixedContentRisk(url) {
+    if (location.protocol !== "https:") return "";
+    var u;
+    try { u = new URL(url, location.href); } catch (e) { return ""; }
+    if (u.protocol !== "http:") return "";
+    if (isCapacitorNative()) return "";
+    if (isLocalhostHost(u.hostname)) {
+      if (isLikelySafari()) {
+        return "Cette page est en HTTPS et Safari bloque les appels vers http://localhost (contenu mixte). Utilisez Chrome (qui autorise localhost), l’application iOS, ou Qwen en ligne (DashScope).";
+      }
+      return "";
+    }
+    return "Cette page est en HTTPS : le navigateur bloque l’accès à une adresse HTTP sur le réseau local (contenu mixte). Sur iPhone, installez l’app iOS (elle autorise le réseau local). Sur Mac, vous pouvez aussi utiliser Qwen en ligne.";
+  }
+  function normalizeChatCompletionsUrl(provider, base) {
+    var u = String(base || "").trim().replace(/\/+$/, "");
+    if (!u) {
+      u = provider === "ollama" ? "http://localhost:11434" : "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
+    }
+    if (/\/chat\/completions$/i.test(u) || /\/api\/chat$/i.test(u)) return u;
+    if (provider === "ollama") {
+      if (/\/v1$/i.test(u)) return u + "/chat/completions";
+      return u + "/v1/chat/completions";
+    }
+    if (/\/v1$/i.test(u) || /compatible-mode\/v1$/i.test(u)) return u + "/chat/completions";
+    return u + "/chat/completions";
+  }
+  function currentAiModel() {
+    if (!aiSettings) loadAiSettings();
+    return aiSettings.provider === "ollama" ? (aiSettings.ollamaModel || "qwen2.5") : (aiSettings.dashscopeModel || "qwen-plus");
+  }
+  function currentAiEndpoint() {
+    if (!aiSettings) loadAiSettings();
+    if (aiSettings.provider === "ollama") return normalizeChatCompletionsUrl("ollama", aiSettings.ollamaBaseUrl);
+    return normalizeChatCompletionsUrl("dashscope", aiSettings.dashscopeBaseUrl);
+  }
+  function explainAiHttpError(status, body, endpoint, networkErr) {
+    var text = String(body || "");
+    if (networkErr) {
+      var mix = mixedContentRisk(endpoint);
+      if (mix) return mix;
+      if (aiSettings && aiSettings.provider === "ollama") {
+        return "Ollama ne répond pas. Sur le Mac, lancez `ollama serve` puis `ollama pull " + (aiSettings.ollamaModel || "qwen2.5") + "`. Pour le site en ligne, autorisez CORS : `OLLAMA_ORIGINS=https://khaldiahmed91-cyber.github.io ollama serve`. Pour l’iPhone, écoutez sur `0.0.0.0` et indiquez l’IP du Mac.";
+      }
+      return "Impossible de joindre le service. Vérifiez votre connexion réseau." + (text ? " " + text : "");
+    }
+    if (status === 401 || status === 403) return "Clé API refusée (" + status + "). Vérifiez votre clé DashScope dans Paramètres.";
+    if (status === 404) return "Adresse ou modèle introuvable (404). Vérifiez l’URL et le nom du modèle.";
+    if (status === 429) return "Trop de requêtes (429). Réessayez dans un moment.";
+    if (status >= 500) return "Le service IA a renvoyé une erreur " + status + ". Réessayez plus tard.";
+    return "Erreur IA (" + status + ")" + (text ? " : " + text.slice(0, 180) : ".");
+  }
+  function getCapacitorHttp() {
+    try {
+      if (!window.Capacitor) return null;
+      if (window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp) return window.Capacitor.Plugins.CapacitorHttp;
+      if (typeof window.Capacitor.registerPlugin === "function") {
+        return window.Capacitor.registerPlugin("CapacitorHttp");
+      }
+    } catch (e) {}
+    return null;
+  }
+  function extractJsonObject(text) {
+    var t = String(text || "").trim();
+    var fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fence) t = fence[1].trim();
+    var i = t.indexOf("{");
+    var j = t.lastIndexOf("}");
+    if (i >= 0 && j > i) t = t.slice(i, j + 1);
+    return JSON.parse(t);
+  }
+  function parseSseContent(chunk, acc) {
+    var lines = String(chunk || "").split(/\r?\n/);
+    var i, line, data, delta;
+    for (i = 0; i < lines.length; i++) {
+      line = lines[i];
+      if (!line || line.indexOf("data:") !== 0) continue;
+      data = line.slice(5).trim();
+      if (!data || data === "[DONE]") continue;
+      try {
+        delta = JSON.parse(data);
+        acc.text += ((((delta.choices || [])[0] || {}).delta || {}).content) || ((((delta.choices || [])[0] || {}).message || {}).content) || "";
+      } catch (e) {}
+    }
+    return acc;
+  }
+  function aiRequest(messages, opts) {
+    opts = opts || {};
+    if (!aiSettings) loadAiSettings();
+    return new Promise(function (resolve, reject) {
+      if (!aiSettings || aiSettings.provider === "off") {
+        reject(new Error("L’assistant IA est désactivé. Activez-le dans Paramètres (Qwen en ligne ou Ollama)."));
+        return;
+      }
+      if (aiSettings.provider === "dashscope" && !String(aiSettings.dashscopeApiKey || "").trim()) {
+        reject(new Error("Clé API DashScope manquante. Collez votre clé dans Paramètres."));
+        return;
+      }
+      var endpoint = currentAiEndpoint();
+      var mix = mixedContentRisk(endpoint);
+      if (mix) { reject(new Error(mix)); return; }
+      var body = {
+        model: currentAiModel(),
+        messages: messages,
+        temperature: opts.temperature == null ? 0.2 : opts.temperature,
+        stream: !!opts.stream
+      };
+      if (opts.json) body.response_format = { type: "json_object" };
+      var headers = { "Content-Type": "application/json" };
+      if (aiSettings.provider === "dashscope") headers.Authorization = "Bearer " + String(aiSettings.dashscopeApiKey).trim();
+      var cap = (isCapacitorNative() && !opts.stream) ? getCapacitorHttp() : null;
+      if (cap && typeof cap.request === "function") {
+        cap.request({ url: endpoint, method: "POST", headers: headers, data: body, connectTimeout: 60000, readTimeout: 120000 }).then(function (res) {
+          var status = res.status || res.statusCode || 0;
+          var data = res.data;
+          var raw = typeof data === "string" ? data : JSON.stringify(data || {});
+          if (status < 200 || status >= 300) {
+            reject(new Error(explainAiHttpError(status, raw, endpoint, false)));
+            return;
+          }
+          try {
+            var parsed = typeof data === "string" ? JSON.parse(data) : data;
+            var text = ((((parsed.choices || [])[0] || {}).message || {}).content) || parsed.message || parsed.response || "";
+            resolve({ text: String(text || ""), raw: parsed });
+          } catch (e) {
+            reject(new Error("La réponse de l’IA n’a pas pu être interprétée. Réessayez."));
+          }
+        }).catch(function (err) {
+          reject(new Error(explainAiHttpError(0, err && err.message, endpoint, true)));
+        });
+        return;
+      }
+      fetch(endpoint, { method: "POST", headers: headers, body: JSON.stringify(body) }).then(function (res) {
+        if (!res.ok) {
+          return res.text().then(function (t) {
+            throw new Error(explainAiHttpError(res.status, t, endpoint, false));
+          });
+        }
+        if (opts.stream && res.body && res.body.getReader) {
+          var reader = res.body.getReader();
+          var decoder = new TextDecoder();
+          var acc = { text: "" };
+          var buf = "";
+          function pump() {
+            return reader.read().then(function (part) {
+              if (part.done) {
+                if (buf) parseSseContent(buf, acc);
+                if (opts.onDelta) opts.onDelta(acc.text);
+                resolve({ text: acc.text, raw: null });
+                return;
+              }
+              buf += decoder.decode(part.value, { stream: true });
+              var cut = buf.lastIndexOf("\n");
+              if (cut >= 0) {
+                parseSseContent(buf.slice(0, cut + 1), acc);
+                buf = buf.slice(cut + 1);
+                if (opts.onDelta) opts.onDelta(acc.text);
+              }
+              return pump();
+            });
+          }
+          return pump();
+        }
+        return res.json().then(function (parsed) {
+          var text = ((((parsed.choices || [])[0] || {}).message || {}).content) || "";
+          resolve({ text: String(text || ""), raw: parsed });
+        });
+      }).catch(function (err) {
+        if (err && err.message && /clé API|désactivé|HTTPS|Ollama|contenu mixte|Safari|refusée/i.test(err.message)) {
+          reject(err);
+          return;
+        }
+        reject(new Error(explainAiHttpError(0, err && err.message, endpoint, true)));
+      });
+    });
+  }
+
+  function assertAiConfigured() {
+    if (!aiSettings) loadAiSettings();
+    if (!aiSettings || aiSettings.provider === "off") {
+      throw new Error("L’assistant IA est désactivé. Activez-le dans Paramètres (Qwen en ligne ou Ollama).");
+    }
+    if (aiSettings.provider === "dashscope" && !String(aiSettings.dashscopeApiKey || "").trim()) {
+      throw new Error("Clé API DashScope manquante. Collez votre clé dans Paramètres.");
+    }
+  }
+  function ensureAiPrivacy(needLabels) {
+    if (!aiSettings) loadAiSettings();
+    return new Promise(function (resolve, reject) {
+      if (aiSettings.provider === "off") {
+        reject(new Error("L’assistant IA est désactivé. Activez-le dans Paramètres."));
+        return;
+      }
+      if (aiSettings.privacyAccepted && (!needLabels || aiSettings.sendMode === "labels")) {
+        resolve(aiSettings.sendMode);
+        return;
+      }
+      if (aiSettings.privacyAccepted && needLabels && aiSettings.sendMode === "aggregates") {
+        /* need a one-off or switch */
+      }
+      var ov = document.getElementById("ai-privacy-overlay");
+      if (!ov) { reject(new Error("Fenêtre de confidentialité indisponible.")); return; }
+      var labelsRadio = document.getElementById("ai-privacy-labels");
+      var aggRadio = document.getElementById("ai-privacy-aggregates");
+      if (aggRadio) aggRadio.checked = aiSettings.sendMode !== "labels";
+      if (labelsRadio) labelsRadio.checked = aiSettings.sendMode === "labels" || !!needLabels;
+      var warn = document.getElementById("ai-privacy-need-labels");
+      if (warn) warn.hidden = !needLabels;
+      ov.classList.add("open");
+      ov.hidden = false;
+      function finish(ok) {
+        ov.classList.remove("open");
+        ov.hidden = true;
+        ov.removeEventListener("click", onClick);
+        if (!ok) { reject(new Error("Envoi à l’IA annulé.")); return; }
+        aiSettings.privacyAccepted = true;
+        aiSettings.sendMode = (labelsRadio && labelsRadio.checked) ? "labels" : "aggregates";
+        saveAiSettings();
+        renderAiSettings();
+        if (needLabels && aiSettings.sendMode !== "labels") {
+          reject(new Error("La catégorisation nécessite l’envoi des libellés. Choisissez « Libellés des opérations » dans la notice de confidentialité."));
+          return;
+        }
+        resolve(aiSettings.sendMode);
+      }
+      function onClick(e) {
+        var id = (e.target && e.target.id) || (e.target && e.target.closest && e.target.closest("[id]") && e.target.closest("[id]").id);
+        if (id === "ai-privacy-accept" || (e.target && e.target.id === "ai-privacy-accept")) { e.preventDefault(); finish(true); }
+        else if (id === "ai-privacy-cancel" || id === "ai-privacy-overlay") {
+          if (e.target === ov || id === "ai-privacy-cancel") { e.preventDefault(); finish(false); }
+        }
+      }
+      ov.addEventListener("click", onClick);
+    });
+  }
+
+  function aiCatalog() {
+    return (state.categories || []).map(function (c) {
+      return {
+        id: c.id,
+        name: c.name,
+        kind: c.kind,
+        subs: (typeof subsOf === "function" ? subsOf(c.id) : (c.subcategories || [])).map(function (s) {
+          return { id: s.id, name: s.name };
+        })
+      };
+    });
+  }
+  function validateAiSuggestion(sugg, amount) {
+    if (!sugg || typeof sugg !== "object") return null;
+    var catId = String(sugg.categoryId || sugg.category || "");
+    var subId = String(sugg.subcategoryId || sugg.subcategory || "");
+    var typ = String(sugg.type || "").toLowerCase();
+    var cat = (typeof catById === "function") ? catById(catId) : null;
+    if (!cat || cat.id === "divers" && catId !== "divers") {
+      /* catById falls back to divers for unknown — check real existence */
+      var found = (state.categories || []).some(function (c) { return c.id === catId; });
+      if (!found) return null;
+      cat = (state.categories || []).filter(function (c) { return c.id === catId; })[0];
+    }
+    if (typ !== "depense" && typ !== "revenu" && typ !== "epargne" && typ !== "retrait" && typ !== "exclu") {
+      typ = (isFinite(amount) && amount > 0) ? "revenu" : "depense";
+      if (cat && cat.kind === "revenu") typ = "revenu";
+      else if (cat && (cat.id === "epargne" || (typeof isEpargne === "function" && isEpargne(cat.id)))) typ = "epargne";
+    }
+    if (typ === "revenu" && cat.kind !== "revenu") catId = "autres-revenus";
+    if ((typ === "depense" || typ === "epargne" || typ === "retrait") && cat.kind === "revenu" && typ !== "revenu") {
+      if (typ !== "epargne" && typ !== "retrait") catId = "divers";
+    }
+    if (typ === "epargne" || typ === "retrait") {
+      var ep = (state.categories || []).filter(function (c) { return c.id === "epargne"; })[0];
+      if (ep) catId = ep.id;
+    }
+    var subs = typeof subsOf === "function" ? subsOf(catId) : [];
+    if (subId && !subs.some(function (s) { return s.id === subId; })) subId = "";
+    var catObj = (state.categories || []).filter(function (c) { return c.id === catId; })[0];
+    var subName = "";
+    (subs || []).forEach(function (s) { if (s.id === subId) subName = s.name; });
+    return {
+      categoryId: catId,
+      subcategoryId: subId || "",
+      type: typ,
+      reason: String(sugg.reason || "").slice(0, 140),
+      categoryLabel: (catObj && catObj.name) || catId,
+      subcategoryLabel: subName
+    };
+  }
+  function applySuggestionToTx(t, sugg) {
+    if (!t || !sugg) return;
+    var typ = sugg.type;
+    var cat = sugg.categoryId;
+    var sub = sugg.subcategoryId || "";
+    if (typ === "exclu") {
+      t.excluded = true;
+      t.type = (isFinite(t.amount) && Number(t.amount) >= 0 && t.type === "revenu") ? "revenu" : (t.type === "retrait" ? "retrait" : (t.type === "revenu" ? "revenu" : "depense"));
+      if (!t.type) t.type = "depense";
+    } else {
+      t.excluded = false;
+      if (typ === "epargne") { t.type = "depense"; cat = cat || "epargne"; }
+      else if (typ === "retrait") { t.type = "retrait"; cat = cat || "epargne"; }
+      else t.type = typ === "revenu" ? "revenu" : "depense";
+    }
+    t.categoryId = cat;
+    t.subcategoryId = sub;
+  }
+  function applySuggestionToImportItem(it, sugg) {
+    if (!it || !sugg) return;
+    it.type = sugg.type;
+    it.categoryId = sugg.categoryId;
+    it.subcategoryId = sugg.subcategoryId || "";
+    it.userSet = true;
+    it.aiAccepted = true;
+  }
+
+  function buildAiBudgetContext(includeLabels) {
+    var year = state.year;
+    var tot = typeof yearTotals === "function" ? yearTotals(year) : { revenus: 0, depenses: 0, epargne: 0, solde: 0, disponible: 0, months: [] };
+    var months = (tot.months || []).map(function (m) {
+      return {
+        mois: m.month,
+        revenus: Math.round((m.revenus || 0) * 100) / 100,
+        depenses: Math.round((m.depenses || 0) * 100) / 100,
+        epargne: Math.round((m.epargne || 0) * 100) / 100,
+        cash: Math.round(((m.revenus || 0) - (m.depenses || 0) - (m.epargne || 0) + (m.retraits || m.withdrawals || 0)) * 100) / 100
+      };
+    });
+    var cats = [];
+    (state.categories || []).forEach(function (c) {
+      var sum = 0;
+      if (tot.byCat && tot.byCat[c.id] != null) sum = tot.byCat[c.id];
+      else if (typeof monthlyAggregates === "function") { /* fallback below */ }
+      cats.push({ id: c.id, nom: c.name, type: c.kind, total: Math.round((sum || 0) * 100) / 100 });
+    });
+    if (tot.byCat) {
+      cats.forEach(function (c) {
+        if (tot.byCat[c.id] != null) c.total = Math.round(tot.byCat[c.id] * 100) / 100;
+      });
+    }
+    var recs = (state.recurring || []).map(function (r) {
+      return { libelle: includeLabels ? String(r.description || "").slice(0, 80) : undefined, type: r.type, montant: r.amount, frequence: r.freq || r.frequency, categorie: r.categoryId };
+    });
+    var ctx = {
+      annee: year,
+      devise: "EUR",
+      totaux: {
+        revenus: Math.round((tot.revenus || 0) * 100) / 100,
+        depenses: Math.round((tot.depenses || 0) * 100) / 100,
+        epargne: Math.round((tot.epargne || 0) * 100) / 100,
+        solde: Math.round((tot.solde || 0) * 100) / 100,
+        cashDisponible: Math.round((tot.disponible || 0) * 100) / 100
+      },
+      epargneCumul: {
+        soldeDepart: Number((state.savings || {}).initialBalance) || 0,
+        objectif: Number((state.savings || {}).goal) || 0
+      },
+      mois: months,
+      categories: cats,
+      recurrents: recs
+    };
+    if (includeLabels && typeof allVisible === "function") {
+      var list = allVisible(year).filter(function (t) { return !isExcluded(t) && t.type !== "revenu"; });
+      var bag = {};
+      list.forEach(function (t) {
+        var k = (typeof txReferent === "function" ? (txReferent(t.description).display || t.description) : t.description) || "Autre";
+        k = String(k).slice(0, 50);
+        if (!bag[k]) bag[k] = { libelle: k, total: 0, n: 0, categorie: t.categoryId };
+        bag[k].total += Math.abs(Number(t.amount) || 0);
+        bag[k].n += 1;
+      });
+      ctx.topDepenses = Object.keys(bag).map(function (k) { return bag[k]; })
+        .sort(function (a, b) { return b.total - a.total; })
+        .slice(0, 15)
+        .map(function (x) { x.total = Math.round(x.total * 100) / 100; return x; });
+    }
+    return ctx;
+  }
+
+  function aiSystemPrompt(kind) {
+    if (kind === "categorize") {
+      return "Tu classifies des opérations bancaires personnelles en français. Réponds uniquement par un objet JSON {\"items\":[{\"id\":\"...\",\"categoryId\":\"...\",\"subcategoryId\":\"\",\"type\":\"depense|revenu|epargne|retrait|exclu\",\"reason\":\"...\"}]}. Utilise exclusivement les categoryId et subcategoryId fournis. type=exclu pour un virement interne entre comptes de la personne. type=epargne pour un versement d’épargne, type=retrait pour un retrait d’épargne. Pas de texte hors JSON.";
+    }
+    return "Tu es l’assistant budget de l’application Mon Budget. Tu parles français, tu es concret et prudent. Tu n’utilises que les chiffres fournis dans le JSON de contexte. Tu n’inventes pas d’opérations. Montants en euros. Si une info manque, tu le dis. Conseils d’épargne réalistes, sans promesse financière.";
+  }
+
+  function categorizeWithAi(items, idKey) {
+    idKey = idKey || "id";
+    var catalog = aiCatalog();
+    var payload = items.map(function (it, i) {
+      return {
+        id: String(it[idKey] != null ? it[idKey] : i),
+        libelle: String(it.label || it.description || "").slice(0, 160),
+        montant: Number(it.amount) || 0,
+        typeActuel: it.type || "",
+        categorieActuelle: it.categoryId || ""
+      };
+    });
+    var batches = [];
+    var size = 18, i;
+    for (i = 0; i < payload.length; i += size) batches.push(payload.slice(i, i + size));
+    var out = {};
+    function run(b) {
+      var user = "Catalogue de catégories:\n" + JSON.stringify(catalog) + "\n\nOpérations à classer:\n" + JSON.stringify(b);
+      return aiRequest([
+        { role: "system", content: aiSystemPrompt("categorize") },
+        { role: "user", content: user }
+      ], { json: true, stream: false, temperature: 0 }).then(function (res) {
+        var parsed;
+        try { parsed = extractJsonObject(res.text); } catch (e) { return; }
+        var list = Array.isArray(parsed.items) ? parsed.items : (Array.isArray(parsed) ? parsed : []);
+        list.forEach(function (row) {
+          var v = validateAiSuggestion(row, row.montant);
+          if (v && row.id != null) out[String(row.id)] = v;
+        });
+      });
+    }
+    return batches.reduce(function (p, b) {
+      return p.then(function () { return run(b); });
+    }, Promise.resolve()).then(function () { return out; });
+  }
+
+  function renderAiSettings() {
+    if (!aiSettings) loadAiSettings();
+    var card = document.getElementById("ai-settings");
+    if (!card) return;
+    card.setAttribute("data-provider", aiSettings.provider || "off");
+    var sel = document.getElementById("ai-provider");
+    if (sel && sel.value !== aiSettings.provider) sel.value = aiSettings.provider;
+    var setv = function (id, v) { var el = document.getElementById(id); if (el && el.value !== v) el.value = v; };
+    setv("ai-dashscope-url", aiSettings.dashscopeBaseUrl);
+    setv("ai-dashscope-model", aiSettings.dashscopeModel);
+    setv("ai-dashscope-key", aiSettings.dashscopeApiKey);
+    setv("ai-ollama-url", aiSettings.ollamaBaseUrl);
+    setv("ai-ollama-model", aiSettings.ollamaModel);
+    var inc = document.getElementById("ai-export-settings");
+    if (inc) inc.checked = !!aiSettings.includeAiInExport;
+    var incK = document.getElementById("ai-export-key");
+    if (incK) { incK.checked = !!aiSettings.includeAiKeyInExport; incK.disabled = !aiSettings.includeAiInExport; }
+    var mode = document.getElementById("ai-send-mode");
+    if (mode) mode.value = aiSettings.sendMode || "aggregates";
+    var st = document.getElementById("ai-settings-status");
+    if (st) {
+      var label = aiSettings.provider === "off" ? "Désactivé (rien n’est envoyé)" : (aiSettings.provider === "ollama" ? "Ollama local · " + currentAiModel() : "Qwen en ligne · " + currentAiModel());
+      st.textContent = label;
+      st.className = "ai-status " + (aiSettings.provider === "off" ? "off" : "on");
+    }
+  }
+  function readAiSettingsFromForm() {
+    if (!aiSettings) loadAiSettings();
+    var sel = document.getElementById("ai-provider");
+    if (sel) aiSettings.provider = sel.value === "dashscope" || sel.value === "ollama" ? sel.value : "off";
+    var g = function (id) { var el = document.getElementById(id); return el ? String(el.value || "").trim() : ""; };
+    if (g("ai-dashscope-url")) aiSettings.dashscopeBaseUrl = g("ai-dashscope-url");
+    if (g("ai-dashscope-model")) aiSettings.dashscopeModel = g("ai-dashscope-model");
+    var keyEl = document.getElementById("ai-dashscope-key");
+    if (keyEl) aiSettings.dashscopeApiKey = keyEl.value || "";
+    if (g("ai-ollama-url")) aiSettings.ollamaBaseUrl = g("ai-ollama-url");
+    if (g("ai-ollama-model")) aiSettings.ollamaModel = g("ai-ollama-model");
+    var inc = document.getElementById("ai-export-settings");
+    aiSettings.includeAiInExport = !!(inc && inc.checked);
+    var incK = document.getElementById("ai-export-key");
+    aiSettings.includeAiKeyInExport = !!(incK && incK.checked && aiSettings.includeAiInExport);
+    var mode = document.getElementById("ai-send-mode");
+    if (mode && (mode.value === "labels" || mode.value === "aggregates")) aiSettings.sendMode = mode.value;
+    var card = document.getElementById("ai-settings");
+    if (card) card.setAttribute("data-provider", aiSettings.provider);
+    if (incK) incK.disabled = !aiSettings.includeAiInExport;
+  }
+
+  function renderAssistant() {
+    var box = document.getElementById("ai-msgs");
+    if (!box) return;
+    if (!aiSettings) loadAiSettings();
+    var intro = aiSettings.provider === "off"
+      ? "L’assistant est désactivé. Dans Paramètres, choisissez Qwen en ligne (clé DashScope) ou Qwen local (Ollama). Rien n’est envoyé tant qu’il est désactivé."
+      : "Je m’appuie sur un résumé de votre budget " + state.year + " (totaux, catégories, épargne, cash disponible). Aucune donnée ne part sans votre accord.";
+    var html = '<div class="ai-bubble system">' + esc(intro) + "</div>";
+    aiChat.forEach(function (m) {
+      html += '<div class="ai-bubble ' + esc(m.role) + (m.error ? " error" : "") + '">' + esc(m.content) + "</div>";
+    });
+    if (aiBusy) html += '<div class="ai-bubble assistant" id="ai-stream">…</div>';
+    box.innerHTML = html;
+    box.scrollTop = box.scrollHeight;
+    var st = document.getElementById("ai-chat-status");
+    if (st) {
+      st.className = "ai-status " + (aiSettings.provider === "off" ? "off" : "on");
+      st.innerHTML = '<span class="dot"></span>' + esc(aiSettings.provider === "off" ? "IA désactivée" : (aiSettings.provider === "ollama" ? "Ollama · " + currentAiModel() : "Qwen · " + currentAiModel()));
+    }
+  }
+  function sendAiChat(text, forcedMode) {
+    var q = String(text || "").trim();
+    if (!q || aiBusy) return;
+    try { assertAiConfigured(); } catch (err) { toast(err.message); return; }
+    ensureAiPrivacy(false).then(function (mode) {
+      if (forcedMode) mode = forcedMode;
+      aiBusy = true;
+      aiChat.push({ role: "user", content: q });
+      renderAssistant();
+      var includeLabels = mode === "labels";
+      var ctx = buildAiBudgetContext(includeLabels);
+      var messages = [
+        { role: "system", content: aiSystemPrompt("chat") },
+        { role: "user", content: "Contexte budget (JSON" + (includeLabels ? ", avec libellés agrégés" : ", totaux uniquement") + ") :\n" + JSON.stringify(ctx) },
+        { role: "user", content: q }
+      ];
+      var acc = "";
+      return aiRequest(messages, {
+        stream: true,
+        temperature: 0.4,
+        onDelta: function (t) {
+          acc = t;
+          var el = document.getElementById("ai-stream");
+          if (el) el.textContent = t || "…";
+          var box = document.getElementById("ai-msgs");
+          if (box) box.scrollTop = box.scrollHeight;
+        }
+      }).then(function (res) {
+        var textOut = (res && res.text) || acc || "";
+        if (!String(textOut).trim()) textOut = "Je n’ai pas obtenu de réponse exploitable. Réessayez.";
+        aiChat.push({ role: "assistant", content: textOut });
+      }).catch(function (err) {
+        aiChat.push({ role: "assistant", content: (err && err.message) || "Erreur inattendue.", error: true });
+      }).then(function () {
+        aiBusy = false;
+        renderAssistant();
+      });
+    }).catch(function (err) {
+      aiBusy = false;
+      toast((err && err.message) || "Annulé.");
+      renderAssistant();
+    });
+  }
+
+  function startImportAiCategorize() {
+    if (!importState || !importState.items) { toast("Aucun aperçu d’import."); return; }
+    var items = importState.items.filter(function (it) { return it.included && it.date; });
+    if (!items.length) { toast("Aucune ligne à catégoriser."); return; }
+    try { assertAiConfigured(); } catch (err) { toast(err.message); return; }
+    ensureAiPrivacy(true).then(function () {
+      aiBusy = true;
+      toast("Catégorisation IA en cours…");
+      return categorizeWithAi(items.map(function (it) {
+        return { id: it.rowIndex, label: it.label, amount: it.amount, type: it.type, categoryId: it.categoryId };
+      }), "id").then(function (map) {
+        var n = 0;
+        importState.items.forEach(function (it) {
+          var s = map[String(it.rowIndex)];
+          if (s) { it.aiProposal = s; n++; }
+        });
+        if (!n) toast("L’IA n’a pas renvoyé de suggestions exploitables.");
+        else toast(n + " suggestion" + (n > 1 ? "s" : "") + " IA prête" + (n > 1 ? "s" : "") + " — acceptez-les une à une, par référent, ou toutes.");
+        if (typeof renderImportPreviewStep === "function") renderImportPreviewStep();
+      });
+    }).catch(function (err) {
+      toast((err && err.message) || "Catégorisation annulée.");
+    }).then(function () { aiBusy = false; });
+  }
+  function acceptImportAi(rowIndex, referentOnly, all) {
+    if (!importState || !importState.items) return;
+    var items = importState.items;
+    var target = items.filter(function (it) { return String(it.rowIndex) === String(rowIndex); })[0];
+    var list;
+    if (all) list = items.filter(function (it) { return it.aiProposal && !it.aiAccepted; });
+    else if (referentOnly && target) {
+      list = items.filter(function (it) { return it.aiProposal && it.referentKey && it.referentKey === target.referentKey; });
+    } else list = target && target.aiProposal ? [target] : [];
+    if (!list.length) { toast("Aucune suggestion à accepter."); return; }
+    list.forEach(function (it) { applySuggestionToImportItem(it, it.aiProposal); });
+    if (typeof renderImportPreviewStep === "function") renderImportPreviewStep();
+    toast(list.length + " suggestion" + (list.length > 1 ? "s" : "") + " appliquée" + (list.length > 1 ? "s" : "") + " (vous pouvez encore corriger avant d’importer).");
+  }
+
+  function rejectImportAi(rowIndex, all) {
+    if (!importState || !importState.items) return;
+    importState.items.forEach(function (it) {
+      if (all || String(it.rowIndex) === String(rowIndex)) delete it.aiProposal;
+    });
+    if (typeof renderImportPreviewStep === "function") renderImportPreviewStep();
+  }
+  function rejectTxAi(id, all) {
+    if (all) aiTxProposals = {};
+    else if (id) delete aiTxProposals[id];
+    if (typeof renderTransactions === "function") renderTransactions();
+    if (typeof updateBulkBar === "function") updateBulkBar();
+  }
+
+  function startTxAiCategorize(onlySelected) {
+    var list = onlySelected ? (typeof selectedItems === "function" ? selectedItems() : []) : (typeof filteredTransactions === "function" ? filteredTransactions() : []);
+    list = (list || []).filter(Boolean);
+    if (!list.length) { toast(onlySelected ? "Sélectionnez au moins une opération." : "Aucune opération visible à catégoriser."); return; }
+    try { assertAiConfigured(); } catch (err) { toast(err.message); return; }
+    ensureAiPrivacy(true).then(function () {
+      toast("Catégorisation IA de " + list.length + " opération" + (list.length > 1 ? "s" : "") + "…");
+      return categorizeWithAi(list.map(function (t) {
+        return { id: t.id, label: t.description, amount: t.type === "revenu" || t.type === "retrait" ? Math.abs(t.amount) : -Math.abs(t.amount), type: t.type, categoryId: t.categoryId };
+      }), "id").then(function (map) {
+        var n = 0;
+        Object.keys(map).forEach(function (id) { aiTxProposals[id] = map[id]; n++; });
+        if (!n) toast("L’IA n’a pas renvoyé de suggestions exploitables.");
+        else toast(n + " suggestion" + (n > 1 ? "s" : "") + " à accepter.");
+        if (typeof renderTransactions === "function") renderTransactions();
+        if (typeof updateBulkBar === "function") updateBulkBar();
+      });
+    }).catch(function (err) {
+      toast((err && err.message) || "Catégorisation annulée.");
+    });
+  }
+  function acceptTxAi(id, referentAll, allVisibleFlag) {
+    var ids = [];
+    if (allVisibleFlag) {
+      ids = Object.keys(aiTxProposals);
+    } else if (referentAll) {
+      var t0 = typeof findTxById === "function" ? findTxById(id) : null;
+      var key = t0 && typeof txReferent === "function" ? txReferent(t0.description).key : "";
+      ids = Object.keys(aiTxProposals).filter(function (i) {
+        var t = findTxById(i);
+        return t && key && txReferent(t.description).key === key;
+      });
+    } else if (id && aiTxProposals[id]) ids = [id];
+    if (!ids.length) { toast("Aucune suggestion à accepter."); return; }
+    if (typeof snapshotFinance === "function") bulkSnapshot = snapshotFinance();
+    ids.forEach(function (i) {
+      var t = findTxById(i);
+      if (t && aiTxProposals[i]) applySuggestionToTx(t, aiTxProposals[i]);
+      delete aiTxProposals[i];
+    });
+    persist();
+    renderAll();
+    if (typeof toastUndo === "function") toastUndo(ids.length + " suggestion" + (ids.length > 1 ? "s" : "") + " IA appliquée" + (ids.length > 1 ? "s" : "") + ".");
+  }
+
+  function testAiConnection() {
+    try { assertAiConfigured(); } catch (err) { toast(err.message); return; }
+    ensureAiPrivacy(false).then(function () {
+      toast("Test de connexion à l’IA…");
+      return aiRequest([
+        { role: "system", content: "Réponds uniquement par le mot OK." },
+        { role: "user", content: "OK ?" }
+      ], { stream: false, temperature: 0 }).then(function (res) {
+        toast("Connexion IA réussie" + (res && res.text ? " (« " + String(res.text).trim().slice(0, 40) + " »)" : "") + ".");
+      });
+    }).catch(function (err) {
+      toast((err && err.message) || "Échec du test IA.");
+    });
+  }
+
+  function handleAiEvent(e) {
+    var t = e.target;
+    if (!t) return false;
+    var id = t.id || (t.closest && t.closest("[id]") && t.closest("[id]").id) || "";
+    var btn = t.closest ? t.closest("[data-ai], button, input, select") : t;
+    if (id === "ai-provider" || id === "ai-dashscope-url" || id === "ai-dashscope-model" || id === "ai-dashscope-key" || id === "ai-ollama-url" || id === "ai-ollama-model" || id === "ai-export-settings" || id === "ai-export-key" || id === "ai-send-mode") {
+      if (e.type === "change" || e.type === "input") { readAiSettingsFromForm(); saveAiSettings(); renderAiSettings(); }
+      return false;
+    }
+    if (id === "btn-ai-test") { e.preventDefault(); testAiConnection(); return true; }
+    if (id === "btn-ai-send" || (id === "ai-input" && e.type === "submit")) { e.preventDefault(); sendAiChat((document.getElementById("ai-input") || {}).value || ""); var inp = document.getElementById("ai-input"); if (inp) inp.value = ""; return true; }
+    if (t.getAttribute && t.getAttribute("data-ai-q")) { e.preventDefault(); sendAiChat(t.getAttribute("data-ai-q")); return true; }
+    if (id === "btn-ai-analyze") { e.preventDefault(); sendAiChat("Fais une analyse claire de mes dépenses de cette année : postes principaux, mois atypiques, et ce qui sort du lot."); return true; }
+    if (id === "btn-ai-advice") { e.preventDefault(); sendAiChat("Donne-moi des conseils d’épargne concrets, adaptés à mon cash disponible et à mes charges récurrentes."); return true; }
+    if (id === "btn-ai-save") { e.preventDefault(); sendAiChat("Où puis-je économiser ? Identifie 3 à 5 pistes réalistes, avec un ordre de grandeur en euros."); return true; }
+    if (id === "btn-ai-cat-import") { e.preventDefault(); startImportAiCategorize(); return true; }
+    if (id === "btn-ai-cat-accept-all-import") { e.preventDefault(); acceptImportAi(null, false, true); return true; }
+    if (id === "btn-ai-reject-all-import") { e.preventDefault(); rejectImportAi(null, true); return true; }
+    if (t.getAttribute && t.getAttribute("data-ai-imp-accept")) { e.preventDefault(); acceptImportAi(t.getAttribute("data-ai-imp-accept"), false, false); return true; }
+    if (t.getAttribute && t.getAttribute("data-ai-imp-accept-ref")) { e.preventDefault(); acceptImportAi(t.getAttribute("data-ai-imp-accept-ref"), true, false); return true; }
+    if (t.getAttribute && t.getAttribute("data-ai-imp-reject")) { e.preventDefault(); rejectImportAi(t.getAttribute("data-ai-imp-reject"), false); return true; }
+    if (id === "btn-ai-cat-tx" || id === "btn-bulk-ai-cat") { e.preventDefault(); startTxAiCategorize(id === "btn-bulk-ai-cat"); return true; }
+    if (id === "btn-ai-tx-accept-all") { e.preventDefault(); acceptTxAi(null, false, true); return true; }
+    if (t.getAttribute && t.getAttribute("data-ai-tx-accept")) { e.preventDefault(); acceptTxAi(t.getAttribute("data-ai-tx-accept"), false, false); return true; }
+    if (t.getAttribute && t.getAttribute("data-ai-tx-accept-ref")) { e.preventDefault(); acceptTxAi(t.getAttribute("data-ai-tx-accept-ref"), true, false); return true; }
+    if (t.getAttribute && t.getAttribute("data-ai-tx-reject")) { e.preventDefault(); rejectTxAi(t.getAttribute("data-ai-tx-reject"), false); return true; }
+    return false;
+  }
+
 
   function bind() {
     document.querySelectorAll("[data-view]").forEach(function (btn) {
@@ -6459,6 +8335,13 @@
     on(document.getElementById("btn-select-transfers"), "click", function () {
       selectAllInternalTransfers();
     });
+    on(document.getElementById("chip-tx-referent"), "click", function () {
+      selectByReferentTx = !selectByReferentTx;
+      syncReferentChip();
+      toast(selectByReferentTx
+        ? "Sélection par référent activée : cocher une ligne sélectionne toutes les similaires visibles."
+        : "Sélection par référent désactivée.");
+    });
     on(document.getElementById("tx-bulk-bar"), "click", function (e) {
       var btn = e.target.closest("button");
       if (!btn) return;
@@ -6467,6 +8350,13 @@
       if (btn.id === "btn-bulk-type") openBulkTypeModal();
       if (btn.id === "btn-bulk-interne") applyBulkInternal();
       if (btn.id === "btn-bulk-clear") clearSelection();
+      if (btn.id === "btn-bulk-extend-ref") {
+        var sh = sharedTxReferent(selectedItems());
+        if (sh) {
+          var nEx = extendSelectionToReferent(sh.key);
+          if (nEx) toast(nEx + " lignes « " + sh.display + " » sélectionnées");
+        }
+      }
     });
     on(document.getElementById("filter-sort"), "change", function (e) { state.filters.sort = e.target.value; renderTransactions(); });
     on(document.getElementById("filter-search"), "input", function (e) { state.filters.search = e.target.value; renderTransactions(); });
@@ -6506,16 +8396,22 @@
         toggleInternalTx(interneBtn.getAttribute("data-interne"));
         return;
       }
+      const refBtn = e.target.closest("[data-ref-sel]");
+      if (refBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        var rid = refBtn.getAttribute("data-ref-sel");
+        var src = findTxById(rid);
+        var rk = src ? txReferent(src.description) : { key: "" };
+        if (rk.key) {
+          var nEx = extendSelectionToReferent(rk.key);
+          if (nEx) toast(nEx + " lignes « " + rk.display + " » sélectionnées");
+        }
+        return;
+      }
       const check = e.target.closest(".tx-check") || e.target.closest("[data-tx-check]");
       if (check) {
         e.stopPropagation();
-        var cid = check.getAttribute("data-tx-check") || check.getAttribute("data-tx");
-        if (cid) {
-          setTxSelected(cid, !!check.checked);
-          var row = check.closest(".tx-item");
-          if (row) row.classList.toggle("selected", !!check.checked);
-          updateBulkBar();
-        }
         return;
       }
       const item = e.target.closest(".tx-item");
@@ -6528,13 +8424,10 @@
       if (!check) return;
       var cid = check.getAttribute("data-tx-check");
       if (!cid) return;
-      setTxSelected(cid, !!check.checked);
-      var row = check.closest(".tx-item");
-      if (row) row.classList.toggle("selected", !!check.checked);
-      updateBulkBar();
+      setTxSelectedGroup(cid, !!check.checked, true);
     });
     on(document.getElementById("tx-list"), "keydown", function (e) {
-      if (e.target.closest(".btn-stop-rec") || e.target.closest(".tx-check") || e.target.closest(".btn-interne")) return;
+      if (e.target.closest(".btn-stop-rec") || e.target.closest(".tx-check") || e.target.closest(".btn-interne") || e.target.closest("[data-ref-sel]")) return;
       if (e.key !== "Enter" && e.key !== " ") return;
       const item = e.target.closest(".tx-item");
       if (!item) return;
@@ -6619,6 +8512,35 @@
       var del = e.target.closest("[data-kw-del]");
       if (del) removeInternalKeyword(del.getAttribute("data-kw-del"));
     });
+    on(document.getElementById("btn-own-account-add"), "click", function () {
+      var inp = document.getElementById("own-account-input");
+      if (inp && addOwnAccount(inp.value)) inp.value = "";
+    });
+    on(document.getElementById("own-account-input"), "keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (addOwnAccount(e.target.value)) e.target.value = "";
+      }
+    });
+    on(document.getElementById("own-accounts-list"), "click", function (e) {
+      var del = e.target.closest("[data-own-del]");
+      if (del) removeOwnAccount(del.getAttribute("data-own-del"));
+    });
+    on(document.getElementById("count-placements-savings"), "change", function (e) {
+      state.countPlacementsAsSavings = !!(e.target && e.target.checked);
+      persist();
+      toast(state.countPlacementsAsSavings
+        ? "Les placements (bourse, crypto, poches d’investissement) seront comptés comme épargne."
+        : "Les placements restent des virements internes, exclus des totaux.");
+    });
+    on(document, "click", function (e) { if (typeof handleAiEvent === "function") handleAiEvent(e); });
+    on(document, "change", function (e) { if (typeof handleAiEvent === "function") handleAiEvent(e); });
+    on(document, "input", function (e) {
+      var id = e.target && e.target.id;
+      if (id && id.indexOf("ai-") === 0 && typeof handleAiEvent === "function") handleAiEvent(e);
+    });
+    var aiForm = document.getElementById("ai-form");
+    if (aiForm) on(aiForm, "submit", function (e) { if (typeof handleAiEvent === "function") handleAiEvent(e); });
     on(document.getElementById("internal-kw-suggest"), "click", function (e) {
       var btn = e.target.closest("#btn-internal-kw-lastname");
       if (!btn) return;
